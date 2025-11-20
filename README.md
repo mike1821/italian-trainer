@@ -1,5 +1,7 @@
 Italian-Greek Vocabulary Practice Tool
+
 Usage:
+
     python tool.py quiz <n>       - Random quiz with n words (Italian->Greek)
     python tool.py quiz-reverse <n> - Quiz Greek->Italian
     python tool.py lookup <word>  - Find translation
