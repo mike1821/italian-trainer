@@ -58,5 +58,7 @@ def get_audio_base64(word, lang='it'):
         
         return audio_b64
     except Exception as e:
+        # gTTS fails on PythonAnywhere free tier (no external connections)
+        # Return empty string instead of None to prevent JavaScript errors
         print(f"Error generating audio: {e}")
-        return None
+        return ""
