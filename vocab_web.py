@@ -530,3 +530,677 @@ def launch_web():
     print("\n🌐 Starting web interface at http://localhost:5000")
     print("Press Ctrl+C to stop\n")
     app.run(debug=True, port=5000, host='0.0.0.0')
+
+
+# WSGI entry point for PythonAnywhere/production deployment
+# This allows the Flask app to be imported by WSGI servers
+application = None
+
+def create_wsgi_app():
+    """Create Flask app for WSGI deployment without app.run()."""
+    from flask import Flask, render_template_string, request, jsonify
+    import json
+    
+    app = Flask(__name__)
+    vocabulary = load_vocabulary()
+    
+    HTML = '''
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Italian Vocabulary Practice</title>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 2.5em;
+        }
+        
+        .mode-selector {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .mode-selector h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .mode-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .mode-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .mode-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .mode-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .quiz-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            min-height: 300px;
+            display: none;
+        }
+        
+        .quiz-container.active {
+            display: block;
+            animation: bounceIn 0.6s ease-out;
+        }
+        
+        .word-display {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .word {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .speaker-icon {
+            font-size: 2em;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        
+        .speaker-icon:hover {
+            transform: scale(1.2);
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 15px rgba(118, 75, 162, 0.3);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .back-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            margin-right: 10px;
+        }
+        
+        .feedback {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 20px 0;
+            min-height: 40px;
+            font-weight: bold;
+        }
+        
+        .correct {
+            color: #4CAF50;
+            animation: bounceIn 0.5s ease-out;
+        }
+        
+        .wrong {
+            color: #f44336;
+        }
+        
+        .score {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .option-btn {
+            background: white;
+            border: 3px solid #667eea;
+            color: #667eea;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .option-btn.correct {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            color: white;
+        }
+        
+        .option-btn.wrong {
+            background: #f44336;
+            border-color: #f44336;
+            color: white;
+        }
+        
+        .flashcard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .flashcard:hover {
+            transform: scale(1.02);
+        }
+        
+        .flashcard-text {
+            font-size: 3em;
+            font-weight: bold;
+        }
+        
+        .flashcard-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .sentence-info {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .sentence-info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .sentence-info p {
+            margin: 10px 0;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .pattern-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🇮🇹 Italian Vocabulary Practice 🇬🇷</h1>
+    
+    <div class="mode-selector" id="modeSelector">
+        <h2>Choose Practice Mode</h2>
+        <div class="mode-buttons">
+            <button class="mode-btn" onclick="startMode('it-gr')">Italian → Greek Translation</button>
+            <button class="mode-btn" onclick="startMode('gr-it')">Greek → Italian Translation</button>
+            <button class="mode-btn" onclick="startMode('mc')">Multiple Choice Quiz</button>
+            <button class="mode-btn" onclick="startMode('flashcard')">Flashcards</button>
+            <button class="mode-btn" onclick="startMode('sentence')">Practice with Sentences</button>
+        </div>
+    </div>
+    
+    <div class="quiz-container" id="quizContainer">
+        <button class="btn back-btn" onclick="backToMenu()">← Back to Menu</button>
+        <div id="quizContent"></div>
+    </div>
+
+    <script>
+        let currentMode = '';
+        let words = [];
+        let currentIndex = 0;
+        let score = 0;
+        let total = 0;
+        let currentWord = null;
+        let flashcardRevealed = false;
+
+        function backToMenu() {
+            document.getElementById('modeSelector').style.display = 'block';
+            document.getElementById('quizContainer').classList.remove('active');
+            currentMode = '';
+            words = [];
+            currentIndex = 0;
+            score = 0;
+            total = 0;
+        }
+
+        async function startMode(mode) {
+            currentMode = mode;
+            currentIndex = 0;
+            score = 0;
+            total = 0;
+            
+            document.getElementById('modeSelector').style.display = 'none';
+            document.getElementById('quizContainer').classList.add('active');
+            
+            if (mode === 'sentence') {
+                showSentence();
+            } else {
+                const response = await fetch('/api/words?n=10');
+                words = await response.json();
+                
+                if (mode === 'it-gr' || mode === 'gr-it') {
+                    showTranslationQuiz();
+                } else if (mode === 'mc') {
+                    showMultipleChoice();
+                } else if (mode === 'flashcard') {
+                    showFlashcard();
+                }
+            }
+        }
+
+        function showTranslationQuiz() {
+            if (currentIndex >= words.length) {
+                showFinalScore();
+                return;
+            }
+            
+            currentWord = words[currentIndex];
+            const question = currentMode === 'it-gr' ? currentWord.italian : currentWord.greek;
+            
+            const html = `
+                <div class="word-display">
+                    <div class="word">${question}</div>
+                    ${currentMode === 'it-gr' ? '<span class="speaker-icon" onclick="playAudio()">🔊</span>' : ''}
+                </div>
+                <input type="text" id="answer" placeholder="Type your answer..." onkeypress="handleEnter(event)">
+                <button class="btn" onclick="checkAnswer()">Check Answer</button>
+                <div class="feedback" id="feedback"></div>
+                <div class="score">Score: ${score}/${total}</div>
+            `;
+            
+            document.getElementById('quizContent').innerHTML = html;
+            document.getElementById('answer').focus();
+        }
+
+        async function playAudio() {
+            if (currentWord && currentMode === 'it-gr') {
+                const response = await fetch(`/api/speak?word=${encodeURIComponent(currentWord.italian)}`);
+                const data = await response.json();
+                const audio = new Audio('data:audio/mp3;base64,' + data.audio);
+                audio.play();
+            }
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        }
+
+        async function checkAnswer() {
+            const userAnswer = document.getElementById('answer').value.trim().toLowerCase();
+            const correctAnswer = currentMode === 'it-gr' ? currentWord.greek.toLowerCase() : currentWord.italian.toLowerCase();
+            const feedback = document.getElementById('feedback');
+            
+            total++;
+            
+            if (userAnswer === correctAnswer) {
+                score++;
+                feedback.innerHTML = '✓ Correct!';
+                feedback.className = 'feedback correct';
+                
+                if (currentMode === 'it-gr') {
+                    await playAudio();
+                }
+                
+                setTimeout(() => {
+                    currentIndex++;
+                    showTranslationQuiz();
+                }, 1500);
+            } else {
+                feedback.innerHTML = `✗ Wrong! Correct answer: ${currentMode === 'it-gr' ? currentWord.greek : currentWord.italian}`;
+                feedback.className = 'feedback wrong';
+                
+                setTimeout(() => {
+                    currentIndex++;
+                    showTranslationQuiz();
+                }, 3000);
+            }
+        }
+
+        async function showMultipleChoice() {
+            if (currentIndex >= words.length) {
+                showFinalScore();
+                return;
+            }
+            
+            currentWord = words[currentIndex];
+            const others = words.filter(w => w !== currentWord).slice(0, 3);
+            const options = [currentWord, ...others].sort(() => Math.random() - 0.5);
+            
+            const html = `
+                <div class="word-display">
+                    <div class="word">${currentWord.italian}</div>
+                    <span class="speaker-icon" onclick="playAudio()">🔊</span>
+                </div>
+                <div class="options" id="options">
+                    ${options.map(opt => `
+                        <button class="option-btn" 
+                                data-opt="${opt.greek}" 
+                                data-correct="${currentWord.greek}"
+                                data-italian="${currentWord.italian}">
+                            ${opt.greek}
+                        </button>
+                    `).join('')}
+                </div>
+                <div class="feedback" id="feedback"></div>
+                <div class="score">Score: ${score}/${total}</div>
+            `;
+            
+            document.getElementById('quizContent').innerHTML = html;
+            
+            setTimeout(() => {
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        checkMC(this.dataset.opt, this.dataset.correct, this.dataset.italian);
+                    });
+                });
+            }, 10);
+        }
+
+        async function checkMC(selected, correct, italian) {
+            total++;
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback');
+            
+            buttons.forEach(btn => btn.disabled = true);
+            
+            if (selected === correct) {
+                score++;
+                feedback.innerHTML = '✓ Correct!';
+                feedback.className = 'feedback correct';
+                buttons.forEach(btn => {
+                    if (btn.dataset.opt === correct) {
+                        btn.classList.add('correct');
+                    }
+                });
+                
+                const response = await fetch(`/api/speak?word=${encodeURIComponent(italian)}`);
+                const data = await response.json();
+                const audio = new Audio('data:audio/mp3;base64,' + data.audio);
+                audio.play();
+            } else {
+                feedback.innerHTML = `✗ Wrong! Correct answer: ${correct}`;
+                feedback.className = 'feedback wrong';
+                buttons.forEach(btn => {
+                    if (btn.dataset.opt === selected) {
+                        btn.classList.add('wrong');
+                    }
+                    if (btn.dataset.opt === correct) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+            
+            setTimeout(() => {
+                currentIndex++;
+                showMultipleChoice();
+            }, 2000);
+        }
+
+        async function showFlashcard() {
+            if (currentIndex >= words.length) {
+                showFinalScore();
+                return;
+            }
+            
+            currentWord = words[currentIndex];
+            flashcardRevealed = false;
+            
+            const html = `
+                <div class="flashcard" onclick="revealFlashcard()">
+                    <div class="flashcard-text">${currentWord.italian}</div>
+                </div>
+                <div class="flashcard-controls">
+                    <button class="btn" onclick="markFlashcard(false)" id="wrongBtn" disabled>Wrong</button>
+                    <button class="btn" onclick="markFlashcard(true)" id="correctBtn" disabled>Correct</button>
+                </div>
+                <div class="score">Score: ${score}/${total}</div>
+            `;
+            
+            document.getElementById('quizContent').innerHTML = html;
+            await playAudio();
+        }
+
+        function revealFlashcard() {
+            if (flashcardRevealed) return;
+            
+            flashcardRevealed = true;
+            document.querySelector('.flashcard-text').textContent = currentWord.greek;
+            document.getElementById('wrongBtn').disabled = false;
+            document.getElementById('correctBtn').disabled = false;
+        }
+
+        function markFlashcard(correct) {
+            total++;
+            if (correct) score++;
+            
+            currentIndex++;
+            showFlashcard();
+        }
+
+        async function showSentence() {
+            const response = await fetch('/api/sentence');
+            const data = await response.json();
+            
+            const html = `
+                <div class="word-display">
+                    <div class="word">${data.italian}</div>
+                </div>
+                <input type="text" id="translation" placeholder="Translate to Greek..." onkeypress="handleSentenceEnter(event)">
+                <button class="btn" onclick="checkSentence()">Check Translation</button>
+                <div class="feedback" id="sentenceFeedback"></div>
+                <div class="sentence-info" id="sentenceInfo" style="display:none;"></div>
+                <button class="btn" onclick="nextSentence()" id="nextBtn" style="display:none;">Next Sentence →</button>
+            `;
+            
+            document.getElementById('quizContent').innerHTML = html;
+            document.getElementById('translation').focus();
+            
+            window.currentSentenceData = data;
+        }
+
+        function handleSentenceEnter(event) {
+            if (event.key === 'Enter') {
+                checkSentence();
+            }
+        }
+
+        function checkSentence() {
+            const data = window.currentSentenceData;
+            const feedback = document.getElementById('sentenceFeedback');
+            const info = document.getElementById('sentenceInfo');
+            
+            feedback.innerHTML = `
+                <span class="pattern-badge">${data.pattern}</span>
+            `;
+            feedback.className = 'feedback';
+            
+            info.innerHTML = `
+                <h3>Word Meanings:</h3>
+                <p>${data.words}</p>
+            `;
+            info.style.display = 'block';
+            
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.querySelector('input').disabled = true;
+            document.querySelector('button.btn:not(#nextBtn)').disabled = true;
+        }
+
+        function nextSentence() {
+            showSentence();
+        }
+
+        function showFinalScore() {
+            const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
+            const html = `
+                <div style="text-align: center;">
+                    <h2 style="color: #667eea; margin-bottom: 20px;">Quiz Complete!</h2>
+                    <div style="font-size: 3em; margin: 30px 0;">
+                        ${score}/${total}
+                    </div>
+                    <div style="font-size: 2em; color: #764ba2; margin-bottom: 30px;">
+                        ${percentage}%
+                    </div>
+                    <button class="btn" onclick="startMode(currentMode)">Try Again</button>
+                    <button class="btn back-btn" onclick="backToMenu()">Back to Menu</button>
+                </div>
+            `;
+            document.getElementById('quizContent').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
+'''
+    
+    @app.route('/')
+    def index():
+        return render_template_string(HTML)
+    
+    @app.route('/api/words')
+    def get_words():
+        n = int(request.args.get('n', 10))
+        selected = random.sample(vocabulary, min(n, len(vocabulary)))
+        return jsonify(selected)
+    
+    @app.route('/api/speak')
+    def speak():
+        word = request.args.get('word', '')
+        audio_base64 = get_audio_base64(word)
+        return jsonify({"audio": audio_base64})
+    
+    @app.route('/api/sentence')
+    def sentence():
+        result = generate_smart_sentence(vocabulary)
+        word_meanings = []
+        for word_it in result['words_used']:
+            matching = [w for w in vocabulary if w['italian'].lower() == word_it.lower()]
+            if matching:
+                word_meanings.append(f"{word_it}={matching[0]['greek']}")
+            else:
+                word_meanings.append(word_it)
+        
+        return jsonify({
+            "italian": result['italian'],
+            "words": ", ".join(word_meanings),
+            "pattern": result['pattern']
+        })
+    
+    return app
+
+
+# Create the application instance for WSGI
+application = create_wsgi_app()
