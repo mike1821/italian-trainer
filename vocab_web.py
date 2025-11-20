@@ -865,7 +865,6 @@ def create_wsgi_app():
         let total = 0;
         let currentWord = null;
         let flashcardRevealed = false;
-        let audioAvailable = true;  // Will be checked on first audio attempt
 
         function backToMenu() {
             document.getElementById('modeSelector').style.display = 'block';
@@ -933,17 +932,10 @@ def create_wsgi_app():
                     const data = await response.json();
                     if (data.audio && data.audio.length > 0) {
                         const audio = new Audio('data:audio/mp3;base64,' + data.audio);
-                        await audio.play();
-                        audioAvailable = true;
-                    } else {
-                        if (audioAvailable) {
-                            alert('⚠️ Audio unavailable on PythonAnywhere free tier.\n\nGoogle Text-to-Speech is blocked by network restrictions.\n\nUpgrade to paid tier or use localhost for audio.');
-                            audioAvailable = false;
-                        }
-                        console.log('Audio not available (PythonAnywhere restriction)');
+                        audio.play().catch(e => console.log('Audio play error:', e));
                     }
                 } catch (e) {
-                    console.log('Audio playback failed:', e);
+                    console.log('Audio fetch failed:', e);
                 }
             }
         }
