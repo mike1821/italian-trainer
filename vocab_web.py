@@ -913,7 +913,7 @@ def create_wsgi_app():
             const html = `
                 <div class="word-display">
                     <div class="word">${question}</div>
-                    ${currentMode === 'it-gr' ? '<span class="speaker-icon" onclick="playAudio()">🔊</span>' : ''}
+                    <span class="speaker-icon" onclick="playAudio()">🔊</span>
                 </div>
                 <input type="text" id="answer" placeholder="Type your answer..." onkeypress="handleEnter(event)">
                 <button class="btn" onclick="checkAnswer()">Check Answer</button>
@@ -926,7 +926,7 @@ def create_wsgi_app():
         }
 
         async function playAudio() {
-            if (currentWord && currentMode === 'it-gr') {
+            if (currentWord) {
                 const response = await fetch(`/api/speak?word=${encodeURIComponent(currentWord.italian)}`);
                 const data = await response.json();
                 const audio = new Audio('data:audio/mp3;base64,' + data.audio);
@@ -1096,7 +1096,6 @@ def create_wsgi_app():
             const data = await response.json();
             
             const html = `
-                <button class="btn back-btn" onclick="backToMenu()">← Back to Menu</button>
                 <div class="word-display">
                     <div class="word">${data.italian}</div>
                 </div>
