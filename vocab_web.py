@@ -11,12 +11,14 @@ def launch_web():
     """Launch Flask web interface."""
     try:
         from flask import Flask, render_template_string, request, jsonify
-        import base64
-        import io
-        
-        app = Flask(__name__)
-        
-        HTML = """
+        import json
+    except ImportError:
+        print("Flask not installed. Run: pip install flask")
+        return
+    
+    app = Flask(__name__)
+    
+    HTML = '''
 <!DOCTYPE html>
 <html>
 <head>
@@ -68,17 +70,31 @@ def launch_web():
         let mode = '';
         let flipped = false;
         
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
         async function startMode(m) {
+            console.log('Starting mode:', m);
             mode = m;
             current = 0;
             score = 0;
-            const res = await fetch('/api/words?n=10');
-            words = await res.json();
             
-            if (mode === 'sentence') {
-                showSentence();
-            } else {
-                showQuestion();
+            try {
+                const res = await fetch('/api/words?n=10');
+                words = await res.json();
+                console.log('Loaded words:', words.length);
+                
+                if (mode === 'sentence') {
+                    showSentence();
+                } else {
+                    showQuestion();
+                }
+            } catch(e) {
+                console.error('Error loading words:', e);
+                document.getElementById('quiz').innerHTML = '<p style="color:red;">Error loading vocabulary. Check console.</p>';
             }
         }
         
@@ -91,7 +107,7 @@ def launch_web():
                     audio.play();
                 }
             } catch(e) {
-                console.log('Audio unavailable');
+                console.log('Audio unavailable:', e);
             }
         }
         
@@ -112,11 +128,10 @@ def launch_web():
             let html = '<div class="progress">Question ' + (current+1) + ' of ' + words.length + '</div>';
             
             if (mode === 'mc') {
-                html += '<div class="card">' + question + 
-                        '<span class="speaker" onclick="playAudio(\'' + w.italian + '\')">🔊</span></div>';
+                html += '<div class="card">' + escapeHtml(question) + 
+                        '<span class="speaker" onclick="playAudio(' + JSON.stringify(w.italian) + ')">🔊</span></div>';
                 html += '<div class="options">';
                 
-                // Generate options (mix correct + 3 wrong)
                 const options = [answer];
                 const otherWords = words.filter((x, i) => i !== current);
                 for (let i = 0; i < 3 && i < otherWords.length; i++) {
@@ -124,31 +139,41 @@ def launch_web():
                 }
                 options.sort(() => Math.random() - 0.5);
                 
-                options.forEach(opt => {
-                    html += '<button class="option-btn" onclick="checkMC(\'' + opt.replace(/'/g, "\\\\'") + 
-                            '\', \'' + answer.replace(/'/g, "\\\\'") + '\')">' + opt + '</button>';
+                options.forEach((opt, idx) => {
+                    html += '<button class="option-btn" data-opt="' + escapeHtml(opt) + 
+                            '" data-correct="' + escapeHtml(answer) + 
+                            '" data-italian="' + escapeHtml(w.italian) + '">' + escapeHtml(opt) + '</button>';
                 });
                 html += '</div>';
+                
+                // Attach event listeners after DOM update
+                setTimeout(() => {
+                    document.querySelectorAll('.option-btn').forEach(btn => {
+                        btn.onclick = function() {
+                            checkMC(this.dataset.opt, this.dataset.correct, this.dataset.italian);
+                        };
+                    });
+                }, 10);
             } else if (mode === 'flashcard') {
                 if (!flipped) {
-                    html += '<div class="card flashcard" onclick="flipCard()">' + question +
-                            '<span class="speaker" onclick="event.stopPropagation(); playAudio(\'' + w.italian + '\')">🔊</span>' +
+                    html += '<div class="card flashcard" onclick="flipCard()">' + escapeHtml(question) +
+                            '<span class="speaker" onclick="event.stopPropagation(); playAudio(' + JSON.stringify(w.italian) + ')">🔊</span>' +
                             '<p style="font-size:14px; color:#999; margin-top:20px;">Click to flip</p></div>';
                 } else {
-                    html += '<div class="card">' + question + 
-                            '<span class="speaker" onclick="playAudio(\'' + w.italian + '\')">🔊</span></div>';
-                    html += '<div class="card" style="background:#e8f5e9;">→ ' + answer + '</div>';
+                    html += '<div class="card">' + escapeHtml(question) + 
+                            '<span class="speaker" onclick="playAudio(' + JSON.stringify(w.italian) + ')">🔊</span></div>';
+                    html += '<div class="card" style="background:#e8f5e9;">→ ' + escapeHtml(answer) + '</div>';
                     html += '<div class="controls">' +
                             '<button onclick="markCard(true)" class="submit-btn" style="background:#4CAF50;">✓ Know it</button>' +
                             '<button onclick="markCard(false)" class="submit-btn" style="background:#f44336;">✗ Need review</button>' +
                             '</div>';
                 }
             } else {
-                html += '<div class="card">' + question + 
-                        '<span class="speaker" onclick="playAudio(\'' + w.italian + '\')">🔊</span></div>';
+                html += '<div class="card">' + escapeHtml(question) + 
+                        '<span class="speaker" onclick="playAudio(' + JSON.stringify(w.italian) + ')">🔊</span></div>';
                 html += '<div class="answer">' +
-                        '<input type="text" id="answer" placeholder="Your answer" autofocus />' +
-                        '<button onclick="checkAnswer(\'' + answer.replace(/'/g, "\\\\'") + '\')" class="submit-btn">Submit</button>' +
+                        '<input type="text" id="answer" placeholder="Your answer" autofocus data-correct=' + JSON.stringify(answer) + ' />' +
+                        '<button onclick="checkAnswerBtn()" class="submit-btn">Submit</button>' +
                         '</div><div id="result"></div>';
                 
                 setTimeout(() => {
@@ -156,7 +181,7 @@ def launch_web():
                     if (inp) {
                         inp.focus();
                         inp.addEventListener('keypress', function(e) {
-                            if (e.key === 'Enter') checkAnswer(answer);
+                            if (e.key === 'Enter') checkAnswerBtn();
                         });
                     }
                 }, 100);
@@ -177,41 +202,48 @@ def launch_web():
             showQuestion();
         }
         
-        function checkAnswer(correct) {
-            const ans = document.getElementById('answer').value.trim();
-            const isCorrect = ans.toLowerCase() === correct.toLowerCase();
+        function checkAnswerBtn() {
+            const inp = document.getElementById('answer');
+            const ans = inp.value.trim();
+            const correct = inp.dataset.correct;
+            checkAnswer(ans, correct);
+        }
+        
+        function checkAnswer(userAnswer, correct) {
+            const isCorrect = userAnswer.toLowerCase() === correct.toLowerCase();
             
             if (isCorrect) {
                 score++;
                 document.getElementById('result').innerHTML = '<p class="correct">✓ Correct!</p>';
             } else {
                 document.getElementById('result').innerHTML = 
-                    '<p class="wrong">✗ Wrong. Answer: ' + correct + '</p>';
+                    '<p class="wrong">✗ Wrong. Answer: ' + escapeHtml(correct) + '</p>';
             }
             
-            // Play pronunciation
             playAudio(words[current].italian);
             
             current++;
             setTimeout(showQuestion, 2000);
         }
         
-        function checkMC(selected, correct) {
+        function checkMC(selected, correct, italianWord) {
             const isCorrect = selected === correct;
             if (isCorrect) score++;
             
             const res = isCorrect ? 
                 '<p class="correct">✓ Correct!</p>' : 
-                '<p class="wrong">✗ Wrong. Answer: ' + correct + '</p>';
+                '<p class="wrong">✗ Wrong. Answer: ' + escapeHtml(correct) + '</p>';
             
             document.getElementById('quiz').innerHTML += '<div>' + res + '</div>';
             
-            // Play pronunciation
-            playAudio(words[current].italian);
+            // Play audio with the word passed as parameter
+            playAudio(italianWord);
             
             current++;
             setTimeout(showQuestion, 2000);
         }
+        
+        let currentSentence = null;
         
         async function showSentence() {
             if (current >= 5) {
@@ -223,83 +255,88 @@ def launch_web():
             
             const res = await fetch('/api/sentence');
             const data = await res.json();
+            currentSentence = data;
             
             let html = '<div class="progress">Sentence ' + (current+1) + ' of 5</div>';
-            html += '<div class="card">' + data.italian + '</div>';
+            html += '<div class="card">' + escapeHtml(data.italian) + '</div>';
             html += '<div class="answer">';
             html += '<textarea id="translation" class="sentence-input" placeholder="Translate to Greek..."></textarea><br>';
-            html += '<button onclick="checkSentence()" class="submit-btn">Check Translation</button>';
+            html += '<button onclick="checkSentence()" class="submit-btn">Show Translation</button>';
             html += '</div><div id="result"></div>';
-            html += '<div style="margin-top:20px; color:#666; font-size:14px;">Words: ' + data.words + '</div>';
+            html += '<div style="margin-top:20px; color:#666; font-size:14px;">Words used: ' + escapeHtml(data.words) + '</div>';
             
             document.getElementById('quiz').innerHTML = html;
         }
         
         function checkSentence() {
             const userTrans = document.getElementById('translation').value.trim();
-            document.getElementById('result').innerHTML = 
-                '<p style="color:#2196F3;">Your translation recorded!</p>' +
-                '<p style="font-size:14px; color:#666;">Tip: Practice makes perfect! 💪</p>';
             
-            current++;
-            setTimeout(showSentence, 2000);
+            let feedback = '<div style="margin-top:20px;">';
+            feedback += '<p style="color:#2196F3; font-weight:bold;">Your translation:</p>';
+            feedback += '<p style="background:#f0f0f0; padding:10px; border-radius:5px;">' + 
+                       (userTrans || '<i>No translation provided</i>') + '</p>';
+            feedback += '<p style="color:#666; font-weight:bold; margin-top:15px;">Reference (word-by-word):</p>';
+            feedback += '<p style="background:#e8f5e9; padding:10px; border-radius:5px;">' + 
+                       escapeHtml(currentSentence.words) + '</p>';
+            feedback += '<p style="font-size:14px; color:#999; margin-top:10px;">💡 Tip: Compare your translation with the word meanings above.</p>';
+            feedback += '<button onclick="nextSentence()" class="submit-btn" style="margin-top:15px;">Next Sentence →</button>';
+            feedback += '</div>';
+            
+            document.getElementById('result').innerHTML = feedback;
         }
         
-        // Auto-start with Italian→Greek mode
-        window.onload = () => startMode('it-gr');
+        function nextSentence() {
+            current++;
+            showSentence();
+        }
+        
+        window.onload = () => {
+            console.log('Page loaded, auto-starting Italian→Greek mode');
+            startMode('it-gr');
+        };
     </script>
 </body>
 </html>
-        """
+    '''
+    
+    @app.route('/')
+    def index():
+        return render_template_string(HTML)
+    
+    @app.route('/api/words')
+    def get_words():
+        n = int(request.args.get('n', 10))
+        words = load_vocabulary()
+        selected = random.sample(words, min(n, len(words)))
+        return jsonify([{"italian": w["italian"], "greek": w["greek"]} for w in selected])
+    
+    @app.route('/api/speak')
+    def speak():
+        word = request.args.get('word', '')
+        audio_b64 = get_audio_base64(word)
+        if audio_b64:
+            return jsonify({"audio": audio_b64})
+        else:
+            return jsonify({"error": "Audio generation failed"}), 500
+    
+    @app.route('/api/sentence')
+    def get_sentence():
+        words = load_vocabulary()
+        selected = random.sample(words, min(3, len(words)))
         
-        @app.route('/')
-        def index():
-            return render_template_string(HTML)
+        templates = [
+            lambda w: f"{w[0]['italian'].capitalize()} è {w[1]['italian']}.",
+            lambda w: f"Ho visto {w[0]['italian']} nel {w[1]['italian']}.",
+            lambda w: f"Mi piace {w[0]['italian']} e {w[1]['italian']}.",
+            lambda w: f"Domani vado al {w[0]['italian']} con {w[1]['italian']}.",
+        ]
         
-        @app.route('/api/words')
-        def get_words():
-            n = int(request.args.get('n', 10))
-            words = load_vocabulary()
-            selected = random.sample(words, min(n, len(words)))
-            return jsonify([{"italian": w["italian"], "greek": w["greek"]} for w in selected])
+        template = random.choice(templates)
+        sentence = template(selected)
+        words_used = ", ".join([f"{w['italian']}={w['greek']}" for w in selected[:2]])
         
-        @app.route('/api/speak')
-        def speak():
-            word = request.args.get('word', '')
-            try:
-                from gtts import gTTS
-                tts = gTTS(text=word, lang='it')
-                audio_bytes = io.BytesIO()
-                tts.write_to_fp(audio_bytes)
-                audio_bytes.seek(0)
-                audio_b64 = base64.b64encode(audio_bytes.read()).decode('utf-8')
-                return jsonify({"audio": audio_b64})
-            except Exception as e:
-                return jsonify({"error": str(e)})
-        
-        @app.route('/api/sentence')
-        def get_sentence():
-            words = load_vocabulary()
-            selected = random.sample(words, min(3, len(words)))
-            
-            templates = [
-                lambda w: f"{w[0]['italian'].capitalize()} è {w[1]['italian']}.",
-                lambda w: f"Ho visto {w[0]['italian']} nel {w[1]['italian']}.",
-                lambda w: f"Mi piace {w[0]['italian']} e {w[1]['italian']}.",
-                lambda w: f"Domani vado al {w[0]['italian']} con {w[1]['italian']}.",
-            ]
-            
-            template = random.choice(templates)
-            sentence = template(selected)
-            words_used = ", ".join([f"{w['italian']}={w['greek']}" for w in selected[:2]])
-            
-            return jsonify({"italian": sentence, "words": words_used})
-        
-        print("\n🌐 Starting web interface at http://localhost:5000")
-        print("Press Ctrl+C to stop\n")
-        app.run(debug=False, port=5000, host='0.0.0.0')
-        
-    except ImportError:
-        print("Flask not installed. Run: pip install flask")
-
-# ==================== Other Functions ====================
+        return jsonify({"italian": sentence, "words": words_used})
+    
+    print("\n🌐 Starting web interface at http://localhost:5000")
+    print("Press Ctrl+C to stop\n")
+    app.run(debug=True, port=5000, host='0.0.0.0')
