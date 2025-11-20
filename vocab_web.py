@@ -5,6 +5,7 @@ Web interface for vocabulary practice using Flask.
 import random
 from vocab_core import load_vocabulary
 from vocab_audio import get_audio_base64
+from sentence_generator import generate_smart_sentence
 
 
 def launch_web():
@@ -25,33 +26,213 @@ def launch_web():
     <title>Italian Vocabulary Practice</title>
     <meta charset="UTF-8">
     <style>
-        body { font-family: Arial; max-width: 900px; margin: 30px auto; padding: 20px; background: #f5f5f5; }
-        h1 { text-align: center; color: #333; }
-        .menu { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 30px 0; }
-        .menu button { font-size: 16px; padding: 15px 25px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        .menu button:hover { background: #45a049; }
-        .menu button.active { background: #2196F3; }
-        #quiz { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); min-height: 300px; }
-        .card { border: 2px solid #333; padding: 40px; text-align: center; font-size: 28px; margin: 20px 0; background: #fafafa; border-radius: 8px; }
-        .flashcard { cursor: pointer; user-select: none; }
-        .answer { margin: 20px 0; text-align: center; }
-        input { font-size: 18px; padding: 12px; width: 350px; border: 2px solid #ddd; border-radius: 5px; }
-        button { font-size: 16px; padding: 12px 24px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; }
-        .submit-btn { background: #4CAF50; color: white; }
-        .submit-btn:hover { background: #45a049; }
-        .correct { color: #4CAF50; font-weight: bold; }
-        .wrong { color: #f44336; font-weight: bold; }
-        .options { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 20px auto; }
-        .option-btn { padding: 15px; font-size: 18px; background: #e0e0e0; }
-        .option-btn:hover { background: #d0d0d0; }
-        .speaker { cursor: pointer; font-size: 24px; margin-left: 10px; }
-        .controls { text-align: center; margin: 20px 0; }
-        .progress { text-align: center; color: #666; margin: 10px 0; }
-        .sentence-input { width: 80%; min-height: 60px; font-size: 16px; padding: 10px; }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        h1 { 
+            text-align: center; 
+            color: white; 
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+        .menu { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 12px; 
+            justify-content: center; 
+            margin: 30px 0; 
+        }
+        .menu button { 
+            font-size: 16px; 
+            padding: 15px 30px; 
+            background: white;
+            color: #667eea; 
+            border: none; 
+            border-radius: 25px; 
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .menu button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: #f0f0f0;
+        }
+        .menu button.active { 
+            background: #4CAF50;
+            color: white;
+        }
+        #quiz { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
+            min-height: 400px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card { 
+            border: 3px solid #667eea; 
+            padding: 50px; 
+            text-align: center; 
+            font-size: 32px; 
+            margin: 20px 0; 
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            border-radius: 15px;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .flashcard { 
+            cursor: pointer; 
+            user-select: none;
+            transition: transform 0.3s ease;
+        }
+        .flashcard:hover {
+            transform: scale(1.02);
+        }
+        .answer { 
+            margin: 30px 0; 
+            text-align: center; 
+        }
+        input { 
+            font-size: 20px; 
+            padding: 15px 20px; 
+            width: 400px; 
+            max-width: 100%;
+            border: 2px solid #667eea; 
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+        button { 
+            font-size: 16px; 
+            padding: 12px 28px; 
+            margin: 5px; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .submit-btn { 
+            background: #4CAF50; 
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        .submit-btn:hover { 
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        .correct { 
+            color: #4CAF50; 
+            font-weight: bold; 
+            font-size: 1.3em;
+            animation: bounceIn 0.5s ease;
+        }
+        .wrong { 
+            color: #f44336; 
+            font-weight: bold; 
+            font-size: 1.2em;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .options { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            max-width: 500px; 
+            margin: 20px auto; 
+        }
+        .option-btn { 
+            padding: 18px; 
+            font-size: 18px; 
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .option-btn:hover { 
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        .speaker { 
+            cursor: pointer; 
+            font-size: 28px; 
+            margin-left: 15px;
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+        .speaker:hover {
+            transform: scale(1.2);
+        }
+        .speaker:active {
+            transform: scale(0.9);
+        }
+        .controls { 
+            text-align: center; 
+            margin: 20px 0; 
+        }
+        .progress { 
+            text-align: center; 
+            color: #667eea; 
+            margin: 10px 0; 
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .sentence-input { 
+            width: 90%; 
+            min-height: 80px; 
+            font-size: 17px; 
+            padding: 15px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        .sentence-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
     <h1>🇮🇹 Italian Vocabulary Practice 🇬🇷</h1>
+    <div class="subtitle">Master Italian vocabulary with interactive practice modes</div>
     
     <div class="menu">
         <button onclick="startMode('it-gr')">Italian → Greek</button>
@@ -62,6 +243,10 @@ def launch_web():
     </div>
     
     <div id="quiz"></div>
+    
+    <footer>
+        Practice makes perfect! 💪 Keep learning every day 📚
+    </footer>
     
     <script>
         let words = [];
@@ -259,6 +444,8 @@ def launch_web():
             
             let html = '<div class="progress">Sentence ' + (current+1) + ' of 5</div>';
             html += '<div class="card">' + escapeHtml(data.italian) + '</div>';
+            html += '<div style="text-align:center; margin:10px 0; color:#667eea; font-size:0.9em; font-style:italic;">';
+            html += '📝 Grammar: ' + escapeHtml(data.pattern) + '</div>';
             html += '<div class="answer">';
             html += '<textarea id="translation" class="sentence-input" placeholder="Translate to Greek..."></textarea><br>';
             html += '<button onclick="checkSentence()" class="submit-btn">Show Translation</button>';
@@ -322,20 +509,23 @@ def launch_web():
     @app.route('/api/sentence')
     def get_sentence():
         words = load_vocabulary()
-        selected = random.sample(words, min(3, len(words)))
+        result = generate_smart_sentence(words)
         
-        templates = [
-            lambda w: f"{w[0]['italian'].capitalize()} è {w[1]['italian']}.",
-            lambda w: f"Ho visto {w[0]['italian']} nel {w[1]['italian']}.",
-            lambda w: f"Mi piace {w[0]['italian']} e {w[1]['italian']}.",
-            lambda w: f"Domani vado al {w[0]['italian']} con {w[1]['italian']}.",
-        ]
+        # Format word meanings for display
+        word_meanings = []
+        for word_it in result['words_used']:
+            # Find the Greek translation
+            matching = [w for w in words if w['italian'].lower() == word_it.lower()]
+            if matching:
+                word_meanings.append(f"{word_it}={matching[0]['greek']}")
+            else:
+                word_meanings.append(word_it)
         
-        template = random.choice(templates)
-        sentence = template(selected)
-        words_used = ", ".join([f"{w['italian']}={w['greek']}" for w in selected[:2]])
-        
-        return jsonify({"italian": sentence, "words": words_used})
+        return jsonify({
+            "italian": result['italian'],
+            "words": ", ".join(word_meanings),
+            "pattern": result['pattern']
+        })
     
     print("\n🌐 Starting web interface at http://localhost:5000")
     print("Press Ctrl+C to stop\n")
