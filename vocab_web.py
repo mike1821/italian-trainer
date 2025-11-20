@@ -952,9 +952,8 @@ def create_wsgi_app():
                 feedback.innerHTML = '✓ Correct!';
                 feedback.className = 'feedback correct';
                 
-                if (currentMode === 'it-gr') {
-                    await playAudio();
-                }
+                // Play audio for both IT→GR and GR→IT modes
+                await playAudio();
                 
                 setTimeout(() => {
                     currentIndex++;
@@ -1097,6 +1096,7 @@ def create_wsgi_app():
             const data = await response.json();
             
             const html = `
+                <button class="btn back-btn" onclick="backToMenu()">← Back to Menu</button>
                 <div class="word-display">
                     <div class="word">${data.italian}</div>
                 </div>
