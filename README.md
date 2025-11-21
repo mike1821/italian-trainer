@@ -36,16 +36,28 @@ python vocab.py migrate
 
 ```
 italian-trainer/
-├── vocab.py              # Main entry point
-├── vocab_core.py         # Vocabulary loading and management
-├── vocab_db.py           # SQLite database and spaced repetition
-├── vocab_quiz.py         # Quiz modes (standard, MC, flashcards)
-├── vocab_audio.py        # Text-to-speech pronunciation
-├── vocab_web.py          # Flask web interface
-├── requirements.txt      # Python dependencies
-├── vocabulary.xlsx       # Your vocabulary data
-└── vocab_progress.db     # Progress tracking database (auto-created)
+├── vocab.py                    # Main entry point
+├── app/
+│   ├── vocab_core.py          # Vocabulary loading and management
+│   ├── vocab_quiz.py          # Quiz modes (standard, MC, flashcards)
+│   ├── vocab_audio.py         # Text-to-speech pronunciation
+│   └── sentence_generator.py  # Intelligent Italian sentence generation
+├── database/
+│   └── vocab_db.py            # SQLite database and spaced repetition
+├── web/
+│   ├── vocab_web.py           # Flask web interface
+│   └── wsgi.py                # WSGI config for PythonAnywhere
+├── docs/
+│   ├── STRUCTURE.md           # Detailed architecture documentation
+│   ├── MIGRATION.md           # Guide for updating existing deployments
+│   ├── WINDOWS_SHARE.md       # Windows network sharing with ngrok
+│   └── PYTHONANYWHERE_DEPLOY.md # Cloud deployment guide
+├── requirements.txt            # Python dependencies
+├── vocabulary.xlsx             # Your vocabulary data
+└── vocab_progress.db           # Progress tracking database (auto-created)
 ```
+
+📖 **[See detailed architecture documentation](docs/STRUCTURE.md)**
 
 ## Usage
 
@@ -93,6 +105,13 @@ Modes available:
 - **Sentences**: Translate generated Italian sentences
 
 All modes include audio pronunciation (🔊 icon) that plays automatically after each answer.
+
+### Sharing & Deployment
+
+Want to share with friends or colleagues?
+
+- **📡 [Windows Network Sharing Guide](docs/WINDOWS_SHARE.md)** - Share on local network or internet using ngrok
+- **☁️ [PythonAnywhere Deployment](docs/PYTHONANYWHERE_DEPLOY.md)** - Deploy to cloud for 24/7 access (free tier available)
 
 ## Database
 

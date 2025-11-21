@@ -24,18 +24,21 @@ application = create_wsgi_app()
 
 ## Files to Upload to PythonAnywhere
 
-Upload these **9 files** to `/home/yourusername/italian-trainer/`:
+Upload the entire project structure to `/home/yourusername/italian-trainer/`:
 
-1. `vocab.py` - Main entry point (for CLI, not used by web)
-2. `vocab_core.py` - Vocabulary loading
-3. `vocab_db.py` - Database functions
-4. `vocab_audio.py` - Audio generation (note: gTTS may have rate limits)
-5. `vocab_quiz.py` - Quiz logic
-6. `vocab_web.py` - Flask app (modified with WSGI support)
-7. `sentence_generator.py` - Grammar engine
-8. `vocabulary.xlsx` - Your word list
-9. `requirements.txt` - Dependencies
-10. `wsgi.py` - WSGI configuration file
+**Core Files:**
+- `vocab.py` - Main entry point
+- `requirements.txt` - Dependencies
+- `vocabulary.xlsx` - Your word list
+
+**Folders:**
+- `app/` - Application logic (vocab_core.py, vocab_quiz.py, vocab_audio.py, sentence_generator.py)
+- `database/` - Database module (vocab_db.py)
+- `web/` - Web interface (vocab_web.py, wsgi.py)
+
+**Total:** 3 files + 3 folders containing all Python modules
+
+Easiest way: Upload entire `italian-trainer` folder or use git clone.
 
 ## Deployment Steps
 
@@ -70,13 +73,17 @@ pip3 install --user -r requirements.txt
 import sys
 import os
 
+```python
+import sys
+import os
+
 # CHANGE THIS PATH to match your username
 project_home = '/home/yourusername/italian-trainer'
 
 if project_home not in sys.path:
     sys.path.insert(0, project_home)
 
-from vocab_web import application
+from web.vocab_web import application
 ```
 
 **Important:** Replace `yourusername` with your actual PythonAnywhere username!

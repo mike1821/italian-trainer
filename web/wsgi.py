@@ -18,7 +18,7 @@ if project_home not in sys.path:
     sys.path.insert(0, project_home)
 
 # Import the Flask application
-from vocab_web import application
+from web.vocab_web import application
 
 # PythonAnywhere will use this 'application' object
-# Note: Make sure all your files (vocab_core.py, vocab_db.py, etc.) are in the same directory
+# Note: Make sure all your files are uploaded with the correct folder structure

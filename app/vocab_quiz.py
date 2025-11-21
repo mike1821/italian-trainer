@@ -3,9 +3,9 @@
 Quiz and practice mode functions.
 """
 import random
-from vocab_core import load_vocabulary, filter_words
-from vocab_db import record_quiz_result, get_weak_words
-from vocab_audio import speak_word
+from app.vocab_core import load_vocabulary, filter_words
+from database.vocab_db import record_quiz_result, get_weak_words
+from app.vocab_audio import speak_word
 
 
 def run_quiz(n=10, reverse=False, category=None, difficulty=None):

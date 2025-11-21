@@ -3,9 +3,9 @@
 Web interface for vocabulary practice using Flask.
 """
 import random
-from vocab_core import load_vocabulary
-from vocab_audio import get_audio_base64
-from sentence_generator import generate_smart_sentence
+from app.vocab_core import load_vocabulary
+from app.vocab_audio import get_audio_base64
+from app.sentence_generator import generate_smart_sentence
 
 
 def launch_web():

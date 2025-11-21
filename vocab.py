@@ -28,11 +28,11 @@ import argparse
 from pathlib import Path
 
 # Import modular components
-from vocab_core import load_vocabulary, migrate_vocabulary
-from vocab_db import init_db, get_stats
-from vocab_quiz import run_quiz, run_multiple_choice, run_flashcards, generate_sentences
-from vocab_audio import speak_word
-from vocab_web import launch_web
+from app.vocab_core import load_vocabulary, migrate_vocabulary
+from database.vocab_db import init_db, get_stats
+from app.vocab_quiz import run_quiz, run_multiple_choice, run_flashcards, generate_sentences
+from app.vocab_audio import speak_word
+from web.vocab_web import launch_web
 
 
 def print_stats():
