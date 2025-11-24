@@ -319,7 +319,8 @@ def launch_web():
         <button onclick="startMode('gr-it')">Greek → Italian</button>
         <button onclick="startMode('mc')">Multiple Choice</button>
         <button onclick="startMode('flashcard')">Flashcards</button>
-        <button onclick="startMode('sentence')">Sentences</button>
+        <button onclick="startMode('sentence-it-gr')">🇮🇹→🇬🇷 Sentences</button>
+        <button onclick="startMode('sentence-gr-it')">🇬🇷→🇮🇹 Sentences</button>
         <button onclick="showStats()" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">📊 Statistics</button>
     </div>
     
@@ -635,13 +636,13 @@ def launch_web():
             score = 0;
             
             try {
-                const res = await fetch('/api/words?n=10');
-                words = await res.json();
-                console.log('Loaded words:', words.length);
-                
-                if (mode === 'sentence') {
+                // Check if it's a sentence mode
+                if (mode.startsWith('sentence')) {
                     showSentence();
                 } else {
+                    const res = await fetch('/api/words?n=10');
+                    words = await res.json();
+                    console.log('Loaded words:', words.length);
                     showQuestion();
                 }
             } catch(e) {
@@ -839,8 +840,16 @@ def launch_web():
                 return;
             }
             
-            // Randomly choose direction: Italian→Greek or Greek→Italian
-            const direction = Math.random() > 0.5 ? 'it-gr' : 'gr-it';
+            // Determine direction based on mode
+            let direction;
+            if (mode === 'sentence-gr-it') {
+                direction = 'gr-it';
+            } else if (mode === 'sentence-it-gr') {
+                direction = 'it-gr';
+            } else {
+                // Fallback: random for old 'sentence' mode
+                direction = Math.random() > 0.5 ? 'it-gr' : 'gr-it';
+            }
             const res = await fetch('/api/sentence?direction=' + direction);
             const data = await res.json();
             currentSentence = data;
