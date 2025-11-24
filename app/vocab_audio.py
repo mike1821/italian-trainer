@@ -34,12 +34,51 @@ def speak_word(word, lang='it'):
                 print("No audio player found. Install mpg123 or ffplay.")
                 return False
         else:  # Windows
-            os.system(f"start {audio_file}")
+            # Try playsound first (no GUI), fallback to pygame, then Windows Media Player
+            if _play_with_playsound(str(audio_file)):
+                return True
+            elif _play_with_pygame(str(audio_file)):
+                return True
+            else:
+                # Fallback to default player (opens GUI)
+                os.system(f"start {audio_file}")
         
         return True
         
     except Exception as e:
         print(f"Error playing audio: {e}")
+        return False
+
+
+def _play_with_playsound(audio_file):
+    """Try to play audio with playsound library (no GUI)."""
+    try:
+        from playsound import playsound
+        playsound(audio_file, block=True)
+        return True
+    except ImportError:
+        return False
+    except Exception:
+        return False
+
+
+def _play_with_pygame(audio_file):
+    """Try to play audio with pygame library (no GUI)."""
+    try:
+        import pygame
+        pygame.mixer.init()
+        pygame.mixer.music.load(audio_file)
+        pygame.mixer.music.play()
+        
+        # Wait for playback to finish
+        while pygame.mixer.music.get_busy():
+            pygame.time.Clock().tick(10)
+        
+        pygame.mixer.quit()
+        return True
+    except ImportError:
+        return False
+    except Exception:
         return False
 
 
