@@ -81,12 +81,13 @@ Examples:
   vocab.py speak ciao                 # Hear pronunciation
   vocab.py web                        # Launch web interface
   vocab.py stats                      # View progress statistics
+  vocab.py focus                      # Focus mode: practice worst 20 words
   vocab.py migrate                    # Migrate old vocabulary format
         """
     )
     
     parser.add_argument('command', 
-                       choices=['quiz', 'mc', 'flashcard', 'sentences', 'speak', 'stats', 'web', 'migrate'],
+                       choices=['quiz', 'mc', 'flashcard', 'sentences', 'speak', 'stats', 'web', 'focus', 'migrate'],
                        help='Command to execute')
     parser.add_argument('args', nargs='*', help='Command arguments')
     parser.add_argument('--reverse', action='store_true', help='Reverse mode (Greek→Italian)')
@@ -129,6 +130,91 @@ Examples:
         
         elif args.command == 'stats':
             print_stats()
+        
+        elif args.command == 'focus':
+            from database.vocab_db import get_weak_words
+            weak_word_names = get_weak_words(20)
+            if not weak_word_names:
+                print("\n🎉 Excellent! No weak words found.")
+                print("All your words are performing well. Try a regular quiz to continue practicing.")
+                return
+            
+            all_words = load_vocabulary()
+            weak_words = [w for w in all_words if w['italian'] in weak_word_names]
+            
+            print(f"\n🎯 Focus Mode: Practicing {len(weak_words)} weakest words")
+            print("These words need the most attention based on your quiz history.\n")
+            
+            # Run intensive quiz on weak words only
+            import random
+            from database.vocab_db import record_quiz_result
+            score = 0
+            wrong_answers = []
+            
+            print(f"{'='*50}")
+            print(f"📚 Focus Mode Quiz")
+            print(f"💡 Wrong answers will be retried at the end")
+            print(f"{'='*50}")
+            
+            for i, word in enumerate(weak_words, 1):
+                question = word["italian"]
+                answer = word["greek"]
+                
+                print(f"\n[{i}/{len(weak_words)}] {question}")
+                user_answer = input("Your answer: ").strip()
+                
+                correct = user_answer.lower() == answer.lower()
+                if correct:
+                    print("✓ Correct!")
+                    score += 1
+                else:
+                    print(f"✗ Wrong. Answer: {answer}")
+                    wrong_answers.append(word)
+                
+                record_quiz_result(word["italian"], correct, "focus")
+                speak_word(word["italian"])
+            
+            # Immediate retry
+            if wrong_answers:
+                print(f"\n{'='*50}")
+                print(f"🔄 Review Time! Let's retry the {len(wrong_answers)} words you missed")
+                print(f"{'='*50}")
+                
+                retry_score = 0
+                for i, word in enumerate(wrong_answers, 1):
+                    question = word["italian"]
+                    answer = word["greek"]
+                    
+                    print(f"\n[Retry {i}/{len(wrong_answers)}] {question}")
+                    user_answer = input("Your answer: ").strip()
+                    
+                    correct = user_answer.lower() == answer.lower()
+                    if correct:
+                        print("✓ Correct! Well done! 🎉")
+                        retry_score += 1
+                    else:
+                        print(f"✗ Still wrong. Remember: {answer}")
+                    
+                    record_quiz_result(word["italian"], correct, "retry")
+                    speak_word(word["italian"])
+                
+                print(f"\n{'='*50}")
+                print(f"Retry Results: {retry_score}/{len(wrong_answers)} correct")
+            
+            print(f"\n{'='*50}")
+            accuracy = score*100//len(weak_words) if weak_words else 0
+            print(f"Focus Mode complete! Score: {score}/{len(weak_words)} ({accuracy}%)")
+            
+            if wrong_answers:
+                improvement = retry_score*100//len(wrong_answers) if wrong_answers else 0
+                print(f"Retry accuracy: {improvement}%")
+                if improvement >= 80:
+                    print("🌟 Excellent improvement!")
+                elif improvement >= 50:
+                    print("👍 Good progress!")
+                else:
+                    print("💪 Keep practicing these words!")
+            print(f"{'='*50}")
         
         elif args.command == 'web':
             launch_web()

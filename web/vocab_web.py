@@ -25,15 +25,47 @@ def launch_web():
 <head>
     <title>Italian Vocabulary Practice</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
+        :root {
+            --bg-gradient-start: #667eea;
+            --bg-gradient-end: #764ba2;
+            --card-bg: white;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --text-light: rgba(255,255,255,0.9);
+            --menu-btn-bg: white;
+            --menu-btn-text: #667eea;
+            --shadow-color: rgba(0,0,0,0.2);
+            --progress-bg: rgba(255,255,255,0.3);
+            --progress-fill: #4CAF50;
+        }
+        
+        body.dark-mode {
+            --bg-gradient-start: #1a1a2e;
+            --bg-gradient-end: #16213e;
+            --card-bg: #0f3460;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b8b8b8;
+            --text-light: rgba(255,255,255,0.9);
+            --menu-btn-bg: #0f3460;
+            --menu-btn-text: #67d5ea;
+            --shadow-color: rgba(0,0,0,0.5);
+            --progress-bg: rgba(255,255,255,0.1);
+            --progress-fill: #67d5ea;
+        }
+        
         * { box-sizing: border-box; }
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             max-width: 1000px; 
             margin: 0 auto; 
             padding: 20px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
             min-height: 100vh;
+            transition: background 0.3s ease;
         }
         h1 { 
             text-align: center; 
@@ -44,9 +76,55 @@ def launch_web():
         }
         .subtitle {
             text-align: center;
-            color: rgba(255,255,255,0.9);
+            color: var(--text-light);
             font-size: 1.1em;
             margin-bottom: 30px;
+        }
+        
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: none;
+            padding: 12px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .dark-mode-toggle:hover {
+            transform: scale(1.1) rotate(20deg);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: var(--progress-bg);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--progress-fill), #76ff03);
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 10px var(--progress-fill);
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9em;
+            margin-top: 5px;
+            font-weight: 600;
         }
         .menu { 
             display: flex; 
@@ -58,14 +136,14 @@ def launch_web():
         .menu button { 
             font-size: 16px; 
             padding: 15px 30px; 
-            background: white;
-            color: #667eea; 
+            background: var(--menu-btn-bg);
+            color: var(--menu-btn-text); 
             border: none; 
             border-radius: 25px; 
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px var(--shadow-color);
         }
         .menu button:hover { 
             transform: translateY(-2px);
@@ -231,15 +309,18 @@ def launch_web():
     </style>
 </head>
 <body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
+    
     <h1>🇮🇹 Italian Vocabulary Practice 🇬🇷</h1>
     <div class="subtitle">Master Italian vocabulary with interactive practice modes</div>
     
-    <div class="menu">
+    <div class="menu" id="mainMenu">
         <button onclick="startMode('it-gr')">Italian → Greek</button>
         <button onclick="startMode('gr-it')">Greek → Italian</button>
         <button onclick="startMode('mc')">Multiple Choice</button>
         <button onclick="startMode('flashcard')">Flashcards</button>
         <button onclick="startMode('sentence')">Sentences</button>
+        <button onclick="showStats()" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">📊 Statistics</button>
     </div>
     
     <div id="quiz"></div>
@@ -255,10 +336,296 @@ def launch_web():
         let mode = '';
         let flipped = false;
         
+        // Dark mode functionality
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            document.querySelector('.dark-mode-toggle').textContent = isDark ? '☀️' : '🌙';
+        }
+        
+        // Load dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.dark-mode-toggle').textContent = '☀️';
+        }
+        
+        // Confetti celebration
+        function celebrate() {
+            const duration = 3000;
+            const end = Date.now() + duration;
+            
+            const colors = ['#667eea', '#764ba2', '#4CAF50', '#FFC107', '#f093fb'];
+            
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+                
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+        
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+        
+        // Record quiz result to database
+        async function recordResult(word, correct, quizType = 'web') {
+            try {
+                await fetch('/api/record', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        word: word,
+                        correct: correct,
+                        quiz_type: quizType
+                    })
+                });
+            } catch(e) {
+                console.log('Failed to record result:', e);
+            }
+        }
+        
+        async function showStats() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('quiz').innerHTML = '<div style="text-align:center;padding:40px;">Loading statistics... ⏳</div>';
+            
+            try {
+                const res = await fetch('/api/stats');
+                const stats = await res.json();
+                
+                let html = '<div style="max-width:1200px; margin:0 auto;">';
+                html += '<button onclick="location.reload()" style="margin-bottom:20px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-size:16px;">← Back to Menu</button>';
+                
+                // Overview cards
+                html += '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-bottom:30px;">';
+                html += `<div class="stat-card">
+                    <div class="stat-number">${stats.total_words}</div>
+                    <div class="stat-label">Words Practiced</div>
+                </div>`;
+                html += `<div class="stat-card">
+                    <div class="stat-number">${stats.total_attempts}</div>
+                    <div class="stat-label">Total Attempts</div>
+                </div>`;
+                html += `<div class="stat-card">
+                    <div class="stat-number">${stats.accuracy.toFixed(1)}%</div>
+                    <div class="stat-label">Overall Accuracy</div>
+                </div>`;
+                html += `<div class="stat-card">
+                    <div class="stat-number">${stats.best_streak}</div>
+                    <div class="stat-label">Best Streak</div>
+                </div>`;
+                html += `<div class="stat-card">
+                    <div class="stat-number">${stats.due_for_review}</div>
+                    <div class="stat-label">Due for Review</div>
+                </div>`;
+                html += '</div>';
+                
+                // Charts Section
+                if (stats.daily_performance.length > 0 || stats.quiz_types.length > 0) {
+                    html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">';
+                    
+                    // Daily Performance Chart
+                    if (stats.daily_performance.length > 0) {
+                        html += '<div style="background:white; padding:25px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.1);">';
+                        html += '<h2 style="color:#667eea; margin-bottom:15px;">📈 Daily Accuracy Trend</h2>';
+                        html += '<canvas id="dailyChart" style="max-height:250px;"></canvas>';
+                        html += '</div>';
+                    }
+                    
+                    // Quiz Type Performance Chart
+                    if (stats.quiz_types.length > 0) {
+                        html += '<div style="background:white; padding:25px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.1);">';
+                        html += '<h2 style="color:#667eea; margin-bottom:15px;">📊 Quiz Type Performance</h2>';
+                        html += '<canvas id="quizTypeChart" style="max-height:250px;"></canvas>';
+                        html += '</div>';
+                    }
+                    
+                    html += '</div>';
+                }
+                
+                // Top words
+                html += '<div style="background:white; padding:25px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.1); margin-bottom:20px;">';
+                html += '<h2 style="color:#667eea; margin-bottom:15px;">🌟 Top Performing Words</h2>';
+                if (stats.top_words.length > 0) {
+                    html += '<table style="width:100%; border-collapse:collapse;">';
+                    html += '<tr style="background:#f5f5f5; font-weight:bold;"><th style="padding:10px; text-align:left;">Word</th><th style="padding:10px;">Success Rate</th><th style="padding:10px;">Streak</th><th style="padding:10px;">EF</th></tr>';
+                    stats.top_words.forEach(w => {
+                        html += `<tr style="border-bottom:1px solid #eee;">
+                            <td style="padding:10px;">${escapeHtml(w.word)}</td>
+                            <td style="padding:10px; text-align:center; color:#4CAF50; font-weight:bold;">${w.rate.toFixed(0)}%</td>
+                            <td style="padding:10px; text-align:center;">${w.streak}</td>
+                            <td style="padding:10px; text-align:center;">${w.ef.toFixed(2)}</td>
+                        </tr>`;
+                    });
+                    html += '</table>';
+                } else {
+                    html += '<p style="color:#999;">No data yet. Start practicing!</p>';
+                }
+                html += '</div>';
+                
+                // Weak words
+                html += '<div style="background:white; padding:25px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.1); margin-bottom:20px;">';
+                html += '<h2 style="color:#f5576c; margin-bottom:15px;">📉 Words Needing Attention</h2>';
+                if (stats.weak_words.length > 0) {
+                    html += '<table style="width:100%; border-collapse:collapse;">';
+                    html += '<tr style="background:#f5f5f5; font-weight:bold;"><th style="padding:10px; text-align:left;">Word</th><th style="padding:10px;">Times Seen</th><th style="padding:10px;">Success Rate</th><th style="padding:10px;">EF</th></tr>';
+                    stats.weak_words.forEach(w => {
+                        html += `<tr style="border-bottom:1px solid #eee;">
+                            <td style="padding:10px;">${escapeHtml(w.word)}</td>
+                            <td style="padding:10px; text-align:center;">${w.seen}</td>
+                            <td style="padding:10px; text-align:center; color:#f44336; font-weight:bold;">${w.rate.toFixed(0)}%</td>
+                            <td style="padding:10px; text-align:center;">${w.ef.toFixed(2)}</td>
+                        </tr>`;
+                    });
+                    html += '</table>';
+                    html += '<div style="margin-top:15px; padding:15px; background:#fff3cd; border-radius:8px; border-left:4px solid #f5576c;">';
+                    html += '💡 <strong>Tip:</strong> Use <code style="background:#f5f5f5; padding:3px 8px; border-radius:4px;">python vocab.py focus</code> in the command line to practice these words intensively!';
+                    html += '</div>';
+                } else {
+                    html += '<p style="color:#999;">Great! No weak words found.</p>';
+                }
+                html += '</div>';
+                
+                html += '</div>';
+                
+                document.getElementById('quiz').innerHTML = html;
+                
+                // Create charts after DOM is ready
+                setTimeout(() => {
+                    // Daily Performance Chart
+                    if (stats.daily_performance.length > 0) {
+                        const dailyCtx = document.getElementById('dailyChart');
+                        if (dailyCtx) {
+                            new Chart(dailyCtx, {
+                                type: 'line',
+                                data: {
+                                    labels: stats.daily_performance.map(d => d.date),
+                                    datasets: [{
+                                        label: 'Accuracy %',
+                                        data: stats.daily_performance.map(d => d.accuracy),
+                                        borderColor: '#667eea',
+                                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                                        tension: 0.4,
+                                        fill: true,
+                                        pointRadius: 5,
+                                        pointBackgroundColor: '#667eea',
+                                        pointBorderColor: '#fff',
+                                        pointBorderWidth: 2
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: true,
+                                    plugins: {
+                                        legend: { display: false },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(context) {
+                                                    const dataPoint = stats.daily_performance[context.dataIndex];
+                                                    return [
+                                                        `Accuracy: ${dataPoint.accuracy.toFixed(1)}%`,
+                                                        `Attempts: ${dataPoint.attempts}`,
+                                                        `Correct: ${dataPoint.correct}`
+                                                    ];
+                                                }
+                                            }
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            max: 100,
+                                            ticks: {
+                                                callback: function(value) {
+                                                    return value + '%';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    
+                    // Quiz Type Chart
+                    if (stats.quiz_types.length > 0) {
+                        const quizTypeCtx = document.getElementById('quizTypeChart');
+                        if (quizTypeCtx) {
+                            const colors = stats.quiz_types.map(qt => 
+                                qt.accuracy >= 70 ? '#4CAF50' : 
+                                qt.accuracy >= 50 ? '#FF9800' : '#f44336'
+                            );
+                            
+                            new Chart(quizTypeCtx, {
+                                type: 'bar',
+                                data: {
+                                    labels: stats.quiz_types.map(qt => qt.type.charAt(0).toUpperCase() + qt.type.slice(1)),
+                                    datasets: [{
+                                        label: 'Accuracy %',
+                                        data: stats.quiz_types.map(qt => qt.accuracy),
+                                        backgroundColor: colors,
+                                        borderColor: colors,
+                                        borderWidth: 2
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: true,
+                                    plugins: {
+                                        legend: { display: false },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(context) {
+                                                    const qt = stats.quiz_types[context.dataIndex];
+                                                    return [
+                                                        `Accuracy: ${qt.accuracy.toFixed(1)}%`,
+                                                        `Attempts: ${qt.count}`,
+                                                        `Correct: ${qt.correct}`
+                                                    ];
+                                                }
+                                            }
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            max: 100,
+                                            ticks: {
+                                                callback: function(value) {
+                                                    return value + '%';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }, 100);
+                
+            } catch(e) {
+                console.error('Error loading stats:', e);
+                document.getElementById('quiz').innerHTML = '<p style="color:red;">Error loading statistics. ' + e.message + '</p>';
+            }
         }
         
         async function startMode(m) {
@@ -298,10 +665,25 @@ def launch_web():
         
         function showQuestion() {
             if (current >= words.length) {
-                document.getElementById('quiz').innerHTML = 
-                    '<h2>🎉 Quiz Complete!</h2><p>Score: ' + score + '/' + words.length + 
-                    ' (' + Math.round(score*100/words.length) + '%)</p>' +
-                    '<button onclick="location.reload()" class="submit-btn">Start New Quiz</button>';
+                const percentage = Math.round(score*100/words.length);
+                let completeHTML = '<div class="fade-in" style="text-align:center; padding:40px;">';
+                completeHTML += '<h2 style="color:var(--text-light); font-size:2.5em; margin-bottom:20px;">🎉 Quiz Complete!</h2>';
+                completeHTML += '<div style="font-size:4em; margin:30px 0;">' + score + '/' + words.length + '</div>';
+                completeHTML += '<div style="font-size:2em; color:var(--text-light); margin-bottom:30px;">' + percentage + '%</div>';
+                
+                // Show confetti for good scores
+                if (percentage >= 80) {
+                    celebrate();
+                    completeHTML += '<p style="color:#4CAF50; font-size:1.5em; margin:20px 0;">🌟 Excellent work! 🌟</p>';
+                } else if (percentage >= 60) {
+                    completeHTML += '<p style="color:#FFC107; font-size:1.3em; margin:20px 0;">👍 Good job! Keep practicing!</p>';
+                } else {
+                    completeHTML += '<p style="color:#FF9800; font-size:1.3em; margin:20px 0;">💪 Keep going! Practice makes perfect!</p>';
+                }
+                
+                completeHTML += '<button onclick="location.reload()" class="submit-btn" style="margin-top:20px;">Start New Quiz</button>';
+                completeHTML += '</div>';
+                document.getElementById('quiz').innerHTML = completeHTML;
                 return;
             }
             
@@ -310,7 +692,14 @@ def launch_web():
             const question = isReverse ? w.greek : w.italian;
             const answer = isReverse ? w.italian : w.greek;
             
-            let html = '<div class="progress">Question ' + (current+1) + ' of ' + words.length + '</div>';
+            const progressPercent = (current / words.length) * 100;
+            
+            let html = '<div class="slide-in">';
+            html += '<div class="progress-container">';
+            html += '<div class="progress-bar" style="width:' + progressPercent + '%"></div>';
+            html += '</div>';
+            html += '<div class="progress-text">Question ' + (current+1) + ' of ' + words.length + ' • Score: ' + score + '</div>';
+            html += '</div>';
             
             if (mode === 'mc') {
                 html += '<div class="card">' + escapeHtml(question) + 
@@ -396,6 +785,10 @@ def launch_web():
         
         function checkAnswer(userAnswer, correct) {
             const isCorrect = userAnswer.toLowerCase() === correct.toLowerCase();
+            const currentWord = words[current];
+            
+            // Record result in database
+            recordResult(currentWord.italian, isCorrect, mode);
             
             if (isCorrect) {
                 score++;
@@ -413,6 +806,10 @@ def launch_web():
         
         function checkMC(selected, correct, italianWord) {
             const isCorrect = selected === correct;
+            
+            // Record result in database
+            recordResult(italianWord, isCorrect, 'mc');
+            
             if (isCorrect) score++;
             
             const res = isCorrect ? 
@@ -432,44 +829,84 @@ def launch_web():
         
         async function showSentence() {
             if (current >= 5) {
-                document.getElementById('quiz').innerHTML = 
-                    '<h2>Sentence Practice Complete!</h2>' +
-                    '<button onclick="location.reload()" class="submit-btn">Start New</button>';
+                let completeHTML = '<div class="fade-in" style="text-align:center; padding:40px;">';
+                completeHTML += '<h2 style="color:var(--text-light); font-size:2.5em;">📚 Sentence Practice Complete!</h2>';
+                completeHTML += '<p style="color:var(--text-light); margin:30px 0;">Great work practicing with real sentences!</p>';
+                completeHTML += '<button onclick="location.reload()" class="submit-btn">Start New Practice</button>';
+                completeHTML += '</div>';
+                document.getElementById('quiz').innerHTML = completeHTML;
+                celebrate();
                 return;
             }
             
-            const res = await fetch('/api/sentence');
+            // Randomly choose direction: Italian→Greek or Greek→Italian
+            const direction = Math.random() > 0.5 ? 'it-gr' : 'gr-it';
+            const res = await fetch('/api/sentence?direction=' + direction);
             const data = await res.json();
             currentSentence = data;
             
-            let html = '<div class="progress">Sentence ' + (current+1) + ' of 5</div>';
-            html += '<div class="card">' + escapeHtml(data.italian) + '</div>';
+            const targetLang = direction === 'it-gr' ? 'Greek' : 'Italian';
+            const targetPlaceholder = direction === 'it-gr' ? 'Translate to Greek...' : 'Μετάφραση στα Ιταλικά...';
+            
+            const progressPercent = (current / 5) * 100;
+            
+            let html = '<div class="slide-in">';
+            html += '<div class="progress-container">';
+            html += '<div class="progress-bar" style="width:' + progressPercent + '%"></div>';
+            html += '</div>';
+            html += '<div class="progress-text">Sentence ' + (current+1) + ' of 5</div>';
+            html += '</div>';
+            html += '<div style="text-align:center; margin:15px 0;">';
+            html += '<span style="background:#667eea; color:white; padding:6px 15px; border-radius:20px; font-size:0.85em;">';
+            html += direction === 'it-gr' ? '🇮🇹 Italian → Greek 🇬🇷' : '🇬🇷 Greek → Italian 🇮🇹';
+            html += '</span></div>';
+            html += '<div class="card fade-in">' + escapeHtml(data.source) + '</div>';
             html += '<div style="text-align:center; margin:10px 0; color:#667eea; font-size:0.9em; font-style:italic;">';
             html += '📝 Grammar: ' + escapeHtml(data.pattern) + '</div>';
             html += '<div class="answer">';
-            html += '<textarea id="translation" class="sentence-input" placeholder="Translate to Greek..."></textarea><br>';
+            html += '<textarea id="translation" class="sentence-input" placeholder="' + targetPlaceholder + '"></textarea><br>';
             html += '<button onclick="checkSentence()" class="submit-btn">Show Translation</button>';
             html += '</div><div id="result"></div>';
-            html += '<div style="margin-top:20px; color:#666; font-size:14px;">Words used: ' + escapeHtml(data.words) + '</div>';
+            html += '<div style="margin-top:15px; padding:12px; background:#f5f5f5; border-radius:8px; font-size:14px; color:#666;">';
+            html += '<strong>Words:</strong> ' + escapeHtml(data.words);
+            html += '</div>';
             
             document.getElementById('quiz').innerHTML = html;
         }
         
         function checkSentence() {
             const userTrans = document.getElementById('translation').value.trim();
+            const targetLang = currentSentence.direction === 'it-gr' ? 'Greek' : 'Italian';
             
-            let feedback = '<div style="margin-top:20px;">';
-            feedback += '<p style="color:#2196F3; font-weight:bold;">Your translation:</p>';
-            feedback += '<p style="background:#f0f0f0; padding:10px; border-radius:5px;">' + 
-                       (userTrans || '<i>No translation provided</i>') + '</p>';
-            feedback += '<p style="color:#666; font-weight:bold; margin-top:15px;">Reference (word-by-word):</p>';
-            feedback += '<p style="background:#e8f5e9; padding:10px; border-radius:5px;">' + 
+            let feedback = '<div style="margin-top:20px; animation: fadeIn 0.5s;">';
+            
+            // User's translation
+            feedback += '<div style="margin-bottom:15px;">';
+            feedback += '<p style="color:#2196F3; font-weight:bold; margin-bottom:8px;">📝 Your translation:</p>';
+            feedback += '<p style="background:#f0f0f0; padding:15px; border-radius:8px; font-size:16px; border-left:4px solid #2196F3;">' + 
+                       (userTrans ? escapeHtml(userTrans) : '<i style="color:#999;">No translation provided</i>') + '</p>';
+            feedback += '</div>';
+            
+            // Correct translation
+            feedback += '<div style="margin-bottom:15px;">';
+            feedback += '<p style="color:#4CAF50; font-weight:bold; margin-bottom:8px;">✅ Correct translation:</p>';
+            feedback += '<p style="background:#e8f5e9; padding:15px; border-radius:8px; font-size:16px; font-weight:500; border-left:4px solid #4CAF50;">' + 
+                       escapeHtml(currentSentence.translation) + '</p>';
+            feedback += '</div>';
+            
+            // Word-by-word reference
+            feedback += '<div style="margin-bottom:15px;">';
+            feedback += '<p style="color:#666; font-weight:bold; margin-bottom:8px;">📚 Word reference:</p>';
+            feedback += '<p style="background:#fff9e6; padding:12px; border-radius:8px; font-size:14px; border-left:4px solid #FFC107;">' + 
                        escapeHtml(currentSentence.words) + '</p>';
-            feedback += '<p style="font-size:14px; color:#999; margin-top:10px;">💡 Tip: Compare your translation with the word meanings above.</p>';
-            feedback += '<button onclick="nextSentence()" class="submit-btn" style="margin-top:15px;">Next Sentence →</button>';
+            feedback += '</div>';
+            
+            feedback += '<button onclick="nextSentence()" class="submit-btn" style="margin-top:15px; width:100%;">Next Sentence →</button>';
             feedback += '</div>';
             
             document.getElementById('result').innerHTML = feedback;
+            document.querySelector('textarea').disabled = true;
+            document.querySelector('button.submit-btn:not([onclick*="next"])').disabled = true;
         }
         
         function nextSentence() {
@@ -492,9 +929,59 @@ def launch_web():
     
     @app.route('/api/words')
     def get_words():
+        from database.vocab_db import get_weak_words
+        from datetime import datetime
+        import sqlite3
+        
         n = int(request.args.get('n', 10))
         words = load_vocabulary()
-        selected = random.sample(words, min(n, len(words)))
+        
+        # Try to get words intelligently based on spaced repetition
+        try:
+            conn = sqlite3.connect('vocab_progress.db')
+            c = conn.cursor()
+            
+            # Get words due for review (50% of selection)
+            due_count = n // 2
+            now = datetime.now()
+            c.execute("""SELECT word_italian 
+                         FROM word_stats 
+                         WHERE next_review <= ? 
+                         ORDER BY next_review ASC 
+                         LIMIT ?""", (now, due_count))
+            due_words = [row[0] for row in c.fetchall()]
+            
+            # Get weak words (30% of selection)
+            weak_count = int(n * 0.3)
+            c.execute("""SELECT word_italian 
+                         FROM word_stats 
+                         WHERE (CAST(times_correct AS FLOAT) / times_seen) < 0.7 
+                         AND times_seen >= 2
+                         ORDER BY (CAST(times_correct AS FLOAT) / times_seen) ASC 
+                         LIMIT ?""", (weak_count,))
+            weak_words = [row[0] for row in c.fetchall()]
+            
+            conn.close()
+            
+            # Combine with random words to fill the rest
+            selected_italian = set(due_words + weak_words)
+            selected = [w for w in words if w['italian'] in selected_italian]
+            
+            # Fill remaining slots with random words
+            remaining = n - len(selected)
+            if remaining > 0:
+                available = [w for w in words if w['italian'] not in selected_italian]
+                if available:
+                    selected.extend(random.sample(available, min(remaining, len(available))))
+            
+            # If not enough intelligent words, fall back to random
+            if len(selected) < n:
+                selected = random.sample(words, min(n, len(words)))
+            
+        except Exception:
+            # Fallback to random selection if database not initialized
+            selected = random.sample(words, min(n, len(words)))
+        
         return jsonify([{"italian": w["italian"], "greek": w["greek"]} for w in selected])
     
     @app.route('/api/speak')
@@ -508,24 +995,85 @@ def launch_web():
     
     @app.route('/api/sentence')
     def get_sentence():
+        from app.greek_sentence_generator import generate_greek_sentence
+        
         words = load_vocabulary()
-        result = generate_smart_sentence(words)
+        direction = request.args.get('direction', 'it-gr')  # 'it-gr' or 'gr-it'
         
-        # Format word meanings for display
-        word_meanings = []
-        for word_it in result['words_used']:
-            # Find the Greek translation
-            matching = [w for w in words if w['italian'].lower() == word_it.lower()]
-            if matching:
-                word_meanings.append(f"{word_it}={matching[0]['greek']}")
+        if direction == 'gr-it':
+            # Greek to Italian
+            result = generate_greek_sentence(words)
+            
+            # Format word meanings for display
+            word_meanings = []
+            for word_gr in result['words_used']:
+                matching = [w for w in words if w['greek'].lower() == word_gr.lower()]
+                if matching:
+                    word_meanings.append(f"{word_gr}={matching[0]['italian']}")
+                else:
+                    word_meanings.append(word_gr)
+            
+            return jsonify({
+                "source": result['greek'],
+                "translation": result['italian'],
+                "words": ", ".join(word_meanings),
+                "pattern": result['pattern'],
+                "direction": 'gr-it'
+            })
+        else:
+            # Italian to Greek (original)
+            result = generate_smart_sentence(words)
+            
+            # Format word meanings for display
+            word_meanings = []
+            greek_translation_parts = []
+            
+            for word_it in result['words_used']:
+                matching = [w for w in words if w['italian'].lower() == word_it.lower()]
+                if matching:
+                    word_meanings.append(f"{word_it}={matching[0]['greek']}")
+                    greek_translation_parts.append(matching[0]['greek'])
+                else:
+                    word_meanings.append(word_it)
+                    greek_translation_parts.append('?')
+            
+            # Create approximate Greek translation
+            greek_translation = ' '.join(greek_translation_parts) if greek_translation_parts else 'Μετάφραση'
+            
+            return jsonify({
+                "source": result['italian'],
+                "translation": greek_translation,
+                "words": ", ".join(word_meanings),
+                "pattern": result['pattern'],
+                "direction": 'it-gr'
+            })
+    
+    @app.route('/api/stats')
+    def get_stats_api():
+        """API endpoint for detailed statistics."""
+        from database.vocab_db import get_detailed_stats
+        stats = get_detailed_stats()
+        return jsonify(stats)
+    
+    @app.route('/api/record', methods=['POST'])
+    def record_result():
+        """Record quiz result for spaced repetition."""
+        from database.vocab_db import record_quiz_result, init_db
+        
+        try:
+            init_db()  # Ensure database exists
+            data = request.get_json()
+            word = data.get('word')
+            correct = data.get('correct', False)
+            quiz_type = data.get('quiz_type', 'web')
+            
+            if word:
+                record_quiz_result(word, correct, quiz_type)
+                return jsonify({"success": True})
             else:
-                word_meanings.append(word_it)
-        
-        return jsonify({
-            "italian": result['italian'],
-            "words": ", ".join(word_meanings),
-            "pattern": result['pattern']
-        })
+                return jsonify({"success": False, "error": "No word provided"}), 400
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 500
     
     print("\n🌐 Starting web interface at http://localhost:5000")
     print("Press Ctrl+C to stop\n")
@@ -835,6 +1383,77 @@ def create_wsgi_app():
             border-radius: 20px;
             font-size: 0.9em;
             margin-top: 5px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 0.95em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .pulse {
+            animation: pulse 0.6s ease-in-out;
         }
     </style>
 </head>

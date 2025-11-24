@@ -8,8 +8,16 @@ from database.vocab_db import record_quiz_result, get_weak_words
 from app.vocab_audio import speak_word
 
 
-def run_quiz(n=10, reverse=False, category=None, difficulty=None):
-    """Run a standard quiz with typed answers."""
+def run_quiz(n=10, reverse=False, category=None, difficulty=None, retry_wrong=True):
+    """Run a standard quiz with typed answers.
+    
+    Args:
+        n: Number of words to quiz
+        reverse: If True, quiz Greek→Italian instead of Italian→Greek
+        category: Filter by category
+        difficulty: Filter by difficulty level
+        retry_wrong: If True, retry wrong answers at end of quiz
+    """
     words = load_vocabulary()
     words = filter_words(words, category, difficulty)
     
@@ -26,6 +34,14 @@ def run_quiz(n=10, reverse=False, category=None, difficulty=None):
     random.shuffle(selected)
     
     score = 0
+    wrong_answers = []  # Track words that need retry
+    
+    print(f"\n{'='*50}")
+    print(f"📚 Quiz Mode: {'Greek→Italian' if reverse else 'Italian→Greek'}")
+    if retry_wrong:
+        print("💡 Wrong answers will be retried at the end")
+    print(f"{'='*50}")
+    
     for i, word in enumerate(selected, 1):
         question = word["greek"] if reverse else word["italian"]
         answer = word["italian"] if reverse else word["greek"]
@@ -39,16 +55,62 @@ def run_quiz(n=10, reverse=False, category=None, difficulty=None):
             score += 1
         else:
             print(f"✗ Wrong. Answer: {answer}")
+            if retry_wrong:
+                wrong_answers.append(word)
         
         record_quiz_result(word["italian"], correct, "standard")
         speak_word(word["italian"])
     
+    # Immediate retry of wrong answers
+    if retry_wrong and wrong_answers:
+        print(f"\n{'='*50}")
+        print(f"🔄 Review Time! Let's retry the {len(wrong_answers)} words you missed")
+        print(f"{'='*50}")
+        
+        retry_score = 0
+        for i, word in enumerate(wrong_answers, 1):
+            question = word["greek"] if reverse else word["italian"]
+            answer = word["italian"] if reverse else word["greek"]
+            
+            print(f"\n[Retry {i}/{len(wrong_answers)}] {question}")
+            user_answer = input("Your answer: ").strip()
+            
+            correct = user_answer.lower() == answer.lower()
+            if correct:
+                print("✓ Correct! Well done! 🎉")
+                retry_score += 1
+            else:
+                print(f"✗ Still wrong. Remember: {answer}")
+            
+            record_quiz_result(word["italian"], correct, "retry")
+            speak_word(word["italian"])
+        
+        print(f"\n{'='*50}")
+        print(f"Retry Results: {retry_score}/{len(wrong_answers)} correct")
+    
     print(f"\n{'='*50}")
-    print(f"Quiz complete! Score: {score}/{len(selected)} ({score*100//len(selected)}%)")
+    accuracy = score*100//len(selected) if selected else 0
+    print(f"Quiz complete! Score: {score}/{len(selected)} ({accuracy}%)")
+    
+    if wrong_answers:
+        improvement = retry_score*100//len(wrong_answers) if wrong_answers else 0
+        print(f"Retry accuracy: {improvement}%")
+        if improvement >= 80:
+            print("🌟 Excellent improvement!")
+        elif improvement >= 50:
+            print("👍 Good progress!")
+        else:
+            print("💪 Keep practicing these words!")
+    print(f"{'='*50}")
 
 
-def run_multiple_choice(n=10):
-    """Run a multiple choice quiz."""
+def run_multiple_choice(n=10, retry_wrong=True):
+    """Run a multiple choice quiz.
+    
+    Args:
+        n: Number of words to quiz
+        retry_wrong: If True, retry wrong answers at end of quiz
+    """
     words = load_vocabulary()
     
     if len(words) < 4:
@@ -57,6 +119,13 @@ def run_multiple_choice(n=10):
     
     selected = random.sample(words, min(n, len(words)))
     score = 0
+    wrong_answers = []  # Track words that need retry
+    
+    print(f"\n{'='*50}")
+    print(f"📝 Multiple Choice Quiz")
+    if retry_wrong:
+        print("💡 Wrong answers will be retried at the end")
+    print(f"{'='*50}")
     
     for i, word in enumerate(selected, 1):
         question = word["italian"]
@@ -88,12 +157,70 @@ def run_multiple_choice(n=10):
             score += 1
         else:
             print(f"✗ Wrong. Answer: {correct_answer}")
+            if retry_wrong:
+                wrong_answers.append(word)
         
         record_quiz_result(word["italian"], correct, "multiple_choice")
         speak_word(word["italian"])
     
+    # Immediate retry of wrong answers
+    if retry_wrong and wrong_answers:
+        print(f"\n{'='*50}")
+        print(f"🔄 Review Time! Let's retry the {len(wrong_answers)} words you missed")
+        print(f"{'='*50}")
+        
+        retry_score = 0
+        for i, word in enumerate(wrong_answers, 1):
+            question = word["italian"]
+            correct_answer = word["greek"]
+            
+            # Generate new wrong answers for retry
+            wrong = random.sample([w["greek"] for w in words if w["greek"] != correct_answer], 3)
+            options = [correct_answer] + wrong
+            random.shuffle(options)
+            
+            print(f"\n[Retry {i}/{len(wrong_answers)}] {question}")
+            for j, opt in enumerate(options, 1):
+                print(f"  {j}. {opt}")
+            
+            while True:
+                try:
+                    choice = int(input("Your choice (1-4): "))
+                    if 1 <= choice <= 4:
+                        break
+                except ValueError:
+                    pass
+                print("Please enter 1, 2, 3, or 4")
+            
+            user_answer = options[choice - 1]
+            correct = user_answer == correct_answer
+            
+            if correct:
+                print("✓ Correct! Well done! 🎉")
+                retry_score += 1
+            else:
+                print(f"✗ Still wrong. Remember: {correct_answer}")
+            
+            record_quiz_result(word["italian"], correct, "retry")
+            speak_word(word["italian"])
+        
+        print(f"\n{'='*50}")
+        print(f"Retry Results: {retry_score}/{len(wrong_answers)} correct")
+    
     print(f"\n{'='*50}")
-    print(f"Quiz complete! Score: {score}/{len(selected)} ({score*100//len(selected)}%)")
+    accuracy = score*100//len(selected) if selected else 0
+    print(f"Quiz complete! Score: {score}/{len(selected)} ({accuracy}%)")
+    
+    if wrong_answers:
+        improvement = retry_score*100//len(wrong_answers) if wrong_answers else 0
+        print(f"Retry accuracy: {improvement}%")
+        if improvement >= 80:
+            print("🌟 Excellent improvement!")
+        elif improvement >= 50:
+            print("👍 Good progress!")
+        else:
+            print("💪 Keep practicing these words!")
+    print(f"{'='*50}")
 
 
 def run_flashcards(n=10):
