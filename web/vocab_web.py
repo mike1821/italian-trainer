@@ -707,11 +707,21 @@ def launch_web():
                         '<span class="speaker" onclick="playAudio(' + JSON.stringify(w.italian) + ')">🔊</span></div>';
                 html += '<div class="options">';
                 
+                // Get random wrong answers (not sequential)
                 const options = [answer];
-                const otherWords = words.filter((x, i) => i !== current);
-                for (let i = 0; i < 3 && i < otherWords.length; i++) {
-                    options.push(isReverse ? otherWords[i].italian : otherWords[i].greek);
+                const availableWords = words.filter((x, i) => i !== current);
+                
+                // Shuffle available words and take first 3
+                const shuffled = availableWords.sort(() => Math.random() - 0.5);
+                for (let i = 0; i < 3 && i < shuffled.length; i++) {
+                    const wrongAnswer = isReverse ? shuffled[i].italian : shuffled[i].greek;
+                    // Avoid duplicates
+                    if (!options.includes(wrongAnswer)) {
+                        options.push(wrongAnswer);
+                    }
                 }
+                
+                // Shuffle the final options so correct answer isn't always first
                 options.sort(() => Math.random() - 0.5);
                 
                 options.forEach((opt, idx) => {
