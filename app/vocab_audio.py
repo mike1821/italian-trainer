@@ -34,10 +34,10 @@ def speak_word(word, lang='it'):
                 print("No audio player found. Install mpg123 or ffplay.")
                 return False
         else:  # Windows
-            # Try playsound first (no GUI), fallback to pygame, then Windows Media Player
-            if _play_with_playsound(str(audio_file)):
+            # Try pygame first (Python 3.13 compatible), fallback to playsound, then Windows Media Player
+            if _play_with_pygame(str(audio_file)):
                 return True
-            elif _play_with_pygame(str(audio_file)):
+            elif _play_with_playsound(str(audio_file)):
                 return True
             else:
                 # Fallback to default player (opens GUI)
