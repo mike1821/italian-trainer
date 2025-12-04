@@ -4,7 +4,7 @@ Quiz and practice mode functions.
 """
 import random
 from app.vocab_core import load_vocabulary, filter_words
-from database.vocab_db import record_quiz_result, get_weak_words
+from database.vocab_db import record_quiz_result, get_weak_words, get_words_for_quiz
 from app.vocab_audio import speak_word
 
 
@@ -25,13 +25,8 @@ def run_quiz(n=10, reverse=False, category=None, difficulty=None, retry_wrong=Tr
         print("No words match the specified filters.")
         return
     
-    # Prioritize weak words
-    weak = get_weak_words(n // 2)
-    weak_words = [w for w in words if w["italian"] in weak]
-    other_words = [w for w in words if w["italian"] not in weak]
-    
-    selected = weak_words[:n//2] + random.sample(other_words, min(n - len(weak_words[:n//2]), len(other_words)))
-    random.shuffle(selected)
+    # Get balanced selection: 30% new, 40% weak, 30% review words
+    selected = get_words_for_quiz(words, n)
     
     score = 0
     wrong_answers = []  # Track words that need retry
@@ -117,7 +112,8 @@ def run_multiple_choice(n=10, retry_wrong=True):
         print("Need at least 4 words for multiple choice quiz")
         return
     
-    selected = random.sample(words, min(n, len(words)))
+    # Get balanced selection: 30% new, 40% weak, 30% review words
+    selected = get_words_for_quiz(words, min(n, len(words)))
     score = 0
     wrong_answers = []  # Track words that need retry
     

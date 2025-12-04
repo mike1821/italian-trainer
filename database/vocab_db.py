@@ -30,7 +30,8 @@ def init_db():
                   next_review DATETIME,
                   easiness_factor REAL DEFAULT 2.5,
                   interval_days REAL DEFAULT 1,
-                  consecutive_correct INTEGER DEFAULT 0)''')
+                  consecutive_correct INTEGER DEFAULT 0,
+                  last_selected DATETIME)''')
     
     # Add new columns if upgrading from old schema
     try:
@@ -45,6 +46,11 @@ def init_db():
     
     try:
         c.execute("ALTER TABLE word_stats ADD COLUMN consecutive_correct INTEGER DEFAULT 0")
+    except sqlite3.OperationalError:
+        pass
+    
+    try:
+        c.execute("ALTER TABLE word_stats ADD COLUMN last_selected DATETIME")
     except sqlite3.OperationalError:
         pass
     
@@ -135,7 +141,7 @@ def record_quiz_result(word, correct, quiz_type="standard"):
 
 
 def get_weak_words(limit=10):
-    """Get words that need review (due or low success rate)."""
+    """Get words that need review (due or low success rate). DEPRECATED - use get_words_for_quiz instead."""
     conn = sqlite3.connect(str(DB_FILE))
     c = conn.cursor()
     
@@ -154,6 +160,204 @@ def get_weak_words(limit=10):
     conn.close()
     
     return weak_words
+
+
+def get_words_for_quiz(all_words, n=10):
+    """Get balanced selection of words for quiz: new words, weak words, and review words.
+    
+    Strategy:
+    - 30% new words (never seen before)
+    - 40% weak words (need review: due or low success rate)
+    - 30% review words (already mastered but not recently selected)
+    
+    This ensures all vocabulary gets covered over time and prevents repetition.
+    """
+    conn = sqlite3.connect(str(DB_FILE))
+    c = conn.cursor()
+    
+    now = datetime.now()
+    
+    # Get all words currently in database
+    c.execute("SELECT word_italian FROM word_stats")
+    known_words = {row[0] for row in c.fetchall()}
+    
+    # Separate words into categories
+    all_word_dict = {w["italian"]: w for w in all_words}
+    new_words = [w for w in all_words if w["italian"] not in known_words]
+    known_word_objs = [w for w in all_words if w["italian"] in known_words]
+    
+    # Get weak words (due for review or low success rate)
+    c.execute("""SELECT word_italian
+                 FROM word_stats
+                 WHERE next_review <= ? OR (CAST(times_correct AS FLOAT) / times_seen) < 0.7
+                 ORDER BY next_review ASC, 
+                          CAST(times_correct AS FLOAT) / times_seen ASC
+                 LIMIT ?""", (now, n))
+    weak_word_names = {row[0] for row in c.fetchall()}
+    
+    weak_words = [w for w in known_word_objs if w["italian"] in weak_word_names]
+    
+    # Get review words (mastered but not recently selected)
+    # Exclude words selected in last 24 hours
+    yesterday = now - timedelta(days=1)
+    c.execute("""SELECT word_italian
+                 FROM word_stats
+                 WHERE (CAST(times_correct AS FLOAT) / times_seen) >= 0.7
+                       AND next_review > ?
+                       AND (last_selected IS NULL OR last_selected < ?)
+                 ORDER BY last_selected ASC NULLS FIRST
+                 LIMIT ?""", (now, yesterday, n))
+    review_word_names = {row[0] for row in c.fetchall()}
+    
+    review_words = [w for w in known_word_objs if w["italian"] in review_word_names]
+    
+    conn.close()
+    
+    # Calculate target counts for each category
+    new_target = max(1, int(n * 0.3))  # 30% new words
+    weak_target = max(1, int(n * 0.4))  # 40% weak words
+    review_target = n - new_target - weak_target  # remaining for review
+    
+    # Select words from each category
+    import random
+    selected_new = random.sample(new_words, min(new_target, len(new_words))) if new_words else []
+    selected_weak = random.sample(weak_words, min(weak_target, len(weak_words))) if weak_words else []
+    selected_review = random.sample(review_words, min(review_target, len(review_words))) if review_words else []
+    
+    # Combine selections
+    selected = selected_new + selected_weak + selected_review
+    
+    # If we don't have enough words, fill from any remaining words
+    if len(selected) < n:
+        remaining = [w for w in all_words if w not in selected]
+        if remaining:
+            needed = n - len(selected)
+            selected += random.sample(remaining, min(needed, len(remaining)))
+    
+    # Shuffle to mix categories
+    random.shuffle(selected)
+    
+    # Mark these words as selected
+    mark_words_selected([w["italian"] for w in selected])
+    
+    return selected
+
+
+def mark_words_selected(word_list):
+    """Update last_selected timestamp for given words."""
+    conn = sqlite3.connect(str(DB_FILE))
+    c = conn.cursor()
+    now = datetime.now()
+    
+    for word in word_list:
+        # Create entry if doesn't exist
+        c.execute("SELECT word_italian FROM word_stats WHERE word_italian = ?", (word,))
+        if not c.fetchone():
+            c.execute("""INSERT INTO word_stats 
+                         (word_italian, times_seen, times_correct, last_selected)
+                         VALUES (?, 0, 0, ?)""", (word, now))
+        else:
+            c.execute("UPDATE word_stats SET last_selected = ? WHERE word_italian = ?", (now, word))
+    
+    conn.commit()
+    conn.close()
+
+
+def get_stats_old_implementation(all_words, n=10):
+    """Old implementation - kept for reference only. DO NOT USE.
+    - 30% review words (already mastered but not recently selected)
+    
+    This ensures all vocabulary gets covered over time and prevents repetition.
+    """
+    conn = sqlite3.connect(str(DB_FILE))
+    c = conn.cursor()
+    
+    now = datetime.now()
+    
+    # Get all words currently in database
+    c.execute("SELECT word_italian FROM word_stats")
+    known_words = {row[0] for row in c.fetchall()}
+    
+    # Separate words into categories
+    all_word_dict = {w["italian"]: w for w in all_words}
+    new_words = [w for w in all_words if w["italian"] not in known_words]
+    known_word_objs = [w for w in all_words if w["italian"] in known_words]
+    
+    # Get weak words (due for review or low success rate)
+    c.execute("""SELECT word_italian
+                 FROM word_stats
+                 WHERE next_review <= ? OR (CAST(times_correct AS FLOAT) / times_seen) < 0.7
+                 ORDER BY next_review ASC, 
+                          CAST(times_correct AS FLOAT) / times_seen ASC
+                 LIMIT ?""", (now, n))
+    weak_word_names = {row[0] for row in c.fetchall()}
+    
+    weak_words = [w for w in known_word_objs if w["italian"] in weak_word_names]
+    
+    # Get review words (mastered but not recently selected)
+    # Exclude words selected in last 24 hours
+    yesterday = now - timedelta(days=1)
+    c.execute("""SELECT word_italian
+                 FROM word_stats
+                 WHERE (CAST(times_correct AS FLOAT) / times_seen) >= 0.7
+                       AND next_review > ?
+                       AND (last_selected IS NULL OR last_selected < ?)
+                 ORDER BY last_selected ASC NULLS FIRST
+                 LIMIT ?""", (now, yesterday, n))
+    review_word_names = {row[0] for row in c.fetchall()}
+    
+    review_words = [w for w in known_word_objs if w["italian"] in review_word_names]
+    
+    conn.close()
+    
+    # Calculate target counts for each category
+    new_target = max(1, int(n * 0.3))  # 30% new words
+    weak_target = max(1, int(n * 0.4))  # 40% weak words
+    review_target = n - new_target - weak_target  # remaining for review
+    
+    # Select words from each category
+    import random
+    selected_new = random.sample(new_words, min(new_target, len(new_words))) if new_words else []
+    selected_weak = random.sample(weak_words, min(weak_target, len(weak_words))) if weak_words else []
+    selected_review = random.sample(review_words, min(review_target, len(review_words))) if review_words else []
+    
+    # Combine selections
+    selected = selected_new + selected_weak + selected_review
+    
+    # If we don't have enough words, fill from any remaining words
+    if len(selected) < n:
+        remaining = [w for w in all_words if w not in selected]
+        if remaining:
+            needed = n - len(selected)
+            selected += random.sample(remaining, min(needed, len(remaining)))
+    
+    # Shuffle to mix categories
+    random.shuffle(selected)
+    
+    # Mark these words as selected
+    mark_words_selected([w["italian"] for w in selected])
+    
+    return selected
+
+
+def mark_words_selected(word_list):
+    """Update last_selected timestamp for given words."""
+    conn = sqlite3.connect(str(DB_FILE))
+    c = conn.cursor()
+    now = datetime.now()
+    
+    for word in word_list:
+        # Create entry if doesn't exist
+        c.execute("SELECT word_italian FROM word_stats WHERE word_italian = ?", (word,))
+        if not c.fetchone():
+            c.execute("""INSERT INTO word_stats 
+                         (word_italian, times_seen, times_correct, last_selected)
+                         VALUES (?, 0, 0, ?)""", (word, now))
+        else:
+            c.execute("UPDATE word_stats SET last_selected = ? WHERE word_italian = ?", (now, word))
+    
+    conn.commit()
+    conn.close()
 
 
 def get_stats():
