@@ -1,22 +1,35 @@
 #!/usr/bin/env python3
 """
-Quiz and practice mode functions.
+Quiz and practice mode functions with interleaved repetition for better learning.
 """
 import random
+from collections import deque
 from app.vocab_core import load_vocabulary, filter_words
 from database.vocab_db import record_quiz_result, get_weak_words, get_words_for_quiz
 from app.vocab_audio import speak_word
 
 
+# Session mastery settings
+CORRECT_NEEDED_TO_MASTER = 2  # Must answer correctly twice to master a word
+MAX_RETRIES_PER_WORD = 3      # Maximum times to retry a single word
+RETRY_DELAY_MIN = 3           # Minimum questions before retry
+RETRY_DELAY_MAX = 7           # Maximum questions before retry
+
+
 def run_quiz(n=10, reverse=False, category=None, difficulty=None, retry_wrong=True):
-    """Run a standard quiz with typed answers.
+    """Run a standard quiz with typed answers and interleaved repetition.
+    
+    Features:
+    - Wrong answers are re-inserted 3-7 questions later (interleaved repetition)
+    - Words must be answered correctly twice to be considered mastered
+    - Maximum 3 retries per word to avoid frustrating loops
     
     Args:
         n: Number of words to quiz
         reverse: If True, quiz Greek→Italian instead of Italian→Greek
         category: Filter by category
         difficulty: Filter by difficulty level
-        retry_wrong: If True, retry wrong answers at end of quiz
+        retry_wrong: If True, use interleaved repetition for wrong answers
     """
     words = load_vocabulary()
     words = filter_words(words, category, difficulty)
@@ -28,83 +41,148 @@ def run_quiz(n=10, reverse=False, category=None, difficulty=None, retry_wrong=Tr
     # Get balanced selection: 30% new, 40% weak, 30% review words
     selected = get_words_for_quiz(words, n)
     
-    score = 0
-    wrong_answers = []  # Track words that need retry
+    # Initialize quiz queue and tracking
+    quiz_queue = deque(selected)
+    word_stats = {}  # Track correct count and retry count per word
+    
+    for word in selected:
+        word_stats[word["italian"]] = {"correct": 0, "retries": 0}
+    
+    questions_answered = 0
+    total_correct = 0
+    mastered_words = set()
+    
+    # Pending retries: list of (word, insert_after_question_number)
+    pending_retries = []
     
     print(f"\n{'='*50}")
     print(f"📚 Quiz Mode: {'Greek→Italian' if reverse else 'Italian→Greek'}")
     if retry_wrong:
-        print("💡 Wrong answers will be retried at the end")
+        print("💡 Interleaved repetition: wrong answers return later")
+        print(f"🎯 Master each word by answering correctly {CORRECT_NEEDED_TO_MASTER}x")
     print(f"{'='*50}")
     
-    for i, word in enumerate(selected, 1):
+    while quiz_queue:
+        # Check if any pending retries should be inserted
+        if retry_wrong:
+            retries_to_insert = [r for r in pending_retries if r[1] <= questions_answered]
+            for retry_item in retries_to_insert:
+                pending_retries.remove(retry_item)
+                quiz_queue.append(retry_item[0])
+        
+        word = quiz_queue.popleft()
+        word_key = word["italian"]
+        stats = word_stats[word_key]
+        
+        questions_answered += 1
+        
         question = word["greek"] if reverse else word["italian"]
         answer = word["italian"] if reverse else word["greek"]
         
-        print(f"\n[{i}/{len(selected)}] {question}")
+        # Show retry indicator if this is a repeated word
+        retry_indicator = ""
+        if stats["retries"] > 0:
+            retry_indicator = f" [retry {stats['retries']}/{MAX_RETRIES_PER_WORD}]"
+        
+        # Calculate progress (unique words answered at least once)
+        progress = len([w for w in word_stats.values() if w["correct"] > 0 or w["retries"] > 0])
+        print(f"\n[{progress}/{n}]{retry_indicator} {question}")
         user_answer = input("Your answer: ").strip()
         
         correct = user_answer.lower() == answer.lower()
+        
         if correct:
-            print("✓ Correct!")
-            score += 1
+            stats["correct"] += 1
+            total_correct += 1
+            
+            if stats["correct"] >= CORRECT_NEEDED_TO_MASTER:
+                mastered_words.add(word_key)
+                print(f"✓ Correct! 🌟 Mastered!")
+            elif stats["correct"] == 1 and stats["retries"] > 0:
+                print(f"✓ Correct! Well done! 🎉")
+            else:
+                remaining = CORRECT_NEEDED_TO_MASTER - stats["correct"]
+                print(f"✓ Correct! ({remaining} more to master)")
         else:
             print(f"✗ Wrong. Answer: {answer}")
-            if retry_wrong:
-                wrong_answers.append(word)
+            
+            # Schedule retry if enabled and not maxed out
+            if retry_wrong and stats["retries"] < MAX_RETRIES_PER_WORD:
+                stats["retries"] += 1
+                # Insert retry 3-7 questions later
+                delay = random.randint(RETRY_DELAY_MIN, RETRY_DELAY_MAX)
+                insert_after = questions_answered + delay
+                pending_retries.append((word, insert_after))
+                print(f"   ↩ Will retry in ~{delay} questions")
         
-        record_quiz_result(word["italian"], correct, "standard")
+        record_quiz_result(word["italian"], correct, "standard" if stats["retries"] == 0 else "retry")
         speak_word(word["italian"])
     
-    # Immediate retry of wrong answers
-    if retry_wrong and wrong_answers:
+    # Process any remaining pending retries
+    still_pending = [r[0] for r in pending_retries]
+    final_retry_score = 0
+    final_retry_total = 0
+    
+    if still_pending:
         print(f"\n{'='*50}")
-        print(f"🔄 Review Time! Let's retry the {len(wrong_answers)} words you missed")
+        print(f"🔄 Final Review: {len(still_pending)} words remaining")
         print(f"{'='*50}")
         
-        retry_score = 0
-        for i, word in enumerate(wrong_answers, 1):
+        for word in still_pending:
+            word_key = word["italian"]
+            stats = word_stats[word_key]
+            final_retry_total += 1
+            
             question = word["greek"] if reverse else word["italian"]
             answer = word["italian"] if reverse else word["greek"]
             
-            print(f"\n[Retry {i}/{len(wrong_answers)}] {question}")
+            print(f"\n[Final] {question}")
             user_answer = input("Your answer: ").strip()
             
             correct = user_answer.lower() == answer.lower()
             if correct:
-                print("✓ Correct! Well done! 🎉")
-                retry_score += 1
+                print("✓ Correct! 🎉")
+                final_retry_score += 1
+                stats["correct"] += 1
+                if stats["correct"] >= CORRECT_NEEDED_TO_MASTER:
+                    mastered_words.add(word_key)
             else:
-                print(f"✗ Still wrong. Remember: {answer}")
+                print(f"✗ Wrong. Remember: {answer}")
             
-            record_quiz_result(word["italian"], correct, "retry")
+            record_quiz_result(word["italian"], correct, "final_retry")
             speak_word(word["italian"])
-        
-        print(f"\n{'='*50}")
-        print(f"Retry Results: {retry_score}/{len(wrong_answers)} correct")
     
+    # Summary
     print(f"\n{'='*50}")
-    accuracy = score*100//len(selected) if selected else 0
-    print(f"Quiz complete! Score: {score}/{len(selected)} ({accuracy}%)")
+    print(f"📊 Quiz Summary")
+    print(f"{'='*50}")
+    print(f"Words mastered: {len(mastered_words)}/{n}")
+    print(f"Total answers: {total_correct} correct out of {questions_answered}")
     
-    if wrong_answers:
-        improvement = retry_score*100//len(wrong_answers) if wrong_answers else 0
-        print(f"Retry accuracy: {improvement}%")
-        if improvement >= 80:
-            print("🌟 Excellent improvement!")
-        elif improvement >= 50:
-            print("👍 Good progress!")
-        else:
-            print("💪 Keep practicing these words!")
+    not_mastered = [w for w in selected if w["italian"] not in mastered_words]
+    if not_mastered:
+        print(f"\n⚠️  Words needing more practice:")
+        for word in not_mastered[:5]:  # Show up to 5
+            print(f"   • {word['italian']} = {word['greek']}")
+        if len(not_mastered) > 5:
+            print(f"   ... and {len(not_mastered) - 5} more")
+    else:
+        print(f"\n🌟 Perfect! All words mastered!")
+    
     print(f"{'='*50}")
 
 
 def run_multiple_choice(n=10, retry_wrong=True):
-    """Run a multiple choice quiz.
+    """Run a multiple choice quiz with interleaved repetition.
+    
+    Features:
+    - Wrong answers are re-inserted 3-7 questions later (interleaved repetition)
+    - Words must be answered correctly twice to be considered mastered
+    - Maximum 3 retries per word to avoid frustrating loops
     
     Args:
         n: Number of words to quiz
-        retry_wrong: If True, retry wrong answers at end of quiz
+        retry_wrong: If True, use interleaved repetition for wrong answers
     """
     words = load_vocabulary()
     
@@ -114,16 +192,42 @@ def run_multiple_choice(n=10, retry_wrong=True):
     
     # Get balanced selection: 30% new, 40% weak, 30% review words
     selected = get_words_for_quiz(words, min(n, len(words)))
-    score = 0
-    wrong_answers = []  # Track words that need retry
+    
+    # Initialize quiz queue and tracking
+    quiz_queue = deque(selected)
+    word_stats = {}  # Track correct count and retry count per word
+    
+    for word in selected:
+        word_stats[word["italian"]] = {"correct": 0, "retries": 0}
+    
+    questions_answered = 0
+    total_correct = 0
+    mastered_words = set()
+    
+    # Pending retries: list of (word, insert_after_question_number)
+    pending_retries = []
     
     print(f"\n{'='*50}")
     print(f"📝 Multiple Choice Quiz")
     if retry_wrong:
-        print("💡 Wrong answers will be retried at the end")
+        print("💡 Interleaved repetition: wrong answers return later")
+        print(f"🎯 Master each word by answering correctly {CORRECT_NEEDED_TO_MASTER}x")
     print(f"{'='*50}")
     
-    for i, word in enumerate(selected, 1):
+    while quiz_queue:
+        # Check if any pending retries should be inserted
+        if retry_wrong:
+            retries_to_insert = [r for r in pending_retries if r[1] <= questions_answered]
+            for retry_item in retries_to_insert:
+                pending_retries.remove(retry_item)
+                quiz_queue.append(retry_item[0])
+        
+        word = quiz_queue.popleft()
+        word_key = word["italian"]
+        stats = word_stats[word_key]
+        
+        questions_answered += 1
+        
         question = word["italian"]
         correct_answer = word["greek"]
         
@@ -132,7 +236,14 @@ def run_multiple_choice(n=10, retry_wrong=True):
         options = [correct_answer] + wrong
         random.shuffle(options)
         
-        print(f"\n[{i}/{len(selected)}] {question}")
+        # Show retry indicator if this is a repeated word
+        retry_indicator = ""
+        if stats["retries"] > 0:
+            retry_indicator = f" [retry {stats['retries']}/{MAX_RETRIES_PER_WORD}]"
+        
+        # Calculate progress (unique words answered at least once)
+        progress = len([w for w in word_stats.values() if w["correct"] > 0 or w["retries"] > 0])
+        print(f"\n[{progress}/{n}]{retry_indicator} {question}")
         for j, opt in enumerate(options, 1):
             print(f"  {j}. {opt}")
         
@@ -149,33 +260,54 @@ def run_multiple_choice(n=10, retry_wrong=True):
         correct = user_answer == correct_answer
         
         if correct:
-            print("✓ Correct!")
-            score += 1
+            stats["correct"] += 1
+            total_correct += 1
+            
+            if stats["correct"] >= CORRECT_NEEDED_TO_MASTER:
+                mastered_words.add(word_key)
+                print(f"✓ Correct! 🌟 Mastered!")
+            elif stats["correct"] == 1 and stats["retries"] > 0:
+                print(f"✓ Correct! Well done! 🎉")
+            else:
+                remaining = CORRECT_NEEDED_TO_MASTER - stats["correct"]
+                print(f"✓ Correct! ({remaining} more to master)")
         else:
             print(f"✗ Wrong. Answer: {correct_answer}")
-            if retry_wrong:
-                wrong_answers.append(word)
+            
+            # Schedule retry if enabled and not maxed out
+            if retry_wrong and stats["retries"] < MAX_RETRIES_PER_WORD:
+                stats["retries"] += 1
+                # Insert retry 3-7 questions later
+                delay = random.randint(RETRY_DELAY_MIN, RETRY_DELAY_MAX)
+                insert_after = questions_answered + delay
+                pending_retries.append((word, insert_after))
+                print(f"   ↩ Will retry in ~{delay} questions")
         
-        record_quiz_result(word["italian"], correct, "multiple_choice")
+        record_quiz_result(word["italian"], correct, "multiple_choice" if stats["retries"] == 0 else "retry")
         speak_word(word["italian"])
     
-    # Immediate retry of wrong answers
-    if retry_wrong and wrong_answers:
+    # Process any remaining pending retries
+    still_pending = [r[0] for r in pending_retries]
+    final_retry_score = 0
+    
+    if still_pending:
         print(f"\n{'='*50}")
-        print(f"🔄 Review Time! Let's retry the {len(wrong_answers)} words you missed")
+        print(f"🔄 Final Review: {len(still_pending)} words remaining")
         print(f"{'='*50}")
         
-        retry_score = 0
-        for i, word in enumerate(wrong_answers, 1):
+        for word in still_pending:
+            word_key = word["italian"]
+            stats = word_stats[word_key]
+            
             question = word["italian"]
             correct_answer = word["greek"]
             
-            # Generate new wrong answers for retry
+            # Generate new wrong answers for final retry
             wrong = random.sample([w["greek"] for w in words if w["greek"] != correct_answer], 3)
             options = [correct_answer] + wrong
             random.shuffle(options)
             
-            print(f"\n[Retry {i}/{len(wrong_answers)}] {question}")
+            print(f"\n[Final] {question}")
             for j, opt in enumerate(options, 1):
                 print(f"  {j}. {opt}")
             
@@ -192,30 +324,34 @@ def run_multiple_choice(n=10, retry_wrong=True):
             correct = user_answer == correct_answer
             
             if correct:
-                print("✓ Correct! Well done! 🎉")
-                retry_score += 1
+                print("✓ Correct! 🎉")
+                final_retry_score += 1
+                stats["correct"] += 1
+                if stats["correct"] >= CORRECT_NEEDED_TO_MASTER:
+                    mastered_words.add(word_key)
             else:
-                print(f"✗ Still wrong. Remember: {correct_answer}")
+                print(f"✗ Wrong. Remember: {correct_answer}")
             
-            record_quiz_result(word["italian"], correct, "retry")
+            record_quiz_result(word["italian"], correct, "final_retry")
             speak_word(word["italian"])
-        
-        print(f"\n{'='*50}")
-        print(f"Retry Results: {retry_score}/{len(wrong_answers)} correct")
     
+    # Summary
     print(f"\n{'='*50}")
-    accuracy = score*100//len(selected) if selected else 0
-    print(f"Quiz complete! Score: {score}/{len(selected)} ({accuracy}%)")
+    print(f"📊 Quiz Summary")
+    print(f"{'='*50}")
+    print(f"Words mastered: {len(mastered_words)}/{n}")
+    print(f"Total answers: {total_correct} correct out of {questions_answered}")
     
-    if wrong_answers:
-        improvement = retry_score*100//len(wrong_answers) if wrong_answers else 0
-        print(f"Retry accuracy: {improvement}%")
-        if improvement >= 80:
-            print("🌟 Excellent improvement!")
-        elif improvement >= 50:
-            print("👍 Good progress!")
-        else:
-            print("💪 Keep practicing these words!")
+    not_mastered = [w for w in selected if w["italian"] not in mastered_words]
+    if not_mastered:
+        print(f"\n⚠️  Words needing more practice:")
+        for word in not_mastered[:5]:  # Show up to 5
+            print(f"   • {word['italian']} = {word['greek']}")
+        if len(not_mastered) > 5:
+            print(f"   ... and {len(not_mastered) - 5} more")
+    else:
+        print(f"\n🌟 Perfect! All words mastered!")
+    
     print(f"{'='*50}")
 
 
