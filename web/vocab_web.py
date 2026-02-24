@@ -21,314 +21,370 @@ def launch_web():
     
     HTML = '''
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Italian Vocabulary Practice</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --bg-gradient-start: #667eea;
-            --bg-gradient-end: #764ba2;
-            --card-bg: white;
-            --text-primary: #333;
-            --text-secondary: #666;
-            --text-light: rgba(255,255,255,0.9);
-            --menu-btn-bg: white;
-            --menu-btn-text: #667eea;
-            --shadow-color: rgba(0,0,0,0.2);
-            --progress-bg: rgba(255,255,255,0.3);
-            --progress-fill: #4CAF50;
+            --bg: #f5f2ed;
+            --bg-accent: #e8e2d9;
+            --card: #ffffff;
+            --text: #1c1917;
+            --text-muted: #57534e;
+            --primary: #b45309;
+            --primary-hover: #92400e;
+            --success: #15803d;
+            --success-bg: #dcfce7;
+            --error: #b91c1c;
+            --error-bg: #fee2e2;
+            --border: rgba(0,0,0,0.08);
+            --shadow: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 40px -10px rgba(0,0,0,0.12);
+            --radius: 14px;
+            --radius-sm: 10px;
         }
-        
         body.dark-mode {
-            --bg-gradient-start: #1a1a2e;
-            --bg-gradient-end: #16213e;
-            --card-bg: #0f3460;
-            --text-primary: #e8e8e8;
-            --text-secondary: #b8b8b8;
-            --text-light: rgba(255,255,255,0.9);
-            --menu-btn-bg: #0f3460;
-            --menu-btn-text: #67d5ea;
-            --shadow-color: rgba(0,0,0,0.5);
-            --progress-bg: rgba(255,255,255,0.1);
-            --progress-fill: #67d5ea;
+            --bg: #1c1917;
+            --bg-accent: #292524;
+            --card: #292524;
+            --text: #fafaf9;
+            --text-muted: #a8a29e;
+            --primary: #f59e0b;
+            --primary-hover: #fbbf24;
+            --success: #4ade80;
+            --success-bg: rgba(74, 222, 128, 0.15);
+            --error: #f87171;
+            --error-bg: rgba(248, 113, 113, 0.15);
+            --border: rgba(255,255,255,0.08);
+            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 40px -10px rgba(0,0,0,0.4);
         }
-        
         * { box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 1000px; 
-            margin: 0 auto; 
-            padding: 20px; 
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 24px 20px 48px;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            transition: background 0.3s ease;
+            line-height: 1.5;
+            transition: background 0.25s ease, color 0.25s ease;
         }
-        h1 { 
-            text-align: center; 
-            color: white; 
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text);
+            margin: 0 0 6px;
+            letter-spacing: -0.02em;
         }
         .subtitle {
             text-align: center;
-            color: var(--text-light);
-            font-size: 1.1em;
-            margin-bottom: 30px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 32px;
         }
-        
         .dark-mode-toggle {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--card-bg);
-            color: var(--text-primary);
-            border: none;
-            padding: 12px 16px;
-            border-radius: 50px;
+            top: 16px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
             cursor: pointer;
-            font-size: 20px;
-            box-shadow: 0 4px 15px var(--shadow-color);
-            transition: all 0.3s ease;
+            font-size: 1.25rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
             z-index: 1000;
         }
-        
         .dark-mode-toggle:hover {
-            transform: scale(1.1) rotate(20deg);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
         }
-        
-        .progress-container {
-            width: 100%;
-            height: 8px;
-            background: var(--progress-bg);
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 24px;
         }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--progress-fill), #76ff03);
-            border-radius: 10px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 10px var(--progress-fill);
-        }
-        
-        .progress-text {
-            text-align: center;
-            color: var(--text-light);
-            font-size: 0.9em;
-            margin-top: 5px;
+        .menu button {
+            font-family: inherit;
+            font-size: 0.9rem;
             font-weight: 600;
-        }
-        .menu { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 12px; 
-            justify-content: center; 
-            margin: 30px 0; 
-        }
-        .menu button { 
-            font-size: 16px; 
-            padding: 15px 30px; 
-            background: var(--menu-btn-bg);
-            color: var(--menu-btn-text); 
-            border: none; 
-            border-radius: 25px; 
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
         }
-        .menu button:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            background: #f0f0f0;
+        .menu button:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(180, 83, 9, 0.25);
         }
-        .menu button.active { 
-            background: #4CAF50;
-            color: white;
+        body.dark-mode .menu button:hover {
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
         }
-        #quiz { 
-            background: white; 
-            padding: 40px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
-            min-height: 400px;
-            animation: fadeIn 0.5s ease-in;
+        .menu button.stats-btn {
+            background: var(--text-muted);
+            color: var(--card);
+            border-color: transparent;
+        }
+        .menu button.stats-btn:hover {
+            background: var(--text);
+            color: var(--card);
+        }
+        #quiz {
+            background: var(--card);
+            padding: 28px 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            min-height: 360px;
+            border: 1px solid var(--border);
+            animation: fadeIn 0.35s ease-out;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .card { 
-            border: 3px solid #667eea; 
-            padding: 50px; 
-            text-align: center; 
-            font-size: 32px; 
-            margin: 20px 0; 
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            border-radius: 15px;
-            font-weight: 500;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        .progress-container {
+            height: 6px;
+            background: var(--bg-accent);
+            border-radius: 999px;
+            margin: 0 0 12px;
+            overflow: hidden;
         }
-        .flashcard { 
-            cursor: pointer; 
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 999px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .progress-text {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .card {
+            padding: 32px 24px;
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 16px 0;
+            background: var(--bg-accent);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            letter-spacing: -0.01em;
+        }
+        .flashcard {
+            cursor: pointer;
             user-select: none;
-            transition: transform 0.3s ease;
+            transition: transform 0.2s ease;
         }
         .flashcard:hover {
-            transform: scale(1.02);
+            transform: scale(1.01);
         }
-        .answer { 
-            margin: 30px 0; 
-            text-align: center; 
-        }
-        input { 
-            font-size: 20px; 
-            padding: 15px 20px; 
-            width: 400px; 
-            max-width: 100%;
-            border: 2px solid #667eea; 
-            border-radius: 10px;
+        .answer { margin: 24px 0; text-align: center; }
+        input {
+            font-family: inherit;
+            font-size: 1.1rem;
+            padding: 14px 18px;
+            width: 100%;
+            max-width: 360px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--card);
+            color: var(--text);
             outline: none;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
         input:focus {
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.15);
         }
-        button { 
-            font-size: 16px; 
-            padding: 12px 28px; 
-            margin: 5px; 
-            border: none; 
-            border-radius: 10px; 
-            cursor: pointer;
+        body.dark-mode input:focus {
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+        }
+        button {
+            font-family: inherit;
+            font-size: 0.9rem;
             font-weight: 600;
-            transition: all 0.3s ease;
+            padding: 12px 24px;
+            margin: 6px;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .submit-btn { 
-            background: #4CAF50; 
-            color: white;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        .submit-btn {
+            background: var(--success);
+            color: #fff;
         }
-        .submit-btn:hover { 
-            background: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        .submit-btn:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
         }
-        .correct { 
-            color: #4CAF50; 
-            font-weight: bold; 
-            font-size: 1.3em;
-            animation: bounceIn 0.5s ease;
+        .correct {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 1.15rem;
+            animation: bounceIn 0.4s ease;
         }
-        .wrong { 
-            color: #f44336; 
-            font-weight: bold; 
-            font-size: 1.2em;
+        .wrong {
+            color: var(--error);
+            font-weight: 700;
+            font-size: 1.1rem;
         }
         @keyframes bounceIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { transform: scale(1.1); }
+            0% { transform: scale(0.9); opacity: 0; }
+            60% { transform: scale(1.03); }
             100% { transform: scale(1); opacity: 1; }
         }
-        .options { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-            max-width: 500px; 
-            margin: 20px auto; 
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 480px;
+            margin: 20px auto;
         }
-        .option-btn { 
-            padding: 18px; 
-            font-size: 18px; 
-            background: #f5f5f5;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+        .option-btn {
+            font-family: inherit;
+            padding: 16px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: left;
+            background: var(--bg-accent);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .option-btn:hover { 
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-            transform: translateX(5px);
+        .option-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            transform: translateX(4px);
         }
-        .speaker { 
-            cursor: pointer; 
-            font-size: 28px; 
-            margin-left: 15px;
-            transition: transform 0.2s ease;
+        .speaker {
+            cursor: pointer;
+            font-size: 1.4rem;
+            margin-left: 10px;
+            opacity: 0.85;
+            transition: transform 0.2s, opacity 0.2s;
             display: inline-block;
         }
-        .speaker:hover {
-            transform: scale(1.2);
-        }
-        .speaker:active {
-            transform: scale(0.9);
-        }
-        .controls { 
-            text-align: center; 
-            margin: 20px 0; 
-        }
-        .progress { 
-            text-align: center; 
-            color: #667eea; 
-            margin: 10px 0; 
-            font-weight: 600;
-            font-size: 1.1em;
-        }
-        .sentence-input { 
-            width: 90%; 
-            min-height: 80px; 
-            font-size: 17px; 
-            padding: 15px;
-            border: 2px solid #667eea;
-            border-radius: 10px;
+        .speaker:hover { opacity: 1; transform: scale(1.15); }
+        .speaker:active { transform: scale(0.95); }
+        .controls { text-align: center; margin: 20px 0; }
+        .sentence-input {
+            width: 100%;
+            min-height: 88px;
             font-family: inherit;
+            font-size: 1rem;
+            padding: 14px 18px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--card);
+            color: var(--text);
             resize: vertical;
         }
         .sentence-input:focus {
             outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.15);
         }
         footer {
             text-align: center;
-            color: white;
-            margin-top: 30px;
-            opacity: 0.8;
-            font-size: 0.9em;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 32px;
         }
+        .stat-card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        .stat-number { font-size: 1.75rem; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
+        .panel {
+            background: var(--card);
+            padding: 24px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .charts-grid .panel {
+            min-width: 0;
+            overflow: hidden;
+        }
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+        }
+        .chart-wrapper canvas {
+            max-width: 100% !important;
+            max-height: 100% !important;
+            display: block;
+        }
+        @media (max-width: 520px) {
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+        .section-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+        .panel table { width: 100%; border-collapse: collapse; }
+        .panel th, .panel td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        .panel th { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+        .panel td { font-size: 0.9rem; }
     </style>
 </head>
 <body>
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
-    
-    <h1>🇮🇹 Italian Vocabulary Practice 🇬🇷</h1>
-    <div class="subtitle">Master Italian vocabulary with interactive practice modes</div>
-    
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+    <h1>Italian → Greek</h1>
+    <p class="subtitle">Pick a mode and start practicing</p>
     <div class="menu" id="mainMenu">
         <button onclick="startMode('it-gr')">Italian → Greek</button>
         <button onclick="startMode('gr-it')">Greek → Italian</button>
-        <button onclick="startMode('mc')">Multiple Choice</button>
+        <button onclick="startMode('mc')">Multiple choice (IT→GR)</button>
+        <button onclick="startMode('mc-gr-it')">Multiple choice (GR→IT)</button>
         <button onclick="startMode('flashcard')">Flashcards</button>
-        <button onclick="startMode('sentence-it-gr')">🇮🇹→🇬🇷 Sentences</button>
-        <button onclick="startMode('sentence-gr-it')">🇬🇷→🇮🇹 Sentences</button>
-        <button onclick="showStats()" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">📊 Statistics</button>
+        <button onclick="startMode('sentence-it-gr')">Sentences IT→GR</button>
+        <button onclick="startMode('sentence-gr-it')">Sentences GR→IT</button>
+        <button class="stats-btn" onclick="showStats()">Statistics</button>
     </div>
-    
     <div id="quiz"></div>
-    
-    <footer>
-        Practice makes perfect! 💪 Keep learning every day 📚
-    </footer>
+    <footer>Practice a little every day.</footer>
     
     <script>
         let words = [];
@@ -356,7 +412,7 @@ def launch_web():
             const duration = 3000;
             const end = Date.now() + duration;
             
-            const colors = ['#667eea', '#764ba2', '#4CAF50', '#FFC107', '#f093fb'];
+            const colors = ['#b45309', '#15803d', '#1c1917', '#f59e0b', '#92400e'];
             
             (function frame() {
                 confetti({
@@ -414,95 +470,66 @@ def launch_web():
                 const stats = await res.json();
                 
                 let html = '<div style="max-width:1200px; margin:0 auto;">';
-                html += '<button onclick="location.reload()" style="margin-bottom:20px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-size:16px;">← Back to Menu</button>';
-                
-                // Overview cards
-                html += '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-bottom:30px;">';
+                html += '<button onclick="location.reload()" class="submit-btn" style="margin-bottom:20px; background:var(--text); color:var(--card);">← Back to Menu</button>';
+                const safe = (v, d) => (v != null && v !== '') ? v : (d != null ? d : 0);
+                html += '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:24px;">';
                 html += `<div class="stat-card">
-                    <div class="stat-number">${stats.total_words}</div>
+                    <div class="stat-number">${safe(stats.total_words, 0)}</div>
                     <div class="stat-label">Words Practiced</div>
                 </div>`;
                 html += `<div class="stat-card">
-                    <div class="stat-number">${stats.total_attempts}</div>
+                    <div class="stat-number">${safe(stats.total_attempts, 0)}</div>
                     <div class="stat-label">Total Attempts</div>
                 </div>`;
                 html += `<div class="stat-card">
-                    <div class="stat-number">${stats.accuracy.toFixed(1)}%</div>
+                    <div class="stat-number">${(stats.accuracy != null ? Number(stats.accuracy) : 0).toFixed(1)}%</div>
                     <div class="stat-label">Overall Accuracy</div>
                 </div>`;
                 html += `<div class="stat-card">
-                    <div class="stat-number">${stats.best_streak}</div>
+                    <div class="stat-number">${safe(stats.best_streak, 0)}</div>
                     <div class="stat-label">Best Streak</div>
                 </div>`;
                 html += `<div class="stat-card">
-                    <div class="stat-number">${stats.due_for_review}</div>
+                    <div class="stat-number">${safe(stats.due_for_review, 0)}</div>
                     <div class="stat-label">Due for Review</div>
                 </div>`;
                 html += '</div>';
                 
                 // Charts Section
                 if (stats.daily_performance.length > 0 || stats.quiz_types.length > 0) {
-                    html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">';
-                    
-                    // Daily Performance Chart
+                    html += '<div class="charts-grid">';
                     if (stats.daily_performance.length > 0) {
-                        html += '<div style="background:white; padding:25px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.1);">';
-                        html += '<h2 style="color:#667eea; margin-bottom:15px;">📈 Daily Accuracy Trend</h2>';
-                        html += '<canvas id="dailyChart" style="max-height:250px;"></canvas>';
-                        html += '</div>';
+                        html += '<div class="panel"><h2 class="section-title">Daily accuracy</h2><div class="chart-wrapper"><canvas id="dailyChart"></canvas></div></div>';
                     }
-                    
-                    // Quiz Type Performance Chart
                     if (stats.quiz_types.length > 0) {
-                        html += '<div style="background:white; padding:25px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.1);">';
-                        html += '<h2 style="color:#667eea; margin-bottom:15px;">📊 Quiz Type Performance</h2>';
-                        html += '<canvas id="quizTypeChart" style="max-height:250px;"></canvas>';
-                        html += '</div>';
+                        html += '<div class="panel"><h2 class="section-title">By quiz type</h2><div class="chart-wrapper"><canvas id="quizTypeChart"></canvas></div></div>';
                     }
-                    
                     html += '</div>';
                 }
-                
-                // Top words
-                html += '<div style="background:white; padding:25px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.1); margin-bottom:20px;">';
-                html += '<h2 style="color:#667eea; margin-bottom:15px;">🌟 Top Performing Words</h2>';
+                html += '<div class="panel"><h2 class="section-title">Top words</h2>';
                 if (stats.top_words.length > 0) {
-                    html += '<table style="width:100%; border-collapse:collapse;">';
-                    html += '<tr style="background:#f5f5f5; font-weight:bold;"><th style="padding:10px; text-align:left;">Word</th><th style="padding:10px;">Success Rate</th><th style="padding:10px;">Streak</th><th style="padding:10px;">EF</th></tr>';
+                    html += '<table><tr><th>Word</th><th>Success</th><th>Streak</th><th>EF</th></tr>';
                     stats.top_words.forEach(w => {
-                        html += `<tr style="border-bottom:1px solid #eee;">
-                            <td style="padding:10px;">${escapeHtml(w.word)}</td>
-                            <td style="padding:10px; text-align:center; color:#4CAF50; font-weight:bold;">${w.rate.toFixed(0)}%</td>
-                            <td style="padding:10px; text-align:center;">${w.streak}</td>
-                            <td style="padding:10px; text-align:center;">${w.ef.toFixed(2)}</td>
-                        </tr>`;
+                        const rate = w.rate != null ? Number(w.rate) : 0;
+                        const ef = w.ef != null ? Number(w.ef) : 0;
+                        html += `<tr><td>${escapeHtml(w.word)}</td><td style="text-align:center; color:var(--success); font-weight:600;">${rate.toFixed(0)}%</td><td style="text-align:center;">${w.streak ?? ''}</td><td style="text-align:center;">${ef.toFixed(2)}</td></tr>`;
                     });
                     html += '</table>';
                 } else {
-                    html += '<p style="color:#999;">No data yet. Start practicing!</p>';
+                    html += '<p style="color:var(--text-muted);">No data yet. Start practicing!</p>';
                 }
                 html += '</div>';
-                
-                // Weak words
-                html += '<div style="background:white; padding:25px; border-radius:15px; box-shadow:0 4px 15px rgba(0,0,0,0.1); margin-bottom:20px;">';
-                html += '<h2 style="color:#f5576c; margin-bottom:15px;">📉 Words Needing Attention</h2>';
+                html += '<div class="panel"><h2 class="section-title">Words to review</h2>';
                 if (stats.weak_words.length > 0) {
-                    html += '<table style="width:100%; border-collapse:collapse;">';
-                    html += '<tr style="background:#f5f5f5; font-weight:bold;"><th style="padding:10px; text-align:left;">Word</th><th style="padding:10px;">Times Seen</th><th style="padding:10px;">Success Rate</th><th style="padding:10px;">EF</th></tr>';
+                    html += '<table><tr><th>Word</th><th>Seen</th><th>Rate</th><th>EF</th></tr>';
                     stats.weak_words.forEach(w => {
-                        html += `<tr style="border-bottom:1px solid #eee;">
-                            <td style="padding:10px;">${escapeHtml(w.word)}</td>
-                            <td style="padding:10px; text-align:center;">${w.seen}</td>
-                            <td style="padding:10px; text-align:center; color:#f44336; font-weight:bold;">${w.rate.toFixed(0)}%</td>
-                            <td style="padding:10px; text-align:center;">${w.ef.toFixed(2)}</td>
-                        </tr>`;
+                        const rate = w.rate != null ? Number(w.rate) : 0;
+                        const ef = w.ef != null ? Number(w.ef) : 0;
+                        html += `<tr><td>${escapeHtml(w.word)}</td><td style="text-align:center;">${w.seen ?? ''}</td><td style="text-align:center; color:var(--error); font-weight:600;">${rate.toFixed(0)}%</td><td style="text-align:center;">${ef.toFixed(2)}</td></tr>`;
                     });
-                    html += '</table>';
-                    html += '<div style="margin-top:15px; padding:15px; background:#fff3cd; border-radius:8px; border-left:4px solid #f5576c;">';
-                    html += '💡 <strong>Tip:</strong> Use <code style="background:#f5f5f5; padding:3px 8px; border-radius:4px;">python vocab.py focus</code> in the command line to practice these words intensively!';
-                    html += '</div>';
+                    html += '</table><p style="margin-top:12px; padding:12px; background:var(--success-bg); border-radius:var(--radius-sm); font-size:0.9rem;">Tip: run <code style="background:var(--bg-accent); padding:2px 6px; border-radius:4px;">python vocab.py focus</code> to practice these words.</p>';
                 } else {
-                    html += '<p style="color:#999;">Great! No weak words found.</p>';
+                    html += '<p style="color:var(--text-muted);">No weak words — nice!</p>';
                 }
                 html += '</div>';
                 
@@ -522,13 +549,13 @@ def launch_web():
                                     labels: stats.daily_performance.map(d => d.date),
                                     datasets: [{
                                         label: 'Accuracy %',
-                                        data: stats.daily_performance.map(d => d.accuracy),
-                                        borderColor: '#667eea',
-                                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                                        data: stats.daily_performance.map(d => d.accuracy != null ? Number(d.accuracy) : 0),
+                                        borderColor: '#b45309',
+                                        backgroundColor: 'rgba(180, 83, 9, 0.12)',
                                         tension: 0.4,
                                         fill: true,
                                         pointRadius: 5,
-                                        pointBackgroundColor: '#667eea',
+                                        pointBackgroundColor: '#b45309',
                                         pointBorderColor: '#fff',
                                         pointBorderWidth: 2
                                     }]
@@ -542,10 +569,11 @@ def launch_web():
                                             callbacks: {
                                                 label: function(context) {
                                                     const dataPoint = stats.daily_performance[context.dataIndex];
+                                                    const acc = dataPoint && dataPoint.accuracy != null ? Number(dataPoint.accuracy) : 0;
                                                     return [
-                                                        `Accuracy: ${dataPoint.accuracy.toFixed(1)}%`,
-                                                        `Attempts: ${dataPoint.attempts}`,
-                                                        `Correct: ${dataPoint.correct}`
+                                                        `Accuracy: ${acc.toFixed(1)}%`,
+                                                        `Attempts: ${dataPoint ? dataPoint.attempts : 0}`,
+                                                        `Correct: ${dataPoint ? dataPoint.correct : 0}`
                                                     ];
                                                 }
                                             }
@@ -571,18 +599,17 @@ def launch_web():
                     if (stats.quiz_types.length > 0) {
                         const quizTypeCtx = document.getElementById('quizTypeChart');
                         if (quizTypeCtx) {
-                            const colors = stats.quiz_types.map(qt => 
-                                qt.accuracy >= 70 ? '#4CAF50' : 
-                                qt.accuracy >= 50 ? '#FF9800' : '#f44336'
-                            );
-                            
+                            const colors = stats.quiz_types.map(qt => {
+                                const a = qt.accuracy != null ? Number(qt.accuracy) : 0;
+                                return a >= 70 ? '#15803d' : a >= 50 ? '#b45309' : '#b91c1c';
+                            });
                             new Chart(quizTypeCtx, {
                                 type: 'bar',
                                 data: {
-                                    labels: stats.quiz_types.map(qt => qt.type.charAt(0).toUpperCase() + qt.type.slice(1)),
+                                    labels: stats.quiz_types.map(qt => (qt.type || '').charAt(0).toUpperCase() + (qt.type || '').slice(1)),
                                     datasets: [{
                                         label: 'Accuracy %',
-                                        data: stats.quiz_types.map(qt => qt.accuracy),
+                                        data: stats.quiz_types.map(qt => qt.accuracy != null ? Number(qt.accuracy) : 0),
                                         backgroundColor: colors,
                                         borderColor: colors,
                                         borderWidth: 2
@@ -597,10 +624,11 @@ def launch_web():
                                             callbacks: {
                                                 label: function(context) {
                                                     const qt = stats.quiz_types[context.dataIndex];
+                                                    const acc = qt && qt.accuracy != null ? Number(qt.accuracy) : 0;
                                                     return [
-                                                        `Accuracy: ${qt.accuracy.toFixed(1)}%`,
-                                                        `Attempts: ${qt.count}`,
-                                                        `Correct: ${qt.correct}`
+                                                        `Accuracy: ${acc.toFixed(1)}%`,
+                                                        `Attempts: ${qt ? qt.count : 0}`,
+                                                        `Correct: ${qt ? qt.correct : 0}`
                                                     ];
                                                 }
                                             }
@@ -634,13 +662,15 @@ def launch_web():
             mode = m;
             current = 0;
             score = 0;
+            totalAnswered = 0;
             
             try {
-                // Check if it's a sentence mode
                 if (mode.startsWith('sentence')) {
                     showSentence();
                 } else {
-                    const res = await fetch('/api/words?n=10');
+                    // Multiple choice: load larger batch so session continues; others load 10
+                    const n = (mode === 'mc' || mode === 'mc-gr-it') ? 300 : 10;
+                    const res = await fetch('/api/words?n=' + n);
                     words = await res.json();
                     console.log('Loaded words:', words.length);
                     showQuestion();
@@ -651,94 +681,124 @@ def launch_web():
             }
         }
         
+        let totalAnswered = 0;
+        
         async function playAudio(word) {
             try {
                 const res = await fetch('/api/speak?word=' + encodeURIComponent(word));
                 const data = await res.json();
-                if (data.audio) {
+                if (res.ok && data.audio && data.audio.length > 0) {
                     const audio = new Audio('data:audio/mp3;base64,' + data.audio);
-                    audio.play();
+                    audio.play().catch(() => fallbackSpeak(word));
+                } else {
+                    fallbackSpeak(word);
                 }
             } catch(e) {
-                console.log('Audio unavailable:', e);
+                fallbackSpeak(word);
             }
         }
         
-        function showQuestion() {
+        function fallbackSpeak(word) {
+            if (!window.speechSynthesis) return;
+            const u = new SpeechSynthesisUtterance(word);
+            u.lang = 'it-IT';
+            u.rate = 0.9;
+            window.speechSynthesis.speak(u);
+        }
+        
+        async function showQuestion() {
+            const isMC = mode === 'mc' || mode === 'mc-gr-it';
+            
             if (current >= words.length) {
-                const percentage = Math.round(score*100/words.length);
-                let completeHTML = '<div class="fade-in" style="text-align:center; padding:40px;">';
-                completeHTML += '<h2 style="color:var(--text-light); font-size:2.5em; margin-bottom:20px;">🎉 Quiz Complete!</h2>';
-                completeHTML += '<div style="font-size:4em; margin:30px 0;">' + score + '/' + words.length + '</div>';
-                completeHTML += '<div style="font-size:2em; color:var(--text-light); margin-bottom:30px;">' + percentage + '%</div>';
-                
-                // Show confetti for good scores
+                if (isMC && totalAnswered > 0) {
+                    const percentage = Math.round(score*100/totalAnswered);
+                    let completeHTML = '<div style="text-align:center; padding:32px 24px;">';
+                    completeHTML += '<h2 style="color:var(--text); font-size:1.5rem; margin-bottom:16px;">Session done</h2>';
+                    completeHTML += '<div style="font-size:3rem; font-weight:700; color:var(--primary); margin:20px 0;">' + score + '/' + totalAnswered + '</div>';
+                    completeHTML += '<p style="color:var(--text-muted); margin-bottom:24px;">' + percentage + '% correct</p>';
+                    completeHTML += '<button onclick="loadMoreWords()" class="submit-btn" style="margin:8px;">More words</button>';
+                    completeHTML += '<button onclick="location.reload()" style="margin:8px; background:var(--text); color:#fff;" class="submit-btn">Menu</button>';
+                    completeHTML += '</div>';
+                    document.getElementById('quiz').innerHTML = completeHTML;
+                    return;
+                }
+                const percentage = words.length ? Math.round(score*100/words.length) : 0;
+                let completeHTML = '<div style="text-align:center; padding:32px 24px;">';
+                completeHTML += '<h2 style="color:var(--text); font-size:1.5rem; margin-bottom:16px;">Quiz complete</h2>';
+                completeHTML += '<div style="font-size:3rem; font-weight:700; color:var(--primary); margin:20px 0;">' + score + '/' + words.length + '</div>';
+                completeHTML += '<p style="color:var(--text-muted); margin-bottom:20px;">' + percentage + '%</p>';
                 if (percentage >= 80) {
                     celebrate();
-                    completeHTML += '<p style="color:#4CAF50; font-size:1.5em; margin:20px 0;">🌟 Excellent work! 🌟</p>';
+                    completeHTML += '<p style="color:var(--success); font-weight:600; margin:16px 0;">Well done!</p>';
                 } else if (percentage >= 60) {
-                    completeHTML += '<p style="color:#FFC107; font-size:1.3em; margin:20px 0;">👍 Good job! Keep practicing!</p>';
+                    completeHTML += '<p style="color:var(--text-muted); margin:16px 0;">Good — keep practicing.</p>';
                 } else {
-                    completeHTML += '<p style="color:#FF9800; font-size:1.3em; margin:20px 0;">💪 Keep going! Practice makes perfect!</p>';
+                    completeHTML += '<p style="color:var(--text-muted); margin:16px 0;">Every round helps.</p>';
                 }
-                
-                completeHTML += '<button onclick="location.reload()" class="submit-btn" style="margin-top:20px;">Start New Quiz</button>';
+                completeHTML += '<button onclick="location.reload()" class="submit-btn" style="margin-top:16px;">New quiz</button>';
                 completeHTML += '</div>';
                 document.getElementById('quiz').innerHTML = completeHTML;
                 return;
             }
             
             const w = words[current];
-            const isReverse = mode === 'gr-it';
+            const isReverse = mode === 'gr-it' || mode === 'mc-gr-it';
             const question = isReverse ? w.greek : w.italian;
             const answer = isReverse ? w.italian : w.greek;
             
-            const progressPercent = (current / words.length) * 100;
+            const progressPercent = words.length ? (current / words.length) * 100 : 0;
             
             let html = '<div class="slide-in">';
             html += '<div class="progress-container">';
             html += '<div class="progress-bar" style="width:' + progressPercent + '%"></div>';
             html += '</div>';
-            html += '<div class="progress-text">Question ' + (current+1) + ' of ' + words.length + ' • Score: ' + score + '</div>';
+            html += '<div class="progress-text">Question ' + (current+1) + (words.length ? ' of ' + words.length : '') + ' • Score: ' + score + '</div>';
+            html += '<button onclick="location.reload()" style="margin-left:12px; padding:8px 16px; background:var(--bg-accent); color:var(--text); border:1px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; font-weight:600; font-size:0.85rem;">Stop</button>';
             html += '</div>';
             
-            if (mode === 'mc') {
+            if (isMC) {
+                const lang = isReverse ? 'italian' : 'greek';
+                const category = (w.category || '').trim();
+                let options = [answer];
+                try {
+                    let url = '/api/mc-options?correct=' + encodeURIComponent(answer) + '&lang=' + lang + '&count=3';
+                    if (category) url += '&category=' + encodeURIComponent(category);
+                    const optRes = await fetch(url);
+                    if (optRes.ok) {
+                        const wrongOpts = await optRes.json();
+                        if (Array.isArray(wrongOpts)) {
+                            wrongOpts.forEach(function(x) {
+                                if (x && options.indexOf(x) === -1) options.push(x);
+                            });
+                        }
+                    }
+                } catch(e) {
+                    console.warn('MC options fetch failed, using batch fallback:', e);
+                }
+                if (options.length < 4) {
+                    const availableWords = words.filter((x, i) => i !== current);
+                    for (let i = 0; i < availableWords.length && options.length < 4; i++) {
+                        const wrongAnswer = isReverse ? availableWords[i].italian : availableWords[i].greek;
+                        if (wrongAnswer && options.indexOf(wrongAnswer) === -1) options.push(wrongAnswer);
+                    }
+                }
+                options.sort(() => Math.random() - 0.5);
+                
                 html += '<div class="card">' + escapeHtml(question) + 
                         '<span class="speaker" onclick="playAudio(' + JSON.stringify(w.italian) + ')">🔊</span></div>';
                 html += '<div class="options">';
-                
-                // Get random wrong answers (not sequential)
-                const options = [answer];
-                const availableWords = words.filter((x, i) => i !== current);
-                
-                // Shuffle available words and take first 3
-                const shuffled = availableWords.sort(() => Math.random() - 0.5);
-                for (let i = 0; i < 3 && i < shuffled.length; i++) {
-                    const wrongAnswer = isReverse ? shuffled[i].italian : shuffled[i].greek;
-                    // Avoid duplicates
-                    if (!options.includes(wrongAnswer)) {
-                        options.push(wrongAnswer);
-                    }
-                }
-                
-                // Shuffle the final options so correct answer isn't always first
-                options.sort(() => Math.random() - 0.5);
-                
-                options.forEach((opt, idx) => {
+                options.forEach((opt) => {
                     html += '<button class="option-btn" data-opt="' + escapeHtml(opt) + 
                             '" data-correct="' + escapeHtml(answer) + 
                             '" data-italian="' + escapeHtml(w.italian) + '">' + escapeHtml(opt) + '</button>';
                 });
                 html += '</div>';
-                
-                // Attach event listeners after DOM update
-                setTimeout(() => {
-                    document.querySelectorAll('.option-btn').forEach(btn => {
-                        btn.onclick = function() {
-                            checkMC(this.dataset.opt, this.dataset.correct, this.dataset.italian);
-                        };
-                    });
-                }, 10);
+                document.getElementById('quiz').innerHTML = html;
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.onclick = function() {
+                        checkMC(this.dataset.opt, this.dataset.correct, this.dataset.italian);
+                    };
+                });
             } else if (mode === 'flashcard') {
                 if (!flipped) {
                     html += '<div class="card flashcard" onclick="flipCard()">' + escapeHtml(question) +
@@ -749,8 +809,8 @@ def launch_web():
                             '<span class="speaker" onclick="playAudio(' + JSON.stringify(w.italian) + ')">🔊</span></div>';
                     html += '<div class="card" style="background:#e8f5e9;">→ ' + escapeHtml(answer) + '</div>';
                     html += '<div class="controls">' +
-                            '<button onclick="markCard(true)" class="submit-btn" style="background:#4CAF50;">✓ Know it</button>' +
-                            '<button onclick="markCard(false)" class="submit-btn" style="background:#f44336;">✗ Need review</button>' +
+                            '<button onclick="markCard(true)" class="submit-btn">✓ Know it</button>' +
+                            '<button onclick="markCard(false)" class="submit-btn" style="background:var(--error);">✗ Need review</button>' +
                             '</div>';
                 }
             } else {
@@ -772,7 +832,9 @@ def launch_web():
                 }, 100);
             }
             
-            document.getElementById('quiz').innerHTML = html;
+            if (!isMC) {
+                document.getElementById('quiz').innerHTML = html;
+            }
         }
         
         function flipCard() {
@@ -817,10 +879,8 @@ def launch_web():
         
         function checkMC(selected, correct, italianWord) {
             const isCorrect = selected === correct;
-            
-            // Record result in database
+            totalAnswered++;
             recordResult(italianWord, isCorrect, 'mc');
-            
             if (isCorrect) score++;
             
             const res = isCorrect ? 
@@ -828,12 +888,24 @@ def launch_web():
                 '<p class="wrong">✗ Wrong. Answer: ' + escapeHtml(correct) + '</p>';
             
             document.getElementById('quiz').innerHTML += '<div>' + res + '</div>';
-            
-            // Play audio with the word passed as parameter
             playAudio(italianWord);
             
             current++;
             setTimeout(showQuestion, 2000);
+        }
+        
+        async function loadMoreWords() {
+            try {
+                const res = await fetch('/api/words?n=300');
+                const more = await res.json();
+                words = more;
+                current = 0;
+                score = 0;
+                totalAnswered = 0;
+                showQuestion();
+            } catch(e) {
+                console.error('Load more failed:', e);
+            }
         }
         
         let currentSentence = null;
@@ -841,9 +913,9 @@ def launch_web():
         async function showSentence() {
             if (current >= 5) {
                 let completeHTML = '<div class="fade-in" style="text-align:center; padding:40px;">';
-                completeHTML += '<h2 style="color:var(--text-light); font-size:2.5em;">📚 Sentence Practice Complete!</h2>';
-                completeHTML += '<p style="color:var(--text-light); margin:30px 0;">Great work practicing with real sentences!</p>';
-                completeHTML += '<button onclick="location.reload()" class="submit-btn">Start New Practice</button>';
+                completeHTML += '<h2 style="color:var(--text); font-size:1.5rem;">Sentences done</h2>';
+                completeHTML += '<p style="color:var(--text-muted); margin:24px 0;">Nice work.</p>';
+                completeHTML += '<button onclick="location.reload()" class="submit-btn">Practice again</button>';
                 completeHTML += '</div>';
                 document.getElementById('quiz').innerHTML = completeHTML;
                 celebrate();
@@ -876,11 +948,11 @@ def launch_web():
             html += '<div class="progress-text">Sentence ' + (current+1) + ' of 5</div>';
             html += '</div>';
             html += '<div style="text-align:center; margin:15px 0;">';
-            html += '<span style="background:#667eea; color:white; padding:6px 15px; border-radius:20px; font-size:0.85em;">';
+            html += '<span style="background:var(--primary); color:#fff; padding:6px 14px; border-radius:999px; font-size:0.85em; font-weight:600;">';
             html += direction === 'it-gr' ? '🇮🇹 Italian → Greek 🇬🇷' : '🇬🇷 Greek → Italian 🇮🇹';
             html += '</span></div>';
             html += '<div class="card fade-in">' + escapeHtml(data.source) + '</div>';
-            html += '<div style="text-align:center; margin:10px 0; color:#667eea; font-size:0.9em; font-style:italic;">';
+            html += '<div style="text-align:center; margin:10px 0; color:var(--text-muted); font-size:0.9em;">';
             html += '📝 Grammar: ' + escapeHtml(data.pattern) + '</div>';
             html += '<div class="answer">';
             html += '<textarea id="translation" class="sentence-input" placeholder="' + targetPlaceholder + '"></textarea><br>';
@@ -901,22 +973,22 @@ def launch_web():
             
             // User's translation
             feedback += '<div style="margin-bottom:15px;">';
-            feedback += '<p style="color:#2196F3; font-weight:bold; margin-bottom:8px;">📝 Your translation:</p>';
-            feedback += '<p style="background:#f0f0f0; padding:15px; border-radius:8px; font-size:16px; border-left:4px solid #2196F3;">' + 
+            feedback += '<p style="color:var(--primary); font-weight:bold; margin-bottom:8px;">Your translation:</p>';
+            feedback += '<p style="background:var(--bg-accent); padding:15px; border-radius:var(--radius-sm); font-size:1rem; border-left:4px solid var(--primary);">' + 
                        (userTrans ? escapeHtml(userTrans) : '<i style="color:#999;">No translation provided</i>') + '</p>';
             feedback += '</div>';
             
             // Correct translation
             feedback += '<div style="margin-bottom:15px;">';
-            feedback += '<p style="color:#4CAF50; font-weight:bold; margin-bottom:8px;">✅ Correct translation:</p>';
-            feedback += '<p style="background:#e8f5e9; padding:15px; border-radius:8px; font-size:16px; font-weight:500; border-left:4px solid #4CAF50;">' + 
+            feedback += '<p style="color:var(--success); font-weight:bold; margin-bottom:8px;">Correct translation:</p>';
+            feedback += '<p style="background:var(--success-bg); padding:15px; border-radius:var(--radius-sm); font-size:1rem; font-weight:500; border-left:4px solid var(--success);">' + 
                        escapeHtml(currentSentence.translation) + '</p>';
             feedback += '</div>';
             
             // Word-by-word reference
             feedback += '<div style="margin-bottom:15px;">';
             feedback += '<p style="color:#666; font-weight:bold; margin-bottom:8px;">📚 Word reference:</p>';
-            feedback += '<p style="background:#fff9e6; padding:12px; border-radius:8px; font-size:14px; border-left:4px solid #FFC107;">' + 
+            feedback += '<p style="background:var(--bg-accent); padding:12px; border-radius:var(--radius-sm); font-size:0.9rem; border-left:4px solid var(--primary);">' + 
                        escapeHtml(currentSentence.words) + '</p>';
             feedback += '</div>';
             
@@ -1001,7 +1073,25 @@ def launch_web():
             # Fallback to random selection if database not initialized
             selected = random.sample(words, min(n, len(words)))
         
-        return jsonify([{"italian": w["italian"], "greek": w["greek"]} for w in selected])
+        return jsonify([{"italian": w["italian"], "greek": w["greek"], "category": w.get("category", "other")} for w in selected])
+    
+    @app.route('/api/mc-options')
+    def mc_options():
+        """Return wrong options for multiple choice. If category is given, only same-category words (harder)."""
+        correct = request.args.get('correct', '')
+        lang = request.args.get('lang', 'greek')  # 'greek' or 'italian'
+        count = int(request.args.get('count', 3))
+        category = request.args.get('category', '').strip() or None
+        words = load_vocabulary()
+        key = 'greek' if lang == 'greek' else 'italian'
+        pool = words
+        if category:
+            pool = [w for w in words if w.get('category') == category]
+        if len(pool) < 4:
+            pool = words
+        candidates = list(dict.fromkeys([w[key] for w in pool if w[key] != correct]))
+        random.shuffle(candidates)
+        return jsonify(candidates[:min(count, len(candidates))])
     
     @app.route('/api/speak')
     def speak():

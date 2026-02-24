@@ -75,7 +75,9 @@ Examples:
   vocab.py quiz --reverse             # Greek to Italian
   vocab.py quiz --category food       # Only food vocabulary
   vocab.py quiz --difficulty 3        # Only difficulty 3 words
+  vocab.py mc                          # Multiple choice (continuous; q to quit)
   vocab.py mc 15                      # Multiple choice with 15 questions
+  vocab.py mc --reverse               # Greek→Italian multiple choice
   vocab.py flashcard 20               # Flashcard mode with 20 cards
   vocab.py sentences 10               # Generate 10 practice sentences
   vocab.py speak ciao                 # Hear pronunciation
@@ -109,8 +111,9 @@ Examples:
             run_quiz(n, args.reverse, args.category, args.difficulty)
         
         elif args.command == 'mc':
-            n = int(args.args[0]) if args.args else 10
-            run_multiple_choice(n)
+            # No number = continuous until quit; mc 20 = 20 questions
+            n = int(args.args[0]) if args.args else None
+            run_multiple_choice(n, args.reverse)
         
         elif args.command == 'flashcard':
             n = int(args.args[0]) if args.args else 10
