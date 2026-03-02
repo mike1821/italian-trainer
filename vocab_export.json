@@ -1,0 +1,2300 @@
+[
+{
+"italian": "a presto",
+"greek": "τα λεμε",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "abbastanza",
+"greek": "αρκετά",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "abiti",
+"greek": "μένεις",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "ad Atene",
+"greek": "στην Αθήνα",
+"category": "conjunctions",
+"difficulty": 1
+},
+{
+"italian": "adatta",
+"greek": "κατάλληλος",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "adesso",
+"greek": "τώρα",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "adesso",
+"greek": "τώρα / αμέσως",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "affolati",
+"greek": "συνοστισμός",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "albero",
+"greek": "δέντρο",
+"category": "conjunctions",
+"difficulty": 3
+},
+{
+"italian": "allora",
+"greek": "οπότε",
+"category": "time",
+"difficulty": 2
+},
+{
+"italian": "alto",
+"greek": "ψηλός",
+"category": "adjectives",
+"difficulty": 2
+},
+{
+"italian": "anche se",
+"greek": "ακόμα κι αν",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "ancora",
+"greek": "ακόμα",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "andare",
+"greek": "πηγαίνω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "andiamo",
+"greek": "πάμε / πηγαίνουμε",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "anni",
+"greek": "χρονών",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "anticipo",
+"greek": "νωρίτερα",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "apri / entra",
+"greek": "άνοιξε / μπες",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "aprire / apre",
+"greek": "ανοίγω / ανοίγει",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "aquila",
+"greek": "αετός",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "arance",
+"greek": "πορτοκάλια",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "ascoltare",
+"greek": "ακούω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "aspetto",
+"greek": "περιμένω",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "attrice",
+"greek": "ηθοποιός",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "avere / hai / ho",
+"greek": "έχω",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "avere fretta",
+"greek": "βιάζομαι",
+"category": "phrases",
+"difficulty": 2
+},
+{
+"italian": "banco",
+"greek": "θρανίο",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "barzellette",
+"greek": "ανέκδοτα",
+"category": "places",
+"difficulty": 2
+},
+{
+"italian": "basso",
+"greek": "κοντός",
+"category": "adjectives",
+"difficulty": 2
+},
+{
+"italian": "bello / bella",
+"greek": "όμορφος / όμορφη",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "benvenuto",
+"greek": "καλωσόρισες",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "bianco",
+"greek": "άσπρο",
+"category": "colors",
+"difficulty": 1
+},
+{
+"italian": "bicchiere",
+"greek": "ποτήρι",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "biglietti",
+"greek": "εισιτήρια",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "blu",
+"greek": "μπλε",
+"category": "colors",
+"difficulty": 1
+},
+{
+"italian": "bottiglia d' acqua",
+"greek": "μπουκάλι νερό",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "brutto",
+"greek": "άσχημος",
+"category": "adjectives",
+"difficulty": 2
+},
+{
+"italian": "buongiorno",
+"greek": "καλημέρα",
+"category": "time",
+"difficulty": 2
+},
+{
+"italian": "caldo",
+"greek": "ζέστη",
+"category": "weather",
+"difficulty": 2
+},
+{
+"italian": "cane",
+"greek": "σκύλος",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "capelli",
+"greek": "μαλλία",
+"category": "body",
+"difficulty": 2
+},
+{
+"italian": "capisco",
+"greek": "κατάλαβα",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "care",
+"greek": "ακριβά",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "carino",
+"greek": "χαριτωμένος",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "cena",
+"greek": "δείπνο",
+"category": "prepositions",
+"difficulty": 1
+},
+{
+"italian": "cento",
+"greek": "εκατό",
+"category": "conjunctions",
+"difficulty": 3
+},
+{
+"italian": "cerco",
+"greek": "ψάχνω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "chiamare / chiamo",
+"greek": "ονομάζομαι",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "chiave",
+"greek": "κλειδί",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "chiudere / chiude",
+"greek": "κλείνω / κλείνει",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "ci entrano",
+"greek": "χωράνε",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "cinquanta",
+"greek": "πενήντα",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "cinque",
+"greek": "πέντε",
+"category": "numbers",
+"difficulty": 1
+},
+{
+"italian": "cioe",
+"greek": "δηλαδή",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "come",
+"greek": "όπως",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "comodo",
+"greek": "βολικό",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "compare / compro",
+"greek": "αγοράζω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "comunque",
+"greek": "τέλος πάντων",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "comunque",
+"greek": "όντως",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "condominio",
+"greek": "πολυκατοικία",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "conoscere",
+"greek": "γνωρίζω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "contenta",
+"greek": "ευχαριστημένη",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "coraggioso",
+"greek": "κουράγιο",
+"category": "time",
+"difficulty": 2
+},
+{
+"italian": "cosi e cosi",
+"greek": "έτσι κι έτσι",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "costellazione",
+"greek": "αστερισμός",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "cucinare",
+"greek": "μαγειρεύω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "da fare",
+"greek": "να κάνω",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "da solo",
+"greek": "μόνος μου",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "da voi",
+"greek": "σε εσάς",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "dai",
+"greek": "έλα (δώσε)",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "dai",
+"greek": "δώσε",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "davvero",
+"greek": "αλήθεια",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "devo",
+"greek": "πρέπει",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "devo andare via",
+"greek": "πρέπει να φύγω",
+"category": "phrases",
+"difficulty": 2
+},
+{
+"italian": "di nuovo",
+"greek": "ξανά",
+"category": "adjectives",
+"difficulty": 2
+},
+{
+"italian": "diciannove",
+"greek": "δεκαεννία",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "diciassette",
+"greek": "δεκαεφτά",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "diciotto",
+"greek": "δεκαοχτώ",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "dieci",
+"greek": "δέκα",
+"category": "numbers",
+"difficulty": 1
+},
+{
+"italian": "difficile",
+"greek": "δύσκολο",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "diffuso",
+"greek": "εξαπλωμένο",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "diverente",
+"greek": "χαριτωμένο",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "diverso / differente",
+"greek": "διαφορετικό",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "dodici",
+"greek": "δώδεκα",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "dolce",
+"greek": "γλυκό",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "domani",
+"greek": "αύριο",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "domenica",
+"greek": "Κυριακή",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "donna",
+"greek": "γυναίκα",
+"category": "prepositions",
+"difficulty": 1
+},
+{
+"italian": "dopo",
+"greek": "μετά",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "dormire",
+"greek": "κοιμάμαι",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "due",
+"greek": "δύο",
+"category": "numbers",
+"difficulty": 1
+},
+{
+"italian": "entusiasta",
+"greek": "ενθουσιασμένος",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "esco",
+"greek": "βγαίνω",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "essere in anticipo",
+"greek": "φθάνω πιο νωρίς",
+"category": "phrases",
+"difficulty": 2
+},
+{
+"italian": "essere in ritardo",
+"greek": "φθάνω πιο αργά",
+"category": "phrases",
+"difficulty": 2
+},
+{
+"italian": "estate",
+"greek": "καλοκαίρι",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "facile",
+"greek": "εύκολο",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "Fai attenzione!",
+"greek": "Πρόσεχε!",
+"category": "conjunctions",
+"difficulty": 3
+},
+{
+"italian": "fame",
+"greek": "πεινάω",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "fidanzanto",
+"greek": "αγόρι",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "figlio unico",
+"greek": "μοναχοπαίδι",
+"category": "family",
+"difficulty": 2
+},
+{
+"italian": "finalmente",
+"greek": "επιτέλους",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "finire / finisco",
+"greek": "τελειώνω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "forse",
+"greek": "ίσως",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "fratelli",
+"greek": "αδέρφια",
+"category": "prepositions",
+"difficulty": 1
+},
+{
+"italian": "frutta",
+"greek": "φρούτα (γενικά)",
+"category": "food",
+"difficulty": 2
+},
+{
+"italian": "frutti",
+"greek": "φρούτα",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "gatto",
+"greek": "γάτα",
+"category": "prepositions",
+"difficulty": 1
+},
+{
+"italian": "genitori",
+"greek": "γονείς",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "gia",
+"greek": "ήδη",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "gia",
+"greek": "ήδη",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "giallo",
+"greek": "κίτρινο",
+"category": "colors",
+"difficulty": 1
+},
+{
+"italian": "giardino",
+"greek": "κήπος",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "giocare",
+"greek": "παίζω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "grazie",
+"greek": "ευχαριστώ",
+"category": "greetings",
+"difficulty": 2
+},
+{
+"italian": "guardare",
+"greek": "κοιτάζω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "guardi (guardare)",
+"greek": "δείτε (βλέπω)",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "hai ragione",
+"greek": "έχεις δίκιο",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "hai voglia?",
+"greek": "θέλεις;",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "ho paura",
+"greek": "φοβάμαι",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "ho trovato un bel ristorante",
+"greek": "βρήκα ένα ωραίο εστιατόριο",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "I colleghi possono essere cortesi",
+"greek": "Οι συνάδελφοι μπορεί να είναι αγενείς",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "ieri",
+"greek": "εχθές",
+"category": "time",
+"difficulty": 2
+},
+{
+"italian": "il soldi",
+"greek": "τα λεφτά",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "il sole",
+"greek": "ήλιος",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "immagine",
+"greek": "εικόνα",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "imparare",
+"greek": "μαθαίνω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "in effetti",
+"greek": "όντως",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "insieme",
+"greek": "μαζί",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "interno",
+"greek": "εσωτερικό",
+"category": "conjunctions",
+"difficulty": 1
+},
+{
+"italian": "isola",
+"greek": "νησί",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "l’ora di pranzo",
+"greek": "η ώρα του μεσημεριανού",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "la nuvola",
+"greek": "σύννεφο",
+"category": "weather",
+"difficulty": 2
+},
+{
+"italian": "la porta",
+"greek": "πόρτα",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "labro",
+"greek": "κλέφτης",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "lavorare",
+"greek": "δουλεύω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "Lavoro a tempo pieno",
+"greek": "Εργάζομαι πλήρους απασχόλησης",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "leggere",
+"greek": "διαβάζω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "letto",
+"greek": "κρεβάτι",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "li",
+"greek": "εκεί",
+"category": "other",
+"difficulty": 2
+},
+{
+"italian": "lunghi",
+"greek": "μακρυά",
+"category": "other",
+"difficulty": 2
+},
+{
+"italian": "magari",
+"greek": "ίσως",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "mai",
+"greek": "ποτέ",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "mai",
+"greek": "ποτέ",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "mangiare",
+"greek": "φάω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "mano",
+"greek": "χέρι",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "marrone",
+"greek": "καφέ",
+"category": "conjunctions",
+"difficulty": 1
+},
+{
+"italian": "mentre",
+"greek": "ενώ",
+"category": "numbers",
+"difficulty": 2
+},
+{
+"italian": "mettere",
+"greek": "βάζω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "mezzi",
+"greek": "μέσα",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "mi dispiace",
+"greek": "λυπάμαι",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "mi preoccupo",
+"greek": "ανησυχώ",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "miglior",
+"greek": "καλύτερος",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "mite",
+"greek": "ήπιος",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "nascondere",
+"greek": "κρύβω",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "naturalmente",
+"greek": "φυσικά",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "nero",
+"greek": "μαύρο",
+"category": "conjunctions",
+"difficulty": 1
+},
+{
+"italian": "niente",
+"greek": "τίποτα",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "noccioline",
+"greek": "φυστίκια",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "non che sole",
+"greek": "δεν έχει ήλιο",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "non stanno",
+"greek": "δεν είναι έτσι",
+"category": "phrases",
+"difficulty": 2
+},
+{
+"italian": "non ti preoccupare",
+"greek": "μην ανησυχείς",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "nove",
+"greek": "εννιά",
+"category": "conjunctions",
+"difficulty": 1
+},
+{
+"italian": "occhi",
+"greek": "μάτια",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "oggi",
+"greek": "σήμερα",
+"category": "time",
+"difficulty": 2
+},
+{
+"italian": "ogni giorno",
+"greek": "κάθε μέρα",
+"category": "time",
+"difficulty": 2
+},
+{
+"italian": "ogni giorno",
+"greek": "κάθε μέρα",
+"category": "time",
+"difficulty": 2
+},
+{
+"italian": "oltretutto",
+"greek": "επίσης",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "orario",
+"greek": "ωράριο",
+"category": "time",
+"difficulty": 1
+},
+{
+"italian": "ordinare",
+"greek": "παραγγέλνω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "origine",
+"greek": "καταγωγή",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "otto",
+"greek": "οκτώ",
+"category": "numbers",
+"difficulty": 1
+},
+{
+"italian": "paese",
+"greek": "χώρα",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "pagare rate",
+"greek": "πληρώνω δόση",
+"category": "phrases",
+"difficulty": 2
+},
+{
+"italian": "parlare",
+"greek": "μιλάω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "partire",
+"greek": "φευγω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "penna",
+"greek": "στυλό",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "per essempio",
+"greek": "για παράδειγμα",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "per me",
+"greek": "για μένα",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "per tornare",
+"greek": "για να γυρίσει",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "pianeti",
+"greek": "πλανήτες",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "piccola",
+"greek": "μικρή",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "più",
+"greek": "πιο",
+"category": "pronouns",
+"difficulty": 1
+},
+{
+"italian": "portali",
+"greek": "πήγαινε τα",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "posso",
+"greek": "μπορώ",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "potete dare un passagio",
+"greek": "μπορείτε να με πάτε",
+"category": "phrases",
+"difficulty": 2
+},
+{
+"italian": "prego",
+"greek": "παρακαλώ",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "prendere / prende",
+"greek": "παίρνω / παίρνει",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "presto",
+"greek": "νωρίς",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "prima",
+"greek": "πρώτα",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "propria",
+"greek": "δικό του",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "pulire",
+"greek": "καθαρίζω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "purtroppo",
+"greek": "δυστύχως",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "purtroppo porta",
+"greek": "δυστύχως φαίρνει",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "quaderno",
+"greek": "τετράδιο",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "qualche volta",
+"greek": "καμμιά φορά",
+"category": "phrases",
+"difficulty": 2
+},
+{
+"italian": "quale",
+"greek": "ποια",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "quando",
+"greek": "όταν",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "quanto",
+"greek": "πόσο",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "quarnta",
+"greek": "σαράντα",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "quasi",
+"greek": "σχεδόν",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "quattordici",
+"greek": "δεκατέσσερα",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "quattro",
+"greek": "τέσσερα",
+"category": "numbers",
+"difficulty": 1
+},
+{
+"italian": "Questo pomeriggio vado al cinema",
+"greek": "Αυτό το απόγευμα πάω σινεμά",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "quindici",
+"greek": "δεκαπέντε",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "regalo",
+"greek": "δώρο",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "ricordi",
+"greek": "θυμάσαι",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "ridere",
+"greek": "γελάω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "rilassarmi",
+"greek": "ξεκουραστώ",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "riposarmi",
+"greek": "ξεκουραστώ",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "ritardo",
+"greek": "καθυστέρηση",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "rosso",
+"greek": "κόκκινο",
+"category": "colors",
+"difficulty": 1
+},
+{
+"italian": "ruba",
+"greek": "κλέβει",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "sabato",
+"greek": "Σάββατο",
+"category": "time",
+"difficulty": 2
+},
+{
+"italian": "sai",
+"greek": "ξέρεις",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "sai",
+"greek": "ξέρεις",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "scarpe",
+"greek": "παπούτσια",
+"category": "clothing",
+"difficulty": 2
+},
+{
+"italian": "scendi",
+"greek": "κατέβα",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "scortese",
+"greek": "αγενής",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "se",
+"greek": "αν",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "secondo me",
+"greek": "σύμφωνα με",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "sedici",
+"greek": "δεκάξι",
+"category": "conjunctions",
+"difficulty": 3
+},
+{
+"italian": "sei",
+"greek": "έξι",
+"category": "conjunctions",
+"difficulty": 1
+},
+{
+"italian": "sempre",
+"greek": "συνεχώς",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "sempre",
+"greek": "πάντα",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "sessanta",
+"greek": "εξήντα",
+"category": "conjunctions",
+"difficulty": 3
+},
+{
+"italian": "sette",
+"greek": "επτά",
+"category": "conjunctions",
+"difficulty": 1
+},
+{
+"italian": "siamo in cinque",
+"greek": "είμαστε 5 (άτομα)",
+"category": "phrases",
+"difficulty": 2
+},
+{
+"italian": "sicuro",
+"greek": "σίγουρος",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "soddisfazione",
+"greek": "ικανοποίηση",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "sonno (avere)",
+"greek": "νύστα (έχω)",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "sono / sto",
+"greek": "είμαι",
+"category": "conjunctions",
+"difficulty": 1
+},
+{
+"italian": "sorella",
+"greek": "αδερφή",
+"category": "conjunctions",
+"difficulty": 1
+},
+{
+"italian": "spese",
+"greek": "ψώνια",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "stare al chiuso",
+"greek": "μένω μέσα",
+"category": "phrases",
+"difficulty": 2
+},
+{
+"italian": "stella",
+"greek": "αστέρι",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "stivale",
+"greek": "μπότα",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "straniera",
+"greek": "ξένη",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "stressato",
+"greek": "αγχωμένος",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "studiare",
+"greek": "μελετώ",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "sul",
+"greek": "πάνω",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "suo",
+"greek": "του",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "suonare",
+"greek": "παίζω (κιθάρα)",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "supera",
+"greek": "ξεπερνώ",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "tesoro",
+"greek": "θησαυρέ μου",
+"category": "conjunctions",
+"difficulty": 1
+},
+{
+"italian": "torto",
+"greek": "άδικο",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "tra poco",
+"greek": "σε λίγο",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "tre",
+"greek": "τρία",
+"category": "numbers",
+"difficulty": 1
+},
+{
+"italian": "tredici",
+"greek": "δεκατρία",
+"category": "numbers",
+"difficulty": 3
+},
+{
+"italian": "trenta",
+"greek": "τριάντα",
+"category": "numbers",
+"difficulty": 3
+},
+{
+"italian": "troppo",
+"greek": "πολύ",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "trovare",
+"greek": "βρίσκω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "tutti",
+"greek": "όλοι",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "tutto",
+"greek": "όλος",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "ucceli",
+"greek": "πουλιά",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "ufficio",
+"greek": "γραφείο",
+"category": "pronouns",
+"difficulty": 1
+},
+{
+"italian": "undici",
+"greek": "έντεκα",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "uno",
+"greek": "ένα",
+"category": "numbers",
+"difficulty": 1
+},
+{
+"italian": "uomo",
+"greek": "άντρας",
+"category": "conjunctions",
+"difficulty": 1
+},
+{
+"italian": "vacance",
+"greek": "διακοπές",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "valigie",
+"greek": "βαλίτσες",
+"category": "prepositions",
+"difficulty": 1
+},
+{
+"italian": "vecchi",
+"greek": "παλιά",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "vedere",
+"greek": "βλέπω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "vendure",
+"greek": "λαχανικά",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "venerdi",
+"greek": "Παρασκευή",
+"category": "prepositions",
+"difficulty": 2
+},
+{
+"italian": "venti",
+"greek": "είκοση",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "venticinque",
+"greek": "εικοσηπέντε",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "ventuno",
+"greek": "εικοσηένα",
+"category": "conjunctions",
+"difficulty": 3
+},
+{
+"italian": "verde",
+"greek": "πράσινο",
+"category": "colors",
+"difficulty": 1
+},
+{
+"italian": "vero",
+"greek": "αλήθεια",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "vestito",
+"greek": "φόρεμα",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "vieni",
+"greek": "έλα",
+"category": "pronouns",
+"difficulty": 2
+},
+{
+"italian": "visitare",
+"greek": "επισκέπτομαι",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "vivere",
+"greek": "ζω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "voglio imparare l’italiano",
+"greek": "θέλω να μάθω Ιταλικά",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "volare",
+"greek": "πετάνε",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "volere",
+"greek": "θέλω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "volevo",
+"greek": "ήθελα",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "vorrei",
+"greek": "θα ήθελα",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "vuoi",
+"greek": "θέλεις",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "zio/zia",
+"greek": "θείος/θεία",
+"category": "family",
+"difficulty": 2
+},
+{
+"italian": "zucchero",
+"greek": "ζάχαρη",
+"category": "conjunctions",
+"difficulty": 2
+},
+{
+"italian": "sono stanco, ma vado avanti",
+"greek": "είμαι κουρασμένος αλλά συνεχίζω",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "ma",
+"greek": "αλλά",
+"category": "prepositions",
+"difficulty": 1
+},
+{
+"italian": "chiedere",
+"greek": "ζητάω",
+"category": "verbs",
+"difficulty": 2
+},
+{
+"italian": "dove?",
+"greek": "πού;",
+"category": "conjunctions",
+"difficulty": 3
+},
+{
+"italian": "abiti",
+"greek": "κατοικείς",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "quale",
+"greek": "ποιος(which)",
+"category": "conjunctions",
+"difficulty": 3
+},
+{
+"italian": "palazzo",
+"greek": "κτήριο",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "appartamento",
+"greek": "διαμέρισμα",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "si trova",
+"greek": "βρίσκεται",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "terzo",
+"greek": "τρίτο",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "piano",
+"greek": "όροφος",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "condominio",
+"greek": "πολυκατοικία",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "vivo",
+"greek": "ζω",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "sembra",
+"greek": "φαίνεται",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "nuovo",
+"greek": "καινούργιος",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "ascensore",
+"greek": "ανελκυστήρας",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "saliamo",
+"greek": "ανεβαίνουμε",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "a piedi",
+"greek": "με τα πόδια",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "purtroppo",
+"greek": "δυστυχώς",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "rotto",
+"greek": "χαλασμένος",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "da tempo",
+"greek": "εδώ και καιρό",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "mi chiamo",
+"greek": "ονομάζομαι",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "moglie",
+"greek": "η σύζυγος",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "fratello",
+"greek": "αδελφός",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "minore",
+"greek": "μικρότερος",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "salve!",
+"greek": "χαίρετε!",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "piacere!",
+"greek": "χάρηκα!",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "scusi",
+"greek": "με συγχωρείτε",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "sorella",
+"greek": "αδελφή",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "tra poco",
+"greek": "σε λίγο",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "viene",
+"greek": "έρχεται",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "salutare",
+"greek": "χαιρετάω",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "assomiglia",
+"greek": "μοιάζει",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "quel",
+"greek": "εκείνος",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "il quadro",
+"greek": "κάδρο",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "il muro",
+"greek": "τοίχος",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "quanto",
+"greek": "πόσος",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "era",
+"greek": "ήταν",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "da giovane",
+"greek": "όταν ήταν νέα",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "capelli",
+"greek": "μαλλιά",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "lunghi",
+"greek": "μακριά",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "biondi",
+"greek": "ξανθά",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "lisci",
+"greek": "ίσια",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "mentre",
+"greek": "ενώ",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "ricci",
+"greek": "σγουρά",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "mi piacciono",
+"greek": "μου αρέσουν",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "le caratteristiche",
+"greek": "χαρακτηριστικά",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "il viso",
+"greek": "πρόσωπο",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "il naso",
+"greek": "μύτη",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "naso alla francese",
+"greek": "γαλλική μύτη",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "gli occhi",
+"greek": "μάτια",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "castani",
+"greek": "καστανά",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "arrotondati",
+"greek": "στρογγυλά",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "bocca",
+"greek": "στόμα",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "bassa",
+"greek": "κοντή",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "grassa",
+"greek": "χοντρή",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "riconosci",
+"greek": "αναγνωρίζεις",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "subito",
+"greek": "αμέσως",
+"category": "time",
+"difficulty": 3
+},
+{
+"italian": "piuttosto",
+"greek": "κάπως",
+"category": "conjunctions",
+"difficulty": 3
+},
+{
+"italian": "magra",
+"greek": "αδύνατη",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "eccomi",
+"greek": "να με",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "finalmente",
+"greek": "επιτέλους",
+"category": "prepositions",
+"difficulty": 3
+},
+{
+"italian": "ci conosciamo",
+"greek": "γνωριζόμαστε",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "spero",
+"greek": "ελπίζω",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "pranzo",
+"greek": "μεσημεριανό",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "pronto",
+"greek": "έτοιμος",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "mangiare",
+"greek": "τρώω",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "dessert",
+"greek": "επιδόρπιο",
+"category": "nouns",
+"difficulty": 3
+},
+{
+"italian": "adoro",
+"greek": "λατρεύω",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "mettere",
+"greek": "βάζουν",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "di solito",
+"greek": "συνήθως",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "raffredata",
+"greek": "κρυωμένη",
+"category": "pronouns",
+"difficulty": 3
+},
+{
+"italian": "spedire",
+"greek": "στέλνω",
+"category": "verbs",
+"difficulty": 3
+},
+{
+"italian": "occhiali da vista",
+"greek": "γυαλιά οράσεως",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "occhiali da sole",
+"greek": "γυαλιά ηλίου",
+"category": "phrases",
+"difficulty": 3
+},
+{
+"italian": "primo",
+"greek": "πρώτος",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "secondo",
+"greek": "δεύτερος",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "giovani",
+"greek": "νέοι",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "nella prima",
+"greek": "στην πρώτη",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "invece",
+"greek": "απο την άλλη",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "fuori",
+"greek": "έξω",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "di fronte a(d)",
+"greek": "μπροστά από",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "cosa",
+"greek": "πράγμα",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "in entrambe",
+"greek": "και στις δύο",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "sogni d'oro",
+"greek": "όνειρα χρυσά",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "stanza",
+"greek": "δωμάτιο",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "letto",
+"greek": "κρεβάτι",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "sul",
+"greek": "πάνω στο",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "lampatario",
+"greek": "λαμπατέρ",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "fanno la ginnastica",
+"greek": "κάνω γυμναστική",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "sotto",
+"greek": "κάτω",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "scendi",
+"greek": "κατέβα",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "ultima",
+"greek": "τελευταία",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "fermata",
+"greek": "στάση",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "motivi",
+"greek": "για λόγους",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "il meze",
+"greek": "μήνας",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "settimana",
+"greek": "βδομάδα",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "cento per cento",
+"greek": "εκατό τις εκατό",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "ecco perche",
+"greek": "να γιατί",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "dare la mano",
+"greek": "δίνω το χέρι",
+"category": "adjectives",
+"difficulty": 3
+},
+{
+"italian": "fare una stretta di mano",
+"greek": "σφίγγο το χέρι",
+"category": "adjectives",
+"difficulty": 3
+}
+]

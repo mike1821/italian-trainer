@@ -1,0 +1,442 @@
+[
+{
+"prompt": "Plurale di: valigia",
+"answer": "valigie"
+},
+{
+"prompt": "Plurale di: letto",
+"answer": "letti"
+},
+{
+"prompt": "Plurale di: dottoressa",
+"answer": "dottoresse"
+},
+{
+"prompt": "Plurale di: eco",
+"answer": "echi"
+},
+{
+"prompt": "Plurale di: bosco",
+"answer": "boschi"
+},
+{
+"prompt": "Plurale di: tempo",
+"answer": "tempi"
+},
+{
+"prompt": "Plurale di: fiume",
+"answer": "fiumi"
+},
+{
+"prompt": "Plurale di: sindaco",
+"answer": "sindaci"
+},
+{
+"prompt": "Plurale di: camicia",
+"answer": "camicie"
+},
+{
+"prompt": "Plurale di: arma",
+"answer": "armi"
+},
+{
+"prompt": "Plurale di: gioco",
+"answer": "giochi"
+},
+{
+"prompt": "Plurale di: inizio",
+"answer": "inizi"
+},
+{
+"prompt": "Plurale di: migliaio",
+"answer": "migliaia"
+},
+{
+"prompt": "Plurale di: orecchio",
+"answer": "orecchi"
+},
+{
+"prompt": "Plurale di: greco",
+"answer": "greci"
+},
+{
+"prompt": "Plurale di: carico",
+"answer": "carichi"
+},
+{
+"prompt": "Plurale di: uomo",
+"answer": "uomini"
+},
+{
+"prompt": "Plurale di: nome",
+"answer": "nomi"
+},
+{
+"prompt": "Plurale di: numero",
+"answer": "numeri"
+},
+{
+"prompt": "Plurale di: muro",
+"answer": "muri"
+},
+{
+"prompt": "Plurale di: braccio",
+"answer": "braccia"
+},
+{
+"prompt": "Plurale di: centinaio",
+"answer": "centinaia"
+},
+{
+"prompt": "Plurale di: mano",
+"answer": "mani"
+},
+{
+"prompt": "Plurale di: labbro",
+"answer": "labbra"
+},
+{
+"prompt": "Plurale di: caffè",
+"answer": "caffè"
+},
+{
+"prompt": "Plurale di: negozio",
+"answer": "negozi"
+},
+{
+"prompt": "Plurale di: albergo",
+"answer": "alberghi"
+},
+{
+"prompt": "Plurale di: piatto",
+"answer": "piatti"
+},
+{
+"prompt": "Plurale di: banco",
+"answer": "banchi"
+},
+{
+"prompt": "Plurale di: albero",
+"answer": "alberi"
+},
+{
+"prompt": "Plurale di: uomo",
+"answer": "uomini"
+},
+{
+"prompt": "Plurale di: lago",
+"answer": "laghi"
+},
+{
+"prompt": "Plurale di: bambino",
+"answer": "bambini"
+},
+{
+"prompt": "Plurale di: tedesco",
+"answer": "tedeschi"
+},
+{
+"prompt": "Plurale di: signora",
+"answer": "signore"
+},
+{
+"prompt": "Plurale di: parco",
+"answer": "parchi"
+},
+{
+"prompt": "Plurale di: re",
+"answer": "re"
+},
+{
+"prompt": "Plurale di: pesco",
+"answer": "peschi"
+},
+{
+"prompt": "Plurale di: miglio",
+"answer": "miglia"
+},
+{
+"prompt": "Plurale di: spiaggia",
+"answer": "spiagge"
+},
+{
+"prompt": "Plurale di: bambina",
+"answer": "bambine"
+},
+{
+"prompt": "Plurale di: uomo",
+"answer": "uomini"
+},
+{
+"prompt": "Plurale di: ago",
+"answer": "aghi"
+},
+{
+"prompt": "Plurale di: amica",
+"answer": "amiche"
+},
+{
+"prompt": "Plurale di: crisi",
+"answer": "crisi"
+},
+{
+"prompt": "Plurale di: paio",
+"answer": "paia"
+},
+{
+"prompt": "Plurale di: tesi",
+"answer": "tesi"
+},
+{
+"prompt": "Plurale di: treno",
+"answer": "treni"
+},
+{
+"prompt": "Plurale di: legge",
+"answer": "leggi"
+},
+{
+"prompt": "Plurale di: occhio",
+"answer": "occhi"
+},
+{
+"prompt": "Plurale di: bugia",
+"answer": "bugie"
+},
+{
+"prompt": "Plurale di: marito",
+"answer": "mariti"
+},
+{
+"prompt": "Plurale di: belga",
+"answer": "belgi"
+},
+{
+"prompt": "Plurale di: amico",
+"answer": "amici"
+},
+{
+"prompt": "Plurale di: anello",
+"answer": "anelli"
+},
+{
+"prompt": "Plurale di: patriarca",
+"answer": "patriarchi"
+},
+{
+"prompt": "Plurale di: cinema",
+"answer": "cinema"
+},
+{
+"prompt": "Plurale di: libro",
+"answer": "libri"
+},
+{
+"prompt": "Plurale di: piano",
+"answer": "piani"
+},
+{
+"prompt": "Plurale di: ala",
+"answer": "ali"
+},
+{
+"prompt": "Plurale di: chiave",
+"answer": "chiavi"
+},
+{
+"prompt": "Plurale di: stomaco",
+"answer": "stomaci"
+},
+{
+"prompt": "Plurale di: cuoco",
+"answer": "cuochi"
+},
+{
+"prompt": "Plurale di: ginocchio",
+"answer": "ginocchia"
+},
+{
+"prompt": "Plurale di: fuoco",
+"answer": "fuochi"
+},
+{
+"prompt": "Plurale di: moglie",
+"answer": "mogli"
+},
+{
+"prompt": "Plurale di: uccello",
+"answer": "uccelli"
+},
+{
+"prompt": "Plurale di: castello",
+"answer": "castelli"
+},
+{
+"prompt": "Plurale di: grazia",
+"answer": "grazie"
+},
+{
+"prompt": "Plurale di: farmacia",
+"answer": "farmacie"
+},
+{
+"prompt": "Plurale di: bue",
+"answer": "buoi"
+},
+{
+"prompt": "Plurale di: asparago",
+"answer": "asparagi"
+},
+{
+"prompt": "Plurale di: bar",
+"answer": "bar"
+},
+{
+"prompt": "Plurale di: gatto",
+"answer": "gatti"
+},
+{
+"prompt": "Plurale di: padre",
+"answer": "padri"
+},
+{
+"prompt": "Plurale di: monarca",
+"answer": "monarchi"
+},
+{
+"prompt": "Plurale di: madre",
+"answer": "madri"
+},
+{
+"prompt": "Plurale di: programma",
+"answer": "programmi"
+},
+{
+"prompt": "Plurale di: luogo",
+"answer": "luoghi"
+},
+{
+"prompt": "Plurale di: tempo",
+"answer": "tempi"
+},
+{
+"prompt": "Plurale di: film",
+"answer": "film"
+},
+{
+"prompt": "Plurale di: uovo",
+"answer": "uova"
+},
+{
+"prompt": "Plurale di: martello",
+"answer": "martelli"
+},
+{
+"prompt": "Plurale di: figlio",
+"answer": "figli"
+},
+{
+"prompt": "Plurale di: studentessa",
+"answer": "studentesse"
+},
+{
+"prompt": "Plurale di: ala",
+"answer": "ali"
+},
+{
+"prompt": "Plurale di: medico",
+"answer": "medici"
+},
+{
+"prompt": "Plurale di: tetto",
+"answer": "tetti"
+},
+{
+"prompt": "Plurale di: osso",
+"answer": "ossa"
+},
+{
+"prompt": "Plurale di: dito",
+"answer": "dita"
+},
+{
+"prompt": "Plurale di: signore",
+"answer": "signori"
+},
+{
+"prompt": "Plurale di: uomo",
+"answer": "uomini"
+},
+{
+"prompt": "Plurale di: studente",
+"answer": "studenti"
+},
+{
+"prompt": "Plurale di: figlia",
+"answer": "figlie"
+},
+{
+"prompt": "Plurale di: nemico",
+"answer": "nemici"
+},
+{
+"prompt": "Plurale di: amico",
+"answer": "amici"
+},
+{
+"prompt": "Plurale di: porco",
+"answer": "porci"
+},
+{
+"prompt": "Plurale di: cavallo",
+"answer": "cavalli"
+},
+{
+"prompt": "Plurale di: sistema",
+"answer": "sistemi"
+},
+{
+"prompt": "Plurale di: dottore",
+"answer": "dottori"
+},
+{
+"prompt": "Plurale di: analisi",
+"answer": "analisi"
+},
+{
+"prompt": "Plurale di: moglie",
+"answer": "mogli"
+},
+{
+"prompt": "Plurale di: donna",
+"answer": "donne"
+},
+{
+"prompt": "Plurale di: zio",
+"answer": "zii"
+},
+{
+"prompt": "Plurale di: fratello",
+"answer": "fratelli"
+},
+{
+"prompt": "Plurale di: bambino",
+"answer": "bambini"
+},
+{
+"prompt": "Plurale di: lago",
+"answer": "laghi"
+},
+{
+"prompt": "Plurale di: problema",
+"answer": "problemi"
+},
+{
+"prompt": "Plurale di: sorella",
+"answer": "sorelle"
+},
+{
+"prompt": "Plurale di: sport",
+"answer": "sport"
+}
+]

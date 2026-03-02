@@ -1,0 +1,482 @@
+[
+{
+"prompt": "___ libri (M, P, definito)",
+"answer": "i"
+},
+{
+"prompt": "___ gnocco (M, S, definito)",
+"answer": "lo"
+},
+{
+"prompt": "___ casa (F, S, definito)",
+"answer": "la"
+},
+{
+"prompt": "___ tavolo (M, S, indefinito)",
+"answer": "un"
+},
+{
+"prompt": "___ zii (M, P, definito)",
+"answer": "gli"
+},
+{
+"prompt": "___ amica (F, S, indefinito)",
+"answer": "un'"
+},
+{
+"prompt": "___ scuola (F, S, definito)",
+"answer": "la"
+},
+{
+"prompt": "___ tavoli (M, P, definito)",
+"answer": "i"
+},
+{
+"prompt": "___ amica (F, S, definito, vocale)",
+"answer": "l'"
+},
+{
+"prompt": "___ amica (F, S, indefinito)",
+"answer": "un'"
+},
+{
+"prompt": "___ ora (F, S, indefinito)",
+"answer": "un'"
+},
+{
+"prompt": "___ finestra (F, S, definito)",
+"answer": "la"
+},
+{
+"prompt": "___ amico (M, S, definito, vocale)",
+"answer": "l'"
+},
+{
+"prompt": "___ case (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ studente (M, S, indefinito)",
+"answer": "uno"
+},
+{
+"prompt": "___ zii (M, P, definito)",
+"answer": "gli"
+},
+{
+"prompt": "___ ora (F, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ casa (F, S, definito)",
+"answer": "la"
+},
+{
+"prompt": "___ scuola (F, S, definito)",
+"answer": "la"
+},
+{
+"prompt": "___ estate (F, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ zio (M, S, indefinito)",
+"answer": "uno"
+},
+{
+"prompt": "___ bambino (M, S, indefinito)",
+"answer": "un"
+},
+{
+"prompt": "___ finestre (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ tavolo (M, S, definito)",
+"answer": "il"
+},
+{
+"prompt": "___ tavolo (M, S, indefinito)",
+"answer": "un"
+},
+{
+"prompt": "___ amico (M, S, indefinito)",
+"answer": "un"
+},
+{
+"prompt": "___ libro (M, S, definito)",
+"answer": "il"
+},
+{
+"prompt": "___ case (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ zio (M, S, definito)",
+"answer": "lo"
+},
+{
+"prompt": "___ libro (M, S, definito)",
+"answer": "il"
+},
+{
+"prompt": "___ acqua (F, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ studenti (M, P, definito)",
+"answer": "gli"
+},
+{
+"prompt": "___ scuole (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ donne (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ psicologo (M, S, definito)",
+"answer": "lo"
+},
+{
+"prompt": "___ orologio (M, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ psicologo (M, S, definito)",
+"answer": "lo"
+},
+{
+"prompt": "___ ora (F, S, indefinito)",
+"answer": "un'"
+},
+{
+"prompt": "___ case (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ zii (M, P, definito)",
+"answer": "gli"
+},
+{
+"prompt": "___ libro (M, S, definito)",
+"answer": "il"
+},
+{
+"prompt": "___ amici (M, P, definito)",
+"answer": "gli"
+},
+{
+"prompt": "___ orologio (M, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ zio (M, S, definito)",
+"answer": "lo"
+},
+{
+"prompt": "___ donne (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ libro (M, S, indefinito)",
+"answer": "un"
+},
+{
+"prompt": "___ donna (F, S, indefinito)",
+"answer": "una"
+},
+{
+"prompt": "___ amiche (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ amico (M, S, definito, vocale)",
+"answer": "l'"
+},
+{
+"prompt": "___ libri (M, P, definito)",
+"answer": "i"
+},
+{
+"prompt": "___ estate (F, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ tavolo (M, S, definito)",
+"answer": "il"
+},
+{
+"prompt": "___ studente (M, S, indefinito)",
+"answer": "uno"
+},
+{
+"prompt": "___ gnocco (M, S, indefinito)",
+"answer": "uno"
+},
+{
+"prompt": "___ studente (M, S, indefinito)",
+"answer": "uno"
+},
+{
+"prompt": "___ amiche (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ gnocco (M, S, indefinito)",
+"answer": "uno"
+},
+{
+"prompt": "___ albero (M, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ casa (F, S, indefinito)",
+"answer": "una"
+},
+{
+"prompt": "___ scuola (F, S, indefinito)",
+"answer": "una"
+},
+{
+"prompt": "___ amica (F, S, definito, vocale)",
+"answer": "l'"
+},
+{
+"prompt": "___ studente (M, S, definito, s+cons)",
+"answer": "lo"
+},
+{
+"prompt": "___ donna (F, S, indefinito)",
+"answer": "una"
+},
+{
+"prompt": "___ albero (M, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ scuola (F, S, indefinito)",
+"answer": "una"
+},
+{
+"prompt": "___ donna (F, S, indefinito)",
+"answer": "una"
+},
+{
+"prompt": "___ casa (F, S, definito)",
+"answer": "la"
+},
+{
+"prompt": "___ alberi (M, P, definito)",
+"answer": "gli"
+},
+{
+"prompt": "___ casa (F, S, indefinito)",
+"answer": "una"
+},
+{
+"prompt": "___ donna (F, S, definito)",
+"answer": "la"
+},
+{
+"prompt": "___ tavoli (M, P, definito)",
+"answer": "i"
+},
+{
+"prompt": "___ scuole (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ estate (F, S, indefinito)",
+"answer": "un'"
+},
+{
+"prompt": "___ bambino (M, S, indefinito)",
+"answer": "un"
+},
+{
+"prompt": "___ donna (F, S, definito)",
+"answer": "la"
+},
+{
+"prompt": "___ amica (F, S, indefinito)",
+"answer": "un'"
+},
+{
+"prompt": "___ estate (F, S, indefinito)",
+"answer": "un'"
+},
+{
+"prompt": "___ estate (F, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ alberi (M, P, definito)",
+"answer": "gli"
+},
+{
+"prompt": "___ scuola (F, S, indefinito)",
+"answer": "una"
+},
+{
+"prompt": "___ psicologo (M, S, indefinito)",
+"answer": "uno"
+},
+{
+"prompt": "___ tavolo (M, S, indefinito)",
+"answer": "un"
+},
+{
+"prompt": "___ bambini (M, P, definito)",
+"answer": "i"
+},
+{
+"prompt": "___ casa (F, S, indefinito)",
+"answer": "una"
+},
+{
+"prompt": "___ studente (M, S, definito, s+cons)",
+"answer": "lo"
+},
+{
+"prompt": "___ libri (M, P, definito)",
+"answer": "i"
+},
+{
+"prompt": "___ libro (M, S, indefinito)",
+"answer": "un"
+},
+{
+"prompt": "___ bambino (M, S, definito)",
+"answer": "il"
+},
+{
+"prompt": "___ gnocco (M, S, definito)",
+"answer": "lo"
+},
+{
+"prompt": "___ ora (F, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ tavoli (M, P, definito)",
+"answer": "i"
+},
+{
+"prompt": "___ amiche (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ bambino (M, S, indefinito)",
+"answer": "un"
+},
+{
+"prompt": "___ studenti (M, P, definito)",
+"answer": "gli"
+},
+{
+"prompt": "___ zio (M, S, indefinito)",
+"answer": "uno"
+},
+{
+"prompt": "___ orologio (M, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ finestra (F, S, definito)",
+"answer": "la"
+},
+{
+"prompt": "___ amico (M, S, indefinito)",
+"answer": "un"
+},
+{
+"prompt": "___ finestre (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ studenti (M, P, definito)",
+"answer": "gli"
+},
+{
+"prompt": "___ psicologo (M, S, indefinito)",
+"answer": "uno"
+},
+{
+"prompt": "___ amici (M, P, definito)",
+"answer": "gli"
+},
+{
+"prompt": "___ albero (M, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ scuola (F, S, definito)",
+"answer": "la"
+},
+{
+"prompt": "___ finestra (F, S, definito)",
+"answer": "la"
+},
+{
+"prompt": "___ acqua (F, S, definito)",
+"answer": "l'"
+},
+{
+"prompt": "___ tavolo (M, S, definito)",
+"answer": "il"
+},
+{
+"prompt": "___ alberi (M, P, definito)",
+"answer": "gli"
+},
+{
+"prompt": "___ bambino (M, S, definito)",
+"answer": "il"
+},
+{
+"prompt": "___ scuole (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ gnocco (M, S, definito)",
+"answer": "lo"
+},
+{
+"prompt": "___ donne (F, P, definito)",
+"answer": "le"
+},
+{
+"prompt": "___ bambini (M, P, definito)",
+"answer": "i"
+},
+{
+"prompt": "___ psicologo (M, S, indefinito)",
+"answer": "uno"
+},
+{
+"prompt": "___ zio (M, S, definito)",
+"answer": "lo"
+},
+{
+"prompt": "___ estate (F, S, indefinito)",
+"answer": "un'"
+},
+{
+"prompt": "___ amica (F, S, definito, vocale)",
+"answer": "l'"
+},
+{
+"prompt": "___ bambini (M, P, definito)",
+"answer": "i"
+},
+{
+"prompt": "___ studente (M, S, definito, s+cons)",
+"answer": "lo"
+},
+{
+"prompt": "___ zio (M, S, indefinito)",
+"answer": "uno"
+}
+]

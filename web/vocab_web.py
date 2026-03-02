@@ -5,21 +5,24 @@ Web interface for vocabulary practice using Flask.
 import random
 from app.vocab_core import load_vocabulary
 from app.vocab_audio import get_audio_base64
-from app.sentence_generator import generate_smart_sentence
+from app.grammar_loader import get_exercises, check_answer as grammar_check_answer, GRAMMAR_CATEGORIES
 
 
 def launch_web():
     """Launch Flask web interface."""
     try:
-        from flask import Flask, render_template_string, request, jsonify
+        from flask import Flask, request, jsonify, send_from_directory
         import json
+        import os
     except ImportError:
         print("Flask not installed. Run: pip install flask")
         return
     
     app = Flask(__name__)
+    WEB_DIR = os.path.dirname(os.path.abspath(__file__))
+    PROJECT_ROOT = os.path.dirname(WEB_DIR)
     
-    HTML = '''
+    HTML_REMOVED = '''
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,8 +32,8 @@ def launch_web():
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
     <style>
         :root {
             --bg: #f5f2ed;
@@ -362,6 +365,7 @@ def launch_web():
         @media (max-width: 520px) {
             .charts-grid { grid-template-columns: 1fr; }
         }
+        .home-logo { display: block; max-width: 200px; height: auto; margin: 0 auto 20px; border-radius: var(--radius); box-shadow: var(--shadow-lg); }
         .section-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 12px; }
         .panel table { width: 100%; border-collapse: collapse; }
         .panel th, .panel td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
@@ -370,18 +374,60 @@ def launch_web():
     </style>
 </head>
 <body>
+    <script>
+    (function() {
+        "use strict";
+        window.goVocab = function() {
+            var h = document.getElementById("homeMenu"), g = document.getElementById("grammarSubMenu"), v = document.getElementById("vocabSubMenu"), q = document.getElementById("quiz");
+            if (h) h.style.display = "none"; if (g) g.style.display = "none"; if (v) v.style.display = "flex"; if (q) q.innerHTML = "";
+        };
+        window.goGrammar = function() {
+            var h = document.getElementById("homeMenu"), g = document.getElementById("vocabSubMenu"), v = document.getElementById("grammarSubMenu"), q = document.getElementById("quiz");
+            if (h) h.style.display = "none"; if (g) g.style.display = "none"; if (v) v.style.display = "flex"; if (q) q.innerHTML = "";
+        };
+        window.goBack = function() {
+            var h = document.getElementById("homeMenu"), g = document.getElementById("grammarSubMenu"), v = document.getElementById("vocabSubMenu"), q = document.getElementById("quiz");
+            if (h) h.style.display = "flex"; if (g) g.style.display = "none"; if (v) v.style.display = "none"; if (q) q.innerHTML = "";
+        };
+        window.goStats = function() {
+            var h = document.getElementById("homeMenu"), g = document.getElementById("grammarSubMenu"), v = document.getElementById("vocabSubMenu"), q = document.getElementById("quiz");
+            if (h) h.style.display = "none"; if (g) g.style.display = "none"; if (v) v.style.display = "none";
+            if (q) q.innerHTML = "<div style=\"text-align:center;padding:40px;\">Loading statistics...</div>";
+            fetch("/api/stats").then(function(r) { return r.json(); }).then(function(stats) {
+                var acc = stats.accuracy != null ? Number(stats.accuracy) * 100 : 0;
+                var html = "<div style=\"max-width:1200px;margin:0 auto;\"><button onclick=\"window.goBack()\" class=\"submit-btn\" style=\"margin-bottom:20px;\">Back to Home</button>";
+                html += "<div style=\"display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px;\">";
+                html += "<div class=\"stat-card\"><div class=\"stat-number\">" + (stats.total_words || 0) + "</div><div class=\"stat-label\">Words Practiced</div></div>";
+                html += "<div class=\"stat-card\"><div class=\"stat-number\">" + (stats.total_attempts || 0) + "</div><div class=\"stat-label\">Total Attempts</div></div>";
+                html += "<div class=\"stat-card\"><div class=\"stat-number\">" + acc.toFixed(1) + "%</div><div class=\"stat-label\">Accuracy</div></div></div></div>";
+                if (q) q.innerHTML = html;
+            }).catch(function() { if (q) q.innerHTML = "<p>Error loading stats.</p><button onclick=\"window.goBack()\">Back to Home</button>"; });
+        };
+        if (typeof console !== "undefined" && console.log) console.log("Home menu ready");
+    })();
+    </script>
     <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
-    <h1>Italian → Greek</h1>
-    <p class="subtitle">Pick a mode and start practicing</p>
-    <div class="menu" id="mainMenu">
+    <img src="/italian.webp" alt="Italian" class="home-logo" />
+    <h1>Italian Trainer</h1>
+    <p class="subtitle">Choose practice type</p>
+    <div class="menu" id="homeMenu">
+        <button type="button" onclick="window.goVocab()">Vocabulary</button>
+        <button type="button" onclick="window.goGrammar()">Grammar</button>
+        <button type="button" class="stats-btn" onclick="window.goStats()">Statistics</button>
+    </div>
+    <div class="menu" id="vocabSubMenu" style="display:none;">
         <button onclick="startMode('it-gr')">Italian → Greek</button>
         <button onclick="startMode('gr-it')">Greek → Italian</button>
         <button onclick="startMode('mc')">Multiple choice (IT→GR)</button>
         <button onclick="startMode('mc-gr-it')">Multiple choice (GR→IT)</button>
-        <button onclick="startMode('flashcard')">Flashcards</button>
-        <button onclick="startMode('sentence-it-gr')">Sentences IT→GR</button>
-        <button onclick="startMode('sentence-gr-it')">Sentences GR→IT</button>
-        <button class="stats-btn" onclick="showStats()">Statistics</button>
+        <button onclick="window.goBack()" style="background:var(--text-muted); color:var(--card);">← Back to Home</button>
+    </div>
+    <div class="menu" id="grammarSubMenu" style="display:none;">
+        <button onclick="startGrammarCategory('verbs_present')">Ρήματα ενεστώτας (όλα τα πρόσωπα)</button>
+        <button onclick="startGrammarCategory('articles')">Άρθρα οριστικά και αόριστα</button>
+        <button onclick="startGrammarCategory('avercela_avere_essere_esserci')">avercela, avere, essere, esserci</button>
+        <button onclick="startGrammarCategory('irregular_nouns')">Ανώμαλα ουσιαστικά</button>
+        <button onclick="window.goBack()" style="background:var(--text-muted); color:var(--card);">← Back to Home</button>
     </div>
     <div id="quiz"></div>
     <footer>Practice a little every day.</footer>
@@ -391,7 +437,10 @@ def launch_web():
         let current = 0;
         let score = 0;
         let mode = '';
-        let flipped = false;
+        
+        function showVocabMenu() { if (window.goVocab) window.goVocab(); }
+        function showGrammarMenu() { if (window.goGrammar) window.goGrammar(); }
+        function backToHome() { if (window.goBack) window.goBack(); }
         
         // Dark mode functionality
         function toggleDarkMode() {
@@ -402,10 +451,13 @@ def launch_web():
         }
         
         // Load dark mode preference
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-            document.querySelector('.dark-mode-toggle').textContent = '☀️';
-        }
+        try {
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+                var t = document.querySelector('.dark-mode-toggle');
+                if (t) t.textContent = '\u2600\uFE0F';
+            }
+        } catch (e) { console.log('Dark mode init:', e); }
         
         // Confetti celebration
         function celebrate() {
@@ -461,8 +513,28 @@ def launch_web():
             }
         }
         
+        function showVocabMenu() {
+            document.getElementById('homeMenu').style.display = 'none';
+            document.getElementById('grammarSubMenu').style.display = 'none';
+            document.getElementById('vocabSubMenu').style.display = 'flex';
+            document.getElementById('quiz').innerHTML = '';
+        }
+        function showGrammarMenu() {
+            document.getElementById('homeMenu').style.display = 'none';
+            document.getElementById('vocabSubMenu').style.display = 'none';
+            document.getElementById('grammarSubMenu').style.display = 'flex';
+            document.getElementById('quiz').innerHTML = '';
+        }
+        function backToHome() {
+            document.getElementById('homeMenu').style.display = 'flex';
+            document.getElementById('vocabSubMenu').style.display = 'none';
+            document.getElementById('grammarSubMenu').style.display = 'none';
+            document.getElementById('quiz').innerHTML = '';
+        }
         async function showStats() {
-            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('homeMenu').style.display = 'none';
+            document.getElementById('vocabSubMenu').style.display = 'none';
+            document.getElementById('grammarSubMenu').style.display = 'none';
             document.getElementById('quiz').innerHTML = '<div style="text-align:center;padding:40px;">Loading statistics... ⏳</div>';
             
             try {
@@ -470,7 +542,7 @@ def launch_web():
                 const stats = await res.json();
                 
                 let html = '<div style="max-width:1200px; margin:0 auto;">';
-                html += '<button onclick="location.reload()" class="submit-btn" style="margin-bottom:20px; background:var(--text); color:var(--card);">← Back to Menu</button>';
+                html += '<button onclick="backToHome()" class="submit-btn" style="margin-bottom:20px; background:var(--text); color:var(--card);">← Back to Home</button>';
                 const safe = (v, d) => (v != null && v !== '') ? v : (d != null ? d : 0);
                 html += '<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:24px;">';
                 html += `<div class="stat-card">
@@ -656,6 +728,17 @@ def launch_web():
                 document.getElementById('quiz').innerHTML = '<p style="color:red;">Error loading statistics. ' + e.message + '</p>';
             }
         }
+        window.showVocabMenu = showVocabMenu;
+        window.showGrammarMenu = showGrammarMenu;
+        window.showStats = showStats;
+        (function bindHomeNow() {
+            var vocab = document.getElementById('btnVocab');
+            var gram = document.getElementById('btnGrammar');
+            var stats = document.getElementById('btnStats');
+            if (vocab) vocab.onclick = showVocabMenu;
+            if (gram) gram.onclick = showGrammarMenu;
+            if (stats) stats.onclick = showStats;
+        })();
         
         async function startMode(m) {
             console.log('Starting mode:', m);
@@ -663,18 +746,13 @@ def launch_web():
             current = 0;
             score = 0;
             totalAnswered = 0;
-            
+            document.getElementById('vocabSubMenu').style.display = 'none';
             try {
-                if (mode.startsWith('sentence')) {
-                    showSentence();
-                } else {
-                    // Multiple choice: load larger batch so session continues; others load 10
-                    const n = (mode === 'mc' || mode === 'mc-gr-it') ? 300 : 10;
-                    const res = await fetch('/api/words?n=' + n);
-                    words = await res.json();
-                    console.log('Loaded words:', words.length);
-                    showQuestion();
-                }
+                const n = (mode === 'mc' || mode === 'mc-gr-it') ? 300 : 10;
+                const res = await fetch('/api/words?n=' + n);
+                words = await res.json();
+                console.log('Loaded words:', words.length);
+                showQuestion();
             } catch(e) {
                 console.error('Error loading words:', e);
                 document.getElementById('quiz').innerHTML = '<p style="color:red;">Error loading vocabulary. Check console.</p>';
@@ -799,20 +877,6 @@ def launch_web():
                         checkMC(this.dataset.opt, this.dataset.correct, this.dataset.italian);
                     };
                 });
-            } else if (mode === 'flashcard') {
-                if (!flipped) {
-                    html += '<div class="card flashcard" onclick="flipCard()">' + escapeHtml(question) +
-                            '<span class="speaker" onclick="event.stopPropagation(); playAudio(' + JSON.stringify(w.italian) + ')">🔊</span>' +
-                            '<p style="font-size:14px; color:#999; margin-top:20px;">Click to flip</p></div>';
-                } else {
-                    html += '<div class="card">' + escapeHtml(question) + 
-                            '<span class="speaker" onclick="playAudio(' + JSON.stringify(w.italian) + ')">🔊</span></div>';
-                    html += '<div class="card" style="background:#e8f5e9;">→ ' + escapeHtml(answer) + '</div>';
-                    html += '<div class="controls">' +
-                            '<button onclick="markCard(true)" class="submit-btn">✓ Know it</button>' +
-                            '<button onclick="markCard(false)" class="submit-btn" style="background:var(--error);">✗ Need review</button>' +
-                            '</div>';
-                }
             } else {
                 html += '<div class="card">' + escapeHtml(question) + 
                         '<span class="speaker" onclick="playAudio(' + JSON.stringify(w.italian) + ')">🔊</span></div>';
@@ -835,18 +899,6 @@ def launch_web():
             if (!isMC) {
                 document.getElementById('quiz').innerHTML = html;
             }
-        }
-        
-        function flipCard() {
-            flipped = true;
-            showQuestion();
-        }
-        
-        function markCard(correct) {
-            if (correct) score++;
-            flipped = false;
-            current++;
-            showQuestion();
         }
         
         function checkAnswerBtn() {
@@ -908,107 +960,90 @@ def launch_web():
             }
         }
         
-        let currentSentence = null;
+        // Grammar exercise state
+        let grammarExercises = [];
+        let grammarIndex = 0;
+        let grammarScore = 0;
+        let grammarCategory = '';
         
-        async function showSentence() {
-            if (current >= 5) {
-                let completeHTML = '<div class="fade-in" style="text-align:center; padding:40px;">';
-                completeHTML += '<h2 style="color:var(--text); font-size:1.5rem;">Sentences done</h2>';
-                completeHTML += '<p style="color:var(--text-muted); margin:24px 0;">Nice work.</p>';
-                completeHTML += '<button onclick="location.reload()" class="submit-btn">Practice again</button>';
-                completeHTML += '</div>';
-                document.getElementById('quiz').innerHTML = completeHTML;
-                celebrate();
+        async function startGrammarCategory(cat) {
+            grammarCategory = cat;
+            grammarIndex = 0;
+            grammarScore = 0;
+            document.getElementById('grammarSubMenu').style.display = 'none';
+            document.getElementById('quiz').innerHTML = '<div style="text-align:center;padding:24px;">Loading exercises...</div>';
+            try {
+                const res = await fetch('/api/grammar/exercises?category=' + encodeURIComponent(cat) + '&n=20');
+                grammarExercises = await res.json();
+                if (!grammarExercises.length) {
+                    document.getElementById('quiz').innerHTML = '<p style="color:var(--error);">No exercises for this category.</p><button onclick="backToHome()" class="submit-btn">Back to Home</button>';
+                    return;
+                }
+                showGrammarQuestion();
+            } catch(e) {
+                document.getElementById('quiz').innerHTML = '<p style="color:var(--error);">Error loading exercises.</p><button onclick="backToHome()" class="submit-btn">Back to Home</button>';
+            }
+        }
+        
+        function showGrammarQuestion() {
+            if (grammarIndex >= grammarExercises.length) {
+                const pct = grammarExercises.length ? Math.round(grammarScore * 100 / grammarExercises.length) : 0;
+                let html = '<div style="text-align:center; padding:32px 24px;">';
+                html += '<h2 style="color:var(--text); font-size:1.5rem; margin-bottom:16px;">Grammar session done</h2>';
+                html += '<div style="font-size:3rem; font-weight:700; color:var(--primary); margin:20px 0;">' + grammarScore + '/' + grammarExercises.length + '</div>';
+                html += '<p style="color:var(--text-muted); margin-bottom:24px;">' + pct + '% correct</p>';
+                if (pct >= 80) celebrate();
+                html += '<button onclick="document.getElementById(\'grammarSubMenu\').style.display=\'flex\'; document.getElementById(\'quiz\').innerHTML=\'\';" class="submit-btn" style="margin:8px;">Back to categories</button>';
+                html += '<button onclick="backToHome()" style="margin:8px; background:var(--text); color:var(--card);" class="submit-btn">Back to Home</button>';
+                html += '</div>';
+                document.getElementById('quiz').innerHTML = html;
                 return;
             }
-            
-            // Determine direction based on mode
-            let direction;
-            if (mode === 'sentence-gr-it') {
-                direction = 'gr-it';
-            } else if (mode === 'sentence-it-gr') {
-                direction = 'it-gr';
-            } else {
-                // Fallback: random for old 'sentence' mode
-                direction = Math.random() > 0.5 ? 'it-gr' : 'gr-it';
-            }
-            const res = await fetch('/api/sentence?direction=' + direction);
-            const data = await res.json();
-            currentSentence = data;
-            
-            const targetLang = direction === 'it-gr' ? 'Greek' : 'Italian';
-            const targetPlaceholder = direction === 'it-gr' ? 'Translate to Greek...' : 'Μετάφραση στα Ιταλικά...';
-            
-            const progressPercent = (current / 5) * 100;
-            
+            const ex = grammarExercises[grammarIndex];
+            const progressPercent = grammarExercises.length ? (grammarIndex / grammarExercises.length) * 100 : 0;
             let html = '<div class="slide-in">';
-            html += '<div class="progress-container">';
-            html += '<div class="progress-bar" style="width:' + progressPercent + '%"></div>';
+            html += '<div class="progress-container"><div class="progress-bar" style="width:' + progressPercent + '%"></div></div>';
+            html += '<div class="progress-text">Question ' + (grammarIndex + 1) + ' of ' + grammarExercises.length + ' • Score: ' + grammarScore + '</div>';
+            html += '<button onclick="backToHome()" style="margin-left:12px; padding:8px 16px; background:var(--bg-accent); color:var(--text); border:1px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; font-weight:600; font-size:0.85rem;">Stop</button>';
             html += '</div>';
-            html += '<div class="progress-text">Sentence ' + (current+1) + ' of 5</div>';
-            html += '</div>';
-            html += '<div style="text-align:center; margin:15px 0;">';
-            html += '<span style="background:var(--primary); color:#fff; padding:6px 14px; border-radius:999px; font-size:0.85em; font-weight:600;">';
-            html += direction === 'it-gr' ? '🇮🇹 Italian → Greek 🇬🇷' : '🇬🇷 Greek → Italian 🇮🇹';
-            html += '</span></div>';
-            html += '<div class="card fade-in">' + escapeHtml(data.source) + '</div>';
-            html += '<div style="text-align:center; margin:10px 0; color:var(--text-muted); font-size:0.9em;">';
-            html += '📝 Grammar: ' + escapeHtml(data.pattern) + '</div>';
-            html += '<div class="answer">';
-            html += '<textarea id="translation" class="sentence-input" placeholder="' + targetPlaceholder + '"></textarea><br>';
-            html += '<button onclick="checkSentence()" class="submit-btn">Show Translation</button>';
-            html += '</div><div id="result"></div>';
-            html += '<div style="margin-top:15px; padding:12px; background:#f5f5f5; border-radius:8px; font-size:14px; color:#666;">';
-            html += '<strong>Words:</strong> ' + escapeHtml(data.words);
-            html += '</div>';
-            
+            html += '<div class="card">' + escapeHtml(ex.prompt) + '</div>';
+            html += '<div class="answer"><input type="text" id="grammarAnswer" placeholder="Your answer" autofocus />';
+            html += '<button onclick="checkGrammarAnswer()" class="submit-btn">Submit</button></div><div id="grammarResult"></div>';
             document.getElementById('quiz').innerHTML = html;
+            const inp = document.getElementById('grammarAnswer');
+            if (inp) {
+                inp.focus();
+                inp.addEventListener('keypress', function(e) { if (e.key === 'Enter') checkGrammarAnswer(); });
+            }
         }
         
-        function checkSentence() {
-            const userTrans = document.getElementById('translation').value.trim();
-            const targetLang = currentSentence.direction === 'it-gr' ? 'Greek' : 'Italian';
-            
-            let feedback = '<div style="margin-top:20px; animation: fadeIn 0.5s;">';
-            
-            // User's translation
-            feedback += '<div style="margin-bottom:15px;">';
-            feedback += '<p style="color:var(--primary); font-weight:bold; margin-bottom:8px;">Your translation:</p>';
-            feedback += '<p style="background:var(--bg-accent); padding:15px; border-radius:var(--radius-sm); font-size:1rem; border-left:4px solid var(--primary);">' + 
-                       (userTrans ? escapeHtml(userTrans) : '<i style="color:#999;">No translation provided</i>') + '</p>';
-            feedback += '</div>';
-            
-            // Correct translation
-            feedback += '<div style="margin-bottom:15px;">';
-            feedback += '<p style="color:var(--success); font-weight:bold; margin-bottom:8px;">Correct translation:</p>';
-            feedback += '<p style="background:var(--success-bg); padding:15px; border-radius:var(--radius-sm); font-size:1rem; font-weight:500; border-left:4px solid var(--success);">' + 
-                       escapeHtml(currentSentence.translation) + '</p>';
-            feedback += '</div>';
-            
-            // Word-by-word reference
-            feedback += '<div style="margin-bottom:15px;">';
-            feedback += '<p style="color:#666; font-weight:bold; margin-bottom:8px;">📚 Word reference:</p>';
-            feedback += '<p style="background:var(--bg-accent); padding:12px; border-radius:var(--radius-sm); font-size:0.9rem; border-left:4px solid var(--primary);">' + 
-                       escapeHtml(currentSentence.words) + '</p>';
-            feedback += '</div>';
-            
-            feedback += '<button onclick="nextSentence()" class="submit-btn" style="margin-top:15px; width:100%;">Next Sentence →</button>';
-            feedback += '</div>';
-            
-            document.getElementById('result').innerHTML = feedback;
-            document.querySelector('textarea').disabled = true;
-            document.querySelector('button.submit-btn:not([onclick*="next"])').disabled = true;
+        async function checkGrammarAnswer() {
+            const inp = document.getElementById('grammarAnswer');
+            if (!inp) return;
+            const userAnswer = inp.value.trim();
+            const ex = grammarExercises[grammarIndex];
+            if (!ex) return;
+            try {
+                const res = await fetch('/api/grammar/check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ category: grammarCategory, prompt: ex.prompt, user_answer: userAnswer })
+                });
+                const data = await res.json();
+                const resultEl = document.getElementById('grammarResult');
+                if (data.correct) {
+                    grammarScore++;
+                    resultEl.innerHTML = '<p class="correct">✓ Correct!</p>';
+                } else {
+                    resultEl.innerHTML = '<p class="wrong">✗ Wrong. Correct: ' + escapeHtml(data.correct_answer || '') + '</p>';
+                }
+                grammarIndex++;
+                setTimeout(showGrammarQuestion, 2000);
+            } catch(e) {
+                document.getElementById('grammarResult').innerHTML = '<p class="wrong">Error checking answer.</p>';
+            }
         }
         
-        function nextSentence() {
-            current++;
-            showSentence();
-        }
-        
-        window.onload = () => {
-            console.log('Page loaded, auto-starting Italian→Greek mode');
-            startMode('it-gr');
-        };
     </script>
 </body>
 </html>
@@ -1016,7 +1051,11 @@ def launch_web():
     
     @app.route('/')
     def index():
-        return render_template_string(HTML)
+        return send_from_directory(WEB_DIR, 'index.html', mimetype='text/html')
+    
+    @app.route('/italian.webp')
+    def serve_italian_logo():
+        return send_from_directory(PROJECT_ROOT, 'italian.webp', mimetype='image/webp')
     
     @app.route('/api/words')
     def get_words():
@@ -1102,61 +1141,6 @@ def launch_web():
         else:
             return jsonify({"error": "Audio generation failed"}), 500
     
-    @app.route('/api/sentence')
-    def get_sentence():
-        from app.greek_sentence_generator import generate_greek_sentence
-        
-        words = load_vocabulary()
-        direction = request.args.get('direction', 'it-gr')  # 'it-gr' or 'gr-it'
-        
-        if direction == 'gr-it':
-            # Greek to Italian
-            result = generate_greek_sentence(words)
-            
-            # Format word meanings for display
-            word_meanings = []
-            for word_gr in result['words_used']:
-                matching = [w for w in words if w['greek'].lower() == word_gr.lower()]
-                if matching:
-                    word_meanings.append(f"{word_gr}={matching[0]['italian']}")
-                else:
-                    word_meanings.append(word_gr)
-            
-            return jsonify({
-                "source": result['greek'],
-                "translation": result['italian'],
-                "words": ", ".join(word_meanings),
-                "pattern": result['pattern'],
-                "direction": 'gr-it'
-            })
-        else:
-            # Italian to Greek (original)
-            result = generate_smart_sentence(words)
-            
-            # Format word meanings for display
-            word_meanings = []
-            greek_translation_parts = []
-            
-            for word_it in result['words_used']:
-                matching = [w for w in words if w['italian'].lower() == word_it.lower()]
-                if matching:
-                    word_meanings.append(f"{word_it}={matching[0]['greek']}")
-                    greek_translation_parts.append(matching[0]['greek'])
-                else:
-                    word_meanings.append(word_it)
-                    greek_translation_parts.append('?')
-            
-            # Create approximate Greek translation
-            greek_translation = ' '.join(greek_translation_parts) if greek_translation_parts else 'Μετάφραση'
-            
-            return jsonify({
-                "source": result['italian'],
-                "translation": greek_translation,
-                "words": ", ".join(word_meanings),
-                "pattern": result['pattern'],
-                "direction": 'it-gr'
-            })
-    
     @app.route('/api/stats')
     def get_stats_api():
         """API endpoint for detailed statistics."""
@@ -1184,6 +1168,28 @@ def launch_web():
         except Exception as e:
             return jsonify({"success": False, "error": str(e)}), 500
     
+    @app.route('/api/grammar/exercises')
+    def grammar_exercises():
+        """Return list of grammar exercises for a category."""
+        category = request.args.get('category', '')
+        if category not in GRAMMAR_CATEGORIES:
+            return jsonify([]), 400
+        n = int(request.args.get('n', 20))
+        exercises = get_exercises(category, n)
+        return jsonify(exercises)
+    
+    @app.route('/api/grammar/check', methods=['POST'])
+    def grammar_check():
+        """Check grammar exercise answer. Body: category, prompt, user_answer."""
+        data = request.get_json() or {}
+        category = data.get('category', '')
+        prompt = data.get('prompt', '')
+        user_answer = data.get('user_answer', '')
+        if category not in GRAMMAR_CATEGORIES:
+            return jsonify({"correct": False, "correct_answer": ""}), 400
+        correct, correct_answer = grammar_check_answer(category, prompt, user_answer)
+        return jsonify({"correct": correct, "correct_answer": correct_answer})
+    
     print("\n🌐 Starting web interface at http://localhost:5000")
     print("Press Ctrl+C to stop\n")
     app.run(debug=True, port=5000, host='0.0.0.0')
@@ -1195,13 +1201,17 @@ application = None
 
 def create_wsgi_app():
     """Create Flask app for WSGI deployment without app.run()."""
-    from flask import Flask, render_template_string, request, jsonify
+    from flask import Flask, request, jsonify, send_from_directory
+    from app.grammar_loader import get_exercises, check_answer as grammar_check_answer, GRAMMAR_CATEGORIES
     import json
+    import os
     
     app = Flask(__name__)
     vocabulary = load_vocabulary()
+    WSGI_WEB_DIR = os.path.dirname(os.path.abspath(__file__))
+    WSGI_PROJECT_ROOT = os.path.dirname(WSGI_WEB_DIR)
     
-    HTML = '''
+    WSGI_HTML_REMOVED = '''
 <!DOCTYPE html>
 <html>
 <head>
@@ -1564,24 +1574,80 @@ def create_wsgi_app():
         .pulse {
             animation: pulse 0.6s ease-in-out;
         }
+        
+        .home-logo {
+            display: block;
+            max-width: 200px;
+            height: auto;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body>
-    <h1>🇮🇹 Italian Vocabulary Practice 🇬🇷</h1>
+    <script>
+    (function() {
+        window.goVocab = function() {
+            var h = document.getElementById("homeMenu"), g = document.getElementById("grammarSubMenu"), v = document.getElementById("vocabSubMenu"), c = document.getElementById("quizContainer"), q = document.getElementById("quizContent");
+            if (h) h.style.display = "none"; if (g) g.style.display = "none"; if (v) v.style.display = "block"; if (c) c.classList.remove("active"); if (q) q.innerHTML = "";
+        };
+        window.goGrammar = function() {
+            var h = document.getElementById("homeMenu"), g = document.getElementById("vocabSubMenu"), v = document.getElementById("grammarSubMenu"), c = document.getElementById("quizContainer"), q = document.getElementById("quizContent");
+            if (h) h.style.display = "none"; if (g) g.style.display = "none"; if (v) v.style.display = "block"; if (c) c.classList.remove("active"); if (q) q.innerHTML = "";
+        };
+        window.goBack = function() {
+            var h = document.getElementById("homeMenu"), g = document.getElementById("grammarSubMenu"), v = document.getElementById("vocabSubMenu"), c = document.getElementById("quizContainer"), q = document.getElementById("quizContent");
+            if (h) h.style.display = "block"; if (g) g.style.display = "none"; if (v) v.style.display = "none"; if (c) c.classList.remove("active"); if (q) q.innerHTML = "";
+        };
+        window.goStats = function() {
+            var h = document.getElementById("homeMenu"), g = document.getElementById("grammarSubMenu"), v = document.getElementById("vocabSubMenu"), c = document.getElementById("quizContainer"), q = document.getElementById("quizContent");
+            if (h) h.style.display = "none"; if (g) g.style.display = "none"; if (v) v.style.display = "none"; if (c) c.classList.add("active"); if (q) q.innerHTML = "<p>Loading statistics...</p>";
+            fetch("/api/stats").then(function(r) { return r.json(); }).then(function(stats) {
+                var acc = stats.accuracy != null ? Number(stats.accuracy) * 100 : 0;
+                var html = "<h2>Statistics</h2><p>Words practiced: " + (stats.total_words || 0) + "</p><p>Total attempts: " + (stats.total_attempts || 0) + "</p><p>Accuracy: " + acc.toFixed(1) + "%</p>";
+                html += "<button class=\"btn\" onclick=\"window.goBack()\">Back to Home</button>";
+                if (q) q.innerHTML = html;
+            }).catch(function() { if (q) q.innerHTML = "<p>Error loading stats.</p><button class=\"btn\" onclick=\"window.goBack()\">Back to Home</button>"; });
+        };
+    })();
+    </script>
+    <img src="/italian.webp" alt="Italian" class="home-logo" />
+    <h1>🇮🇹 Italian Trainer 🇬🇷</h1>
     
-    <div class="mode-selector" id="modeSelector">
-        <h2>Choose Practice Mode</h2>
+    <div class="mode-selector" id="homeMenu">
+        <h2>Choose practice type</h2>
         <div class="mode-buttons">
-            <button class="mode-btn" onclick="startMode('it-gr')">Italian → Greek Translation</button>
-            <button class="mode-btn" onclick="startMode('gr-it')">Greek → Italian Translation</button>
-            <button class="mode-btn" onclick="startMode('mc')">Multiple Choice Quiz</button>
-            <button class="mode-btn" onclick="startMode('flashcard')">Flashcards</button>
-            <button class="mode-btn" onclick="startMode('sentence')">Practice with Sentences</button>
+            <button type="button" class="mode-btn" onclick="window.goVocab()">Vocabulary</button>
+            <button type="button" class="mode-btn" onclick="window.goGrammar()">Grammar</button>
+            <button type="button" class="mode-btn" onclick="window.goStats()">Statistics</button>
+        </div>
+    </div>
+    
+    <div class="mode-selector" id="vocabSubMenu" style="display:none;">
+        <h2>Vocabulary</h2>
+        <div class="mode-buttons">
+            <button class="mode-btn" onclick="startMode('it-gr')">Italian → Greek</button>
+            <button class="mode-btn" onclick="startMode('gr-it')">Greek → Italian</button>
+            <button class="mode-btn" onclick="startMode('mc')">Multiple choice (IT→GR)</button>
+            <button class="mode-btn" onclick="startMode('mc-gr-it')">Multiple choice (GR→IT)</button>
+            <button class="btn back-btn" onclick="window.goBack()">← Back to Home</button>
+        </div>
+    </div>
+    
+    <div class="mode-selector" id="grammarSubMenu" style="display:none;">
+        <h2>Grammar</h2>
+        <div class="mode-buttons">
+            <button class="mode-btn" onclick="startGrammarCategory('verbs_present')">Ρήματα ενεστώτας</button>
+            <button class="mode-btn" onclick="startGrammarCategory('articles')">Άρθρα οριστικά και αόριστα</button>
+            <button class="mode-btn" onclick="startGrammarCategory('avercela_avere_essere_esserci')">avercela, avere, essere, esserci</button>
+            <button class="mode-btn" onclick="startGrammarCategory('irregular_nouns')">Ανώμαλα ουσιαστικά</button>
+            <button class="btn back-btn" onclick="window.goBack()">← Back to Home</button>
         </div>
     </div>
     
     <div class="quiz-container" id="quizContainer">
-        <button class="btn back-btn" onclick="backToMenu()">← Back to Menu</button>
+        <button class="btn back-btn" onclick="window.goBack()">← Back to Home</button>
         <div id="quizContent"></div>
     </div>
 
@@ -1592,16 +1658,26 @@ def create_wsgi_app():
         let score = 0;
         let total = 0;
         let currentWord = null;
-        let flashcardRevealed = false;
 
-        function backToMenu() {
-            document.getElementById('modeSelector').style.display = 'block';
-            document.getElementById('quizContainer').classList.remove('active');
-            currentMode = '';
-            words = [];
-            currentIndex = 0;
-            score = 0;
-            total = 0;
+        function showVocabMenu() { if (window.goVocab) window.goVocab(); }
+        function showGrammarMenu() { if (window.goGrammar) window.goGrammar(); }
+        function backToHome() { if (window.goBack) window.goBack(); }
+
+        async function showStats() {
+            document.getElementById('homeMenu').style.display = 'none';
+            document.getElementById('vocabSubMenu').style.display = 'none';
+            document.getElementById('grammarSubMenu').style.display = 'none';
+            document.getElementById('quizContainer').classList.add('active');
+            document.getElementById('quizContent').innerHTML = '<p>Loading statistics...</p>';
+            try {
+                const res = await fetch('/api/stats');
+                const stats = await res.json();
+                let html = '<h2>Statistics</h2><p>Words practiced: ' + (stats.total_words || 0) + '</p><p>Total attempts: ' + (stats.total_attempts || 0) + '</p><p>Accuracy: ' + ((stats.accuracy != null ? Number(stats.accuracy) : 0) * 100).toFixed(1) + '%</p>';
+                html += '<button class="btn" onclick="backToHome()">Back to Home</button>';
+                document.getElementById('quizContent').innerHTML = html;
+            } catch (e) {
+                document.getElementById('quizContent').innerHTML = '<p>Error loading stats.</p><button class="btn" onclick="backToHome()">Back to Home</button>';
+            }
         }
 
         async function startMode(mode) {
@@ -1609,23 +1685,15 @@ def create_wsgi_app():
             currentIndex = 0;
             score = 0;
             total = 0;
-            
-            document.getElementById('modeSelector').style.display = 'none';
+            document.getElementById('vocabSubMenu').style.display = 'none';
             document.getElementById('quizContainer').classList.add('active');
-            
-            if (mode === 'sentence') {
-                showSentence();
-            } else {
-                const response = await fetch('/api/words?n=10');
-                words = await response.json();
-                
-                if (mode === 'it-gr' || mode === 'gr-it') {
-                    showTranslationQuiz();
-                } else if (mode === 'mc') {
-                    showMultipleChoice();
-                } else if (mode === 'flashcard') {
-                    showFlashcard();
-                }
+            const n = (mode === 'mc' || mode === 'mc-gr-it') ? 50 : 10;
+            const response = await fetch('/api/words?n=' + n);
+            words = await response.json();
+            if (mode === 'it-gr' || mode === 'gr-it') {
+                showTranslationQuiz();
+            } else if (mode === 'mc' || mode === 'mc-gr-it') {
+                showMultipleChoice();
             }
         }
 
@@ -1709,32 +1777,27 @@ def create_wsgi_app():
                 showFinalScore();
                 return;
             }
-            
             currentWord = words[currentIndex];
-            const others = words.filter(w => w !== currentWord).slice(0, 3);
+            const isReverse = currentMode === 'mc-gr-it';
+            const question = isReverse ? currentWord.greek : currentWord.italian;
+            const correctAnswer = isReverse ? currentWord.italian : currentWord.greek;
+            const others = words.filter((w, i) => words.indexOf(w) !== currentIndex).slice(0, 3);
             const options = [currentWord, ...others].sort(() => Math.random() - 0.5);
-            
             const html = `
                 <div class="word-display">
-                    <div class="word">${currentWord.italian}</div>
-                    <span class="speaker-icon" onclick="playAudio()">🔊</span>
+                    <div class="word">${question}</div>
+                    ${!isReverse ? '<span class="speaker-icon" onclick="playAudio()">🔊</span>' : ''}
                 </div>
                 <div class="options" id="options">
-                    ${options.map(opt => `
-                        <button class="option-btn" 
-                                data-opt="${opt.greek}" 
-                                data-correct="${currentWord.greek}"
-                                data-italian="${currentWord.italian}">
-                            ${opt.greek}
-                        </button>
-                    `).join('')}
+                    ${options.map(opt => {
+                        const optVal = isReverse ? opt.italian : opt.greek;
+                        return `<button class="option-btn" data-opt="${optVal.replace(/"/g, '&quot;')}" data-correct="${correctAnswer.replace(/"/g, '&quot;')}" data-italian="${currentWord.italian.replace(/"/g, '&quot;')}">${optVal}</button>`;
+                    }).join('')}
                 </div>
                 <div class="feedback" id="feedback"></div>
                 <div class="score">Score: ${score}/${total}</div>
             `;
-            
             document.getElementById('quizContent').innerHTML = html;
-            
             setTimeout(() => {
                 document.querySelectorAll('.option-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
@@ -1784,97 +1847,77 @@ def create_wsgi_app():
             }, 2000);
         }
 
-        async function showFlashcard() {
-            if (currentIndex >= words.length) {
-                showFinalScore();
+        let grammarExercises = [];
+        let grammarIndex = 0;
+        let grammarScore = 0;
+        let grammarCategory = '';
+
+        async function startGrammarCategory(cat) {
+            grammarCategory = cat;
+            grammarIndex = 0;
+            grammarScore = 0;
+            document.getElementById('grammarSubMenu').style.display = 'none';
+            document.getElementById('quizContainer').classList.add('active');
+            document.getElementById('quizContent').innerHTML = '<p>Loading exercises...</p>';
+            try {
+                const res = await fetch('/api/grammar/exercises?category=' + encodeURIComponent(cat) + '&n=20');
+                grammarExercises = await res.json();
+                if (!grammarExercises.length) {
+                    document.getElementById('quizContent').innerHTML = '<p>No exercises for this category.</p><button class="btn" onclick="backToHome()">Back to Home</button>';
+                    return;
+                }
+                showGrammarQuestion();
+            } catch (e) {
+                document.getElementById('quizContent').innerHTML = '<p>Error loading exercises.</p><button class="btn" onclick="backToHome()">Back to Home</button>';
+            }
+        }
+
+        function showGrammarQuestion() {
+            if (grammarIndex >= grammarExercises.length) {
+                const pct = grammarExercises.length ? Math.round(grammarScore * 100 / grammarExercises.length) : 0;
+                let html = '<h2>Grammar session done</h2><div class="score">' + grammarScore + '/' + grammarExercises.length + ' (' + pct + '%)</div>';
+                html += '<button class="btn" onclick="document.getElementById(\'grammarSubMenu\').style.display=\'block\'; document.getElementById(\'quizContent\').innerHTML=\'\'; document.getElementById(\'quizContainer\').classList.remove(\'active\');">Back to categories</button> ';
+                html += '<button class="btn back-btn" onclick="backToHome()">Back to Home</button>';
+                document.getElementById('quizContent').innerHTML = html;
                 return;
             }
-            
-            currentWord = words[currentIndex];
-            flashcardRevealed = false;
-            
-            const html = `
-                <div class="flashcard" onclick="revealFlashcard()">
-                    <div class="flashcard-text">${currentWord.italian}</div>
-                </div>
-                <div class="flashcard-controls">
-                    <button class="btn" onclick="markFlashcard(false)" id="wrongBtn" disabled>Wrong</button>
-                    <button class="btn" onclick="markFlashcard(true)" id="correctBtn" disabled>Correct</button>
-                </div>
-                <div class="score">Score: ${score}/${total}</div>
-            `;
-            
+            const ex = grammarExercises[grammarIndex];
+            let html = '<p>Question ' + (grammarIndex + 1) + ' of ' + grammarExercises.length + ' | Score: ' + grammarScore + '</p>';
+            html += '<div class="word">' + ex.prompt.replace(/</g, '&lt;') + '</div>';
+            html += '<input type="text" id="grammarAnswer" placeholder="Your answer">';
+            html += '<button class="btn" onclick="checkGrammarAnswer()">Submit</button>';
+            html += '<div class="feedback" id="grammarResult"></div>';
             document.getElementById('quizContent').innerHTML = html;
-            await playAudio();
+            document.getElementById('grammarAnswer').focus();
+            document.getElementById('grammarAnswer').onkeypress = function(e) { if (e.key === 'Enter') checkGrammarAnswer(); };
         }
 
-        function revealFlashcard() {
-            if (flashcardRevealed) return;
-            
-            flashcardRevealed = true;
-            document.querySelector('.flashcard-text').textContent = currentWord.greek;
-            document.getElementById('wrongBtn').disabled = false;
-            document.getElementById('correctBtn').disabled = false;
-        }
-
-        function markFlashcard(correct) {
-            total++;
-            if (correct) score++;
-            
-            currentIndex++;
-            showFlashcard();
-        }
-
-        async function showSentence() {
-            const response = await fetch('/api/sentence');
-            const data = await response.json();
-            
-            const html = `
-                <div class="word-display">
-                    <div class="word">${data.italian}</div>
-                </div>
-                <input type="text" id="translation" placeholder="Translate to Greek..." onkeypress="handleSentenceEnter(event)">
-                <button class="btn" onclick="checkSentence()">Check Translation</button>
-                <div class="feedback" id="sentenceFeedback"></div>
-                <div class="sentence-info" id="sentenceInfo" style="display:none;"></div>
-                <button class="btn" onclick="nextSentence()" id="nextBtn" style="display:none;">Next Sentence →</button>
-            `;
-            
-            document.getElementById('quizContent').innerHTML = html;
-            document.getElementById('translation').focus();
-            
-            window.currentSentenceData = data;
-        }
-
-        function handleSentenceEnter(event) {
-            if (event.key === 'Enter') {
-                checkSentence();
+        async function checkGrammarAnswer() {
+            const inp = document.getElementById('grammarAnswer');
+            if (!inp) return;
+            const userAnswer = inp.value.trim();
+            const ex = grammarExercises[grammarIndex];
+            if (!ex) return;
+            try {
+                const res = await fetch('/api/grammar/check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ category: grammarCategory, prompt: ex.prompt, user_answer: userAnswer })
+                });
+                const data = await res.json();
+                const resultEl = document.getElementById('grammarResult');
+                if (data.correct) {
+                    grammarScore++;
+                    resultEl.innerHTML = '<span class="correct">✓ Correct!</span>';
+                } else {
+                    resultEl.innerHTML = '<span class="wrong">✗ Wrong. Correct: ' + (data.correct_answer || '').replace(/</g, '&lt;') + '</span>';
+                }
+                resultEl.className = 'feedback ' + (data.correct ? 'correct' : 'wrong');
+                grammarIndex++;
+                setTimeout(showGrammarQuestion, 2000);
+            } catch (e) {
+                document.getElementById('grammarResult').innerHTML = 'Error checking answer.';
             }
-        }
-
-        function checkSentence() {
-            const data = window.currentSentenceData;
-            const feedback = document.getElementById('sentenceFeedback');
-            const info = document.getElementById('sentenceInfo');
-            
-            feedback.innerHTML = `
-                <span class="pattern-badge">${data.pattern}</span>
-            `;
-            feedback.className = 'feedback';
-            
-            info.innerHTML = `
-                <h3>Word Meanings:</h3>
-                <p>${data.words}</p>
-            `;
-            info.style.display = 'block';
-            
-            document.getElementById('nextBtn').style.display = 'inline-block';
-            document.querySelector('input').disabled = true;
-            document.querySelector('button.btn:not(#nextBtn)').disabled = true;
-        }
-
-        function nextSentence() {
-            showSentence();
         }
 
         function showFinalScore() {
@@ -1889,11 +1932,12 @@ def create_wsgi_app():
                         ${percentage}%
                     </div>
                     <button class="btn" onclick="startMode(currentMode)">Try Again</button>
-                    <button class="btn back-btn" onclick="backToMenu()">Back to Menu</button>
+                    <button class="btn back-btn" onclick="backToHome()">Back to Home</button>
                 </div>
             `;
             document.getElementById('quizContent').innerHTML = html;
         }
+
     </script>
 </body>
 </html>
@@ -1901,7 +1945,11 @@ def create_wsgi_app():
     
     @app.route('/')
     def index():
-        return render_template_string(HTML)
+        return send_from_directory(WSGI_WEB_DIR, 'index.html', mimetype='text/html')
+    
+    @app.route('/italian.webp')
+    def serve_italian_logo_wsgi():
+        return send_from_directory(WSGI_PROJECT_ROOT, 'italian.webp', mimetype='image/webp')
     
     @app.route('/api/words')
     def get_words():
@@ -1915,22 +1963,32 @@ def create_wsgi_app():
         audio_base64 = get_audio_base64(word)
         return jsonify({"audio": audio_base64})
     
-    @app.route('/api/sentence')
-    def sentence():
-        result = generate_smart_sentence(vocabulary)
-        word_meanings = []
-        for word_it in result['words_used']:
-            matching = [w for w in vocabulary if w['italian'].lower() == word_it.lower()]
-            if matching:
-                word_meanings.append(f"{word_it}={matching[0]['greek']}")
-            else:
-                word_meanings.append(word_it)
-        
-        return jsonify({
-            "italian": result['italian'],
-            "words": ", ".join(word_meanings),
-            "pattern": result['pattern']
-        })
+    @app.route('/api/stats')
+    def get_stats_wsgi():
+        try:
+            from database.vocab_db import get_detailed_stats
+            return jsonify(get_detailed_stats())
+        except Exception:
+            return jsonify({"total_words": 0, "total_attempts": 0, "accuracy": 0})
+    
+    @app.route('/api/grammar/exercises')
+    def grammar_exercises_wsgi():
+        category = request.args.get('category', '')
+        if category not in GRAMMAR_CATEGORIES:
+            return jsonify([]), 400
+        n = int(request.args.get('n', 20))
+        return jsonify(get_exercises(category, n))
+    
+    @app.route('/api/grammar/check', methods=['POST'])
+    def grammar_check_wsgi():
+        data = request.get_json() or {}
+        category = data.get('category', '')
+        prompt = data.get('prompt', '')
+        user_answer = data.get('user_answer', '')
+        if category not in GRAMMAR_CATEGORIES:
+            return jsonify({"correct": False, "correct_answer": ""}), 400
+        correct, correct_answer = grammar_check_answer(category, prompt, user_answer)
+        return jsonify({"correct": correct, "correct_answer": correct_answer})
     
     return app
 

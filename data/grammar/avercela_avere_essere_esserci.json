@@ -1,0 +1,442 @@
+[
+{
+"prompt": "Loro ___ una casa.",
+"answer": "hanno"
+},
+{
+"prompt": "Tu ___ fretta?",
+"answer": "hai"
+},
+{
+"prompt": "Loro ___ fame.",
+"answer": "hanno"
+},
+{
+"prompt": "Noi ___ fame e sete.",
+"answer": "abbiamo"
+},
+{
+"prompt": "Noi ___ pronti.",
+"answer": "siamo"
+},
+{
+"prompt": "In Italia ___ molte chiese.",
+"answer": "ci sono"
+},
+{
+"prompt": "Non ___ latte.",
+"answer": "c'è"
+},
+{
+"prompt": "Non ___ niente da fare.",
+"answer": "c'è"
+},
+{
+"prompt": "Lui ___ ragione.",
+"answer": "ha"
+},
+{
+"prompt": "Voi ___ con noi? (avercela)",
+"answer": "ce l'avete"
+},
+{
+"prompt": "Noi ___ fame e sete.",
+"answer": "abbiamo"
+},
+{
+"prompt": "Non ___ ancora. (avercela, io)",
+"answer": "ce l'ho"
+},
+{
+"prompt": "Loro ___ a scuola.",
+"answer": "sono"
+},
+{
+"prompt": "Voi ___ stanchi?",
+"answer": "siete"
+},
+{
+"prompt": "Loro ___ una casa.",
+"answer": "hanno"
+},
+{
+"prompt": "Tu ___ sete?",
+"answer": "hai"
+},
+{
+"prompt": "Loro ___ studenti.",
+"answer": "sono"
+},
+{
+"prompt": "Io ___ italiano.",
+"answer": "sono"
+},
+{
+"prompt": "Voi ___ a Napoli?",
+"answer": "siete"
+},
+{
+"prompt": "Loro ___ studenti.",
+"answer": "sono"
+},
+{
+"prompt": "Io ___ di Milano.",
+"answer": "sono"
+},
+{
+"prompt": "Tu ___ molto gentile.",
+"answer": "sei"
+},
+{
+"prompt": "Io non ___ voglia.",
+"answer": "ho"
+},
+{
+"prompt": "Voi ___ ragione.",
+"answer": "avete"
+},
+{
+"prompt": "Lei ___ sonno.",
+"answer": "ha"
+},
+{
+"prompt": "Tu ___ stanco?",
+"answer": "sei"
+},
+{
+"prompt": "Io ___ freddo.",
+"answer": "ho"
+},
+{
+"prompt": "Voi ___ a Napoli?",
+"answer": "siete"
+},
+{
+"prompt": "___ una festa stasera.",
+"answer": "C'è"
+},
+{
+"prompt": "Tu ___ stanco?",
+"answer": "sei"
+},
+{
+"prompt": "Io ___ fame.",
+"answer": "ho"
+},
+{
+"prompt": "Voi ___ italiani?",
+"answer": "siete"
+},
+{
+"prompt": "___ due bagni in casa.",
+"answer": "Ci sono"
+},
+{
+"prompt": "Tu ___ fretta?",
+"answer": "hai"
+},
+{
+"prompt": "Lui ___ con loro. (avercela)",
+"answer": "ce l'ha"
+},
+{
+"prompt": "___ una festa stasera.",
+"answer": "C'è"
+},
+{
+"prompt": "Loro ___ con lui. (avercela)",
+"answer": "ce l'hanno"
+},
+{
+"prompt": "Tu ___ in ritardo.",
+"answer": "sei"
+},
+{
+"prompt": "Voi ___ con noi? (avercela)",
+"answer": "ce l'avete"
+},
+{
+"prompt": "Noi ___ paura.",
+"answer": "abbiamo"
+},
+{
+"prompt": "___ tempo per mangiare?",
+"answer": "C'è"
+},
+{
+"prompt": "Qui ___ troppa gente.",
+"answer": "c'è"
+},
+{
+"prompt": "___ due bagni in casa.",
+"answer": "Ci sono"
+},
+{
+"prompt": "___ tre stanze.",
+"answer": "Ci sono"
+},
+{
+"prompt": "Tu ___ in ritardo.",
+"answer": "sei"
+},
+{
+"prompt": "Loro ___ fame.",
+"answer": "hanno"
+},
+{
+"prompt": "___ tre stanze.",
+"answer": "Ci sono"
+},
+{
+"prompt": "Tu ___ con me? (avercela)",
+"answer": "ce l'hai"
+},
+{
+"prompt": "___ molti libri qui.",
+"answer": "Ci sono"
+},
+{
+"prompt": "Non ___ ancora. (avercela, io)",
+"answer": "ce l'ho"
+},
+{
+"prompt": "Voi ___ italiani?",
+"answer": "siete"
+},
+{
+"prompt": "Io ___ fame.",
+"answer": "ho"
+},
+{
+"prompt": "Qui ___ troppa gente.",
+"answer": "c'è"
+},
+{
+"prompt": "Loro ___ in vacanza.",
+"answer": "sono"
+},
+{
+"prompt": "Sì, ___! (avercela, noi)",
+"answer": "ce l'abbiamo"
+},
+{
+"prompt": "Sì, ___! (avercela, noi)",
+"answer": "ce l'abbiamo"
+},
+{
+"prompt": "Loro ___ in vacanza.",
+"answer": "sono"
+},
+{
+"prompt": "Lui ___ ragione.",
+"answer": "ha"
+},
+{
+"prompt": "Non ___ più pane.",
+"answer": "c'è"
+},
+{
+"prompt": "Loro ___ con lui. (avercela)",
+"answer": "ce l'hanno"
+},
+{
+"prompt": "___ un problema.",
+"answer": "C'è"
+},
+{
+"prompt": "Non ___ più pane.",
+"answer": "c'è"
+},
+{
+"prompt": "Io ___ italiano.",
+"answer": "sono"
+},
+{
+"prompt": "Non ___ latte.",
+"answer": "c'è"
+},
+{
+"prompt": "Noi ___ pronti.",
+"answer": "siamo"
+},
+{
+"prompt": "Lui ___ mio amico.",
+"answer": "è"
+},
+{
+"prompt": "Noi ___ tempo.",
+"answer": "abbiamo"
+},
+{
+"prompt": "Voi ___ un gatto.",
+"answer": "avete"
+},
+{
+"prompt": "Lei ___ sonno.",
+"answer": "ha"
+},
+{
+"prompt": "Io ___ con te. (avercela)",
+"answer": "ce l'ho"
+},
+{
+"prompt": "___ tempo per mangiare?",
+"answer": "C'è"
+},
+{
+"prompt": "Voi ___ un gatto.",
+"answer": "avete"
+},
+{
+"prompt": "___ due opzioni.",
+"answer": "Ci sono"
+},
+{
+"prompt": "___ molti libri qui.",
+"answer": "Ci sono"
+},
+{
+"prompt": "La casa ___ grande.",
+"answer": "è"
+},
+{
+"prompt": "Marco ___ 25 anni.",
+"answer": "ha"
+},
+{
+"prompt": "Voi ___ stanchi?",
+"answer": "siete"
+},
+{
+"prompt": "Marco ___ 25 anni.",
+"answer": "ha"
+},
+{
+"prompt": "Maria ___ alta.",
+"answer": "è"
+},
+{
+"prompt": "La casa ___ grande.",
+"answer": "è"
+},
+{
+"prompt": "In piazza ___ molti turisti.",
+"answer": "ci sono"
+},
+{
+"prompt": "Noi ___ felici.",
+"answer": "siamo"
+},
+{
+"prompt": "Io ___ a casa.",
+"answer": "sono"
+},
+{
+"prompt": "Voi ___ ragione.",
+"answer": "avete"
+},
+{
+"prompt": "Loro ___ a scuola.",
+"answer": "sono"
+},
+{
+"prompt": "Noi ___ a Roma.",
+"answer": "siamo"
+},
+{
+"prompt": "In piazza ___ molti turisti.",
+"answer": "ci sono"
+},
+{
+"prompt": "Noi ___ felici.",
+"answer": "siamo"
+},
+{
+"prompt": "___ una bella giornata.",
+"answer": "È"
+},
+{
+"prompt": "I bambini ___ paura.",
+"answer": "hanno"
+},
+{
+"prompt": "Lui ___ con loro. (avercela)",
+"answer": "ce l'ha"
+},
+{
+"prompt": "Io ___ freddo.",
+"answer": "ho"
+},
+{
+"prompt": "Tu ___ con me? (avercela)",
+"answer": "ce l'hai"
+},
+{
+"prompt": "Lui ___ mio amico.",
+"answer": "è"
+},
+{
+"prompt": "Tu ___ molto gentile.",
+"answer": "sei"
+},
+{
+"prompt": "Io ___ di Milano.",
+"answer": "sono"
+},
+{
+"prompt": "Non ___ niente da fare.",
+"answer": "c'è"
+},
+{
+"prompt": "Maria ___ alta.",
+"answer": "è"
+},
+{
+"prompt": "Noi ___ paura.",
+"answer": "abbiamo"
+},
+{
+"prompt": "___ un libro sul tavolo.",
+"answer": "C'è"
+},
+{
+"prompt": "Tu ___ sete?",
+"answer": "hai"
+},
+{
+"prompt": "___ un problema.",
+"answer": "C'è"
+},
+{
+"prompt": "Noi ___ con voi. (avercela)",
+"answer": "ce l'abbiamo"
+},
+{
+"prompt": "Io ___ con te. (avercela)",
+"answer": "ce l'ho"
+},
+{
+"prompt": "Noi ___ tempo.",
+"answer": "abbiamo"
+},
+{
+"prompt": "I bambini ___ paura.",
+"answer": "hanno"
+},
+{
+"prompt": "___ una bella giornata.",
+"answer": "È"
+},
+{
+"prompt": "___ due opzioni.",
+"answer": "Ci sono"
+},
+{
+"prompt": "Io ___ a casa.",
+"answer": "sono"
+},
+{
+"prompt": "In Italia ___ molte chiese.",
+"answer": "ci sono"
+}
+]

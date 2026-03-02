@@ -1,0 +1,1634 @@
+[
+{
+"prompt": "vedere, tu →",
+"answer": "vedi"
+},
+{
+"prompt": "dormire, io →",
+"answer": "dormo"
+},
+{
+"prompt": "decidere, io →",
+"answer": "decido"
+},
+{
+"prompt": "servire, voi →",
+"answer": "servite"
+},
+{
+"prompt": "pulire, noi →",
+"answer": "puliamo"
+},
+{
+"prompt": "parlare, lui/lei →",
+"answer": "parla"
+},
+{
+"prompt": "dare, lui/lei →",
+"answer": "dà"
+},
+{
+"prompt": "mangiare, loro →",
+"answer": "mangiano"
+},
+{
+"prompt": "sapere, voi →",
+"answer": "sapete"
+},
+{
+"prompt": "guardare, noi →",
+"answer": "guardiamo"
+},
+{
+"prompt": "rimanere, io →",
+"answer": "rimango"
+},
+{
+"prompt": "cucinare, loro →",
+"answer": "cucinano"
+},
+{
+"prompt": "guardare, tu →",
+"answer": "guardi"
+},
+{
+"prompt": "telefonare, tu →",
+"answer": "telefoni"
+},
+{
+"prompt": "leggere, noi →",
+"answer": "leggiamo"
+},
+{
+"prompt": "capire, voi →",
+"answer": "capite"
+},
+{
+"prompt": "dare, noi →",
+"answer": "diamo"
+},
+{
+"prompt": "ascoltare, lui/lei →",
+"answer": "ascolta"
+},
+{
+"prompt": "perdere, io →",
+"answer": "perdo"
+},
+{
+"prompt": "prendere, tu →",
+"answer": "prendi"
+},
+{
+"prompt": "mangiare, noi →",
+"answer": "mangiamo"
+},
+{
+"prompt": "pensare, noi →",
+"answer": "pensiamo"
+},
+{
+"prompt": "tornare, voi →",
+"answer": "tornate"
+},
+{
+"prompt": "chiedere, noi →",
+"answer": "chiediamo"
+},
+{
+"prompt": "servire, io →",
+"answer": "servo"
+},
+{
+"prompt": "ubbidire, voi →",
+"answer": "ubbidite"
+},
+{
+"prompt": "credere, loro →",
+"answer": "credono"
+},
+{
+"prompt": "dovere, voi →",
+"answer": "dovete"
+},
+{
+"prompt": "entrare, tu →",
+"answer": "entri"
+},
+{
+"prompt": "colpire, lui/lei →",
+"answer": "colpisce"
+},
+{
+"prompt": "vendere, voi →",
+"answer": "vendete"
+},
+{
+"prompt": "sapere, loro →",
+"answer": "sanno"
+},
+{
+"prompt": "bere, voi →",
+"answer": "bevete"
+},
+{
+"prompt": "scrivere, noi →",
+"answer": "scriviamo"
+},
+{
+"prompt": "telefonare, voi →",
+"answer": "telefonate"
+},
+{
+"prompt": "viaggiare, loro →",
+"answer": "viaggiano"
+},
+{
+"prompt": "chiudere, voi →",
+"answer": "chiudete"
+},
+{
+"prompt": "finire, io →",
+"answer": "finisco"
+},
+{
+"prompt": "cucinare, noi →",
+"answer": "cuciniamo"
+},
+{
+"prompt": "dormire, loro →",
+"answer": "dormono"
+},
+{
+"prompt": "finire, noi →",
+"answer": "finiamo"
+},
+{
+"prompt": "dormire, tu →",
+"answer": "dormi"
+},
+{
+"prompt": "avere, noi →",
+"answer": "abbiamo"
+},
+{
+"prompt": "stare, tu →",
+"answer": "stai"
+},
+{
+"prompt": "rispondere, loro →",
+"answer": "rispondono"
+},
+{
+"prompt": "conoscere, loro →",
+"answer": "conoscono"
+},
+{
+"prompt": "sapere, lui/lei →",
+"answer": "sa"
+},
+{
+"prompt": "preferire, loro →",
+"answer": "preferiscono"
+},
+{
+"prompt": "comprare, voi →",
+"answer": "comprate"
+},
+{
+"prompt": "viaggiare, tu →",
+"answer": "viaggi"
+},
+{
+"prompt": "leggere, tu →",
+"answer": "leggi"
+},
+{
+"prompt": "potere, voi →",
+"answer": "potete"
+},
+{
+"prompt": "ascoltare, noi →",
+"answer": "ascoltiamo"
+},
+{
+"prompt": "offrire, tu →",
+"answer": "offri"
+},
+{
+"prompt": "ubbidire, loro →",
+"answer": "ubbidiscono"
+},
+{
+"prompt": "finire, tu →",
+"answer": "finisci"
+},
+{
+"prompt": "prendere, loro →",
+"answer": "prendono"
+},
+{
+"prompt": "avere, voi →",
+"answer": "avete"
+},
+{
+"prompt": "cantare, loro →",
+"answer": "cantano"
+},
+{
+"prompt": "mettere, noi →",
+"answer": "mettiamo"
+},
+{
+"prompt": "spedire, noi →",
+"answer": "spediamo"
+},
+{
+"prompt": "fare, loro →",
+"answer": "fanno"
+},
+{
+"prompt": "vestire, io →",
+"answer": "vesto"
+},
+{
+"prompt": "studiare, lui/lei →",
+"answer": "studia"
+},
+{
+"prompt": "ballare, lui/lei →",
+"answer": "balla"
+},
+{
+"prompt": "servire, loro →",
+"answer": "servono"
+},
+{
+"prompt": "mettere, io →",
+"answer": "metto"
+},
+{
+"prompt": "cantare, lui/lei →",
+"answer": "canta"
+},
+{
+"prompt": "correre, io →",
+"answer": "corro"
+},
+{
+"prompt": "scendere, loro →",
+"answer": "scendono"
+},
+{
+"prompt": "ballare, io →",
+"answer": "ballo"
+},
+{
+"prompt": "studiare, loro →",
+"answer": "studiano"
+},
+{
+"prompt": "ubbidire, tu →",
+"answer": "ubbidisci"
+},
+{
+"prompt": "colpire, voi →",
+"answer": "colpite"
+},
+{
+"prompt": "comprare, tu →",
+"answer": "compri"
+},
+{
+"prompt": "cucinare, io →",
+"answer": "cucino"
+},
+{
+"prompt": "sentire, tu →",
+"answer": "senti"
+},
+{
+"prompt": "scrivere, lui/lei →",
+"answer": "scrive"
+},
+{
+"prompt": "dormire, lui/lei →",
+"answer": "dorme"
+},
+{
+"prompt": "offrire, voi →",
+"answer": "offrite"
+},
+{
+"prompt": "cucinare, voi →",
+"answer": "cucinate"
+},
+{
+"prompt": "potere, tu →",
+"answer": "puoi"
+},
+{
+"prompt": "leggere, voi →",
+"answer": "leggete"
+},
+{
+"prompt": "mangiare, voi →",
+"answer": "mangiate"
+},
+{
+"prompt": "abitare, loro →",
+"answer": "abitano"
+},
+{
+"prompt": "volere, voi →",
+"answer": "volete"
+},
+{
+"prompt": "tenere, io →",
+"answer": "tengo"
+},
+{
+"prompt": "scendere, noi →",
+"answer": "scendiamo"
+},
+{
+"prompt": "abitare, voi →",
+"answer": "abitate"
+},
+{
+"prompt": "finire, lui/lei →",
+"answer": "finisce"
+},
+{
+"prompt": "pensare, tu →",
+"answer": "pensi"
+},
+{
+"prompt": "mangiare, io →",
+"answer": "mangio"
+},
+{
+"prompt": "pensare, io →",
+"answer": "penso"
+},
+{
+"prompt": "avere, tu →",
+"answer": "hai"
+},
+{
+"prompt": "fare, tu →",
+"answer": "fai"
+},
+{
+"prompt": "ballare, noi →",
+"answer": "balliamo"
+},
+{
+"prompt": "giocare, voi →",
+"answer": "giocate"
+},
+{
+"prompt": "cucinare, lui/lei →",
+"answer": "cucina"
+},
+{
+"prompt": "scrivere, io →",
+"answer": "scrivo"
+},
+{
+"prompt": "credere, lui/lei →",
+"answer": "crede"
+},
+{
+"prompt": "ascoltare, tu →",
+"answer": "ascolti"
+},
+{
+"prompt": "perdere, lui/lei →",
+"answer": "perde"
+},
+{
+"prompt": "capire, lui/lei →",
+"answer": "capisce"
+},
+{
+"prompt": "fare, lui/lei →",
+"answer": "fa"
+},
+{
+"prompt": "partire, voi →",
+"answer": "partite"
+},
+{
+"prompt": "chiedere, tu →",
+"answer": "chiedi"
+},
+{
+"prompt": "sapere, tu →",
+"answer": "sai"
+},
+{
+"prompt": "pulire, voi →",
+"answer": "pulite"
+},
+{
+"prompt": "giocare, noi →",
+"answer": "giochiamo"
+},
+{
+"prompt": "telefonare, loro →",
+"answer": "telefonano"
+},
+{
+"prompt": "credere, tu →",
+"answer": "credi"
+},
+{
+"prompt": "colpire, io →",
+"answer": "colpisco"
+},
+{
+"prompt": "chiedere, voi →",
+"answer": "chiedete"
+},
+{
+"prompt": "essere, noi →",
+"answer": "siamo"
+},
+{
+"prompt": "pensare, voi →",
+"answer": "pensate"
+},
+{
+"prompt": "correre, loro →",
+"answer": "corrono"
+},
+{
+"prompt": "uscire, noi →",
+"answer": "usciamo"
+},
+{
+"prompt": "finire, loro →",
+"answer": "finiscono"
+},
+{
+"prompt": "rispondere, io →",
+"answer": "rispondo"
+},
+{
+"prompt": "bere, loro →",
+"answer": "bevono"
+},
+{
+"prompt": "mangiare, tu →",
+"answer": "mangi"
+},
+{
+"prompt": "preferire, tu →",
+"answer": "preferisci"
+},
+{
+"prompt": "vestire, voi →",
+"answer": "vestite"
+},
+{
+"prompt": "perdere, tu →",
+"answer": "perdi"
+},
+{
+"prompt": "correre, noi →",
+"answer": "corriamo"
+},
+{
+"prompt": "tenere, noi →",
+"answer": "teniamo"
+},
+{
+"prompt": "correre, tu →",
+"answer": "corri"
+},
+{
+"prompt": "chiudere, io →",
+"answer": "chiudo"
+},
+{
+"prompt": "rimanere, noi →",
+"answer": "rimaniamo"
+},
+{
+"prompt": "dare, voi →",
+"answer": "date"
+},
+{
+"prompt": "avere, loro →",
+"answer": "hanno"
+},
+{
+"prompt": "uscire, io →",
+"answer": "esco"
+},
+{
+"prompt": "salire, noi →",
+"answer": "saliamo"
+},
+{
+"prompt": "vendere, tu →",
+"answer": "vendi"
+},
+{
+"prompt": "entrare, loro →",
+"answer": "entrano"
+},
+{
+"prompt": "amare, tu →",
+"answer": "ami"
+},
+{
+"prompt": "capire, noi →",
+"answer": "capiamo"
+},
+{
+"prompt": "camminare, voi →",
+"answer": "camminate"
+},
+{
+"prompt": "mettere, lui/lei →",
+"answer": "mette"
+},
+{
+"prompt": "partire, lui/lei →",
+"answer": "parte"
+},
+{
+"prompt": "scendere, tu →",
+"answer": "scendi"
+},
+{
+"prompt": "fare, io →",
+"answer": "faccio"
+},
+{
+"prompt": "rimanere, loro →",
+"answer": "rimangono"
+},
+{
+"prompt": "costruire, tu →",
+"answer": "costruisci"
+},
+{
+"prompt": "perdere, voi →",
+"answer": "perdete"
+},
+{
+"prompt": "dare, io →",
+"answer": "do"
+},
+{
+"prompt": "rompere, noi →",
+"answer": "rompiamo"
+},
+{
+"prompt": "cantare, noi →",
+"answer": "cantiamo"
+},
+{
+"prompt": "conoscere, voi →",
+"answer": "conoscete"
+},
+{
+"prompt": "tornare, tu →",
+"answer": "torni"
+},
+{
+"prompt": "chiedere, loro →",
+"answer": "chiedono"
+},
+{
+"prompt": "cantare, tu →",
+"answer": "canti"
+},
+{
+"prompt": "potere, io →",
+"answer": "posso"
+},
+{
+"prompt": "avere, io →",
+"answer": "ho"
+},
+{
+"prompt": "tornare, noi →",
+"answer": "torniamo"
+},
+{
+"prompt": "scendere, io →",
+"answer": "scendo"
+},
+{
+"prompt": "giocare, io →",
+"answer": "gioco"
+},
+{
+"prompt": "dare, loro →",
+"answer": "danno"
+},
+{
+"prompt": "perdere, noi →",
+"answer": "perdiamo"
+},
+{
+"prompt": "partire, tu →",
+"answer": "parti"
+},
+{
+"prompt": "studiare, io →",
+"answer": "studio"
+},
+{
+"prompt": "tornare, lui/lei →",
+"answer": "torna"
+},
+{
+"prompt": "correre, lui/lei →",
+"answer": "corre"
+},
+{
+"prompt": "abitare, lui/lei →",
+"answer": "abita"
+},
+{
+"prompt": "venire, io →",
+"answer": "vengo"
+},
+{
+"prompt": "rispondere, noi →",
+"answer": "rispondiamo"
+},
+{
+"prompt": "rispondere, lui/lei →",
+"answer": "risponde"
+},
+{
+"prompt": "costruire, io →",
+"answer": "costruisco"
+},
+{
+"prompt": "tenere, lui/lei →",
+"answer": "tiene"
+},
+{
+"prompt": "rompere, loro →",
+"answer": "rompono"
+},
+{
+"prompt": "bere, noi →",
+"answer": "beviamo"
+},
+{
+"prompt": "servire, lui/lei →",
+"answer": "serve"
+},
+{
+"prompt": "abitare, io →",
+"answer": "abito"
+},
+{
+"prompt": "leggere, loro →",
+"answer": "leggono"
+},
+{
+"prompt": "mettere, loro →",
+"answer": "mettono"
+},
+{
+"prompt": "telefonare, io →",
+"answer": "telefono"
+},
+{
+"prompt": "mangiare, lui/lei →",
+"answer": "mangia"
+},
+{
+"prompt": "bere, tu →",
+"answer": "bevi"
+},
+{
+"prompt": "capire, io →",
+"answer": "capisco"
+},
+{
+"prompt": "dovere, io →",
+"answer": "devo"
+},
+{
+"prompt": "vestire, noi →",
+"answer": "vestiamo"
+},
+{
+"prompt": "salire, loro →",
+"answer": "salgono"
+},
+{
+"prompt": "amare, io →",
+"answer": "amo"
+},
+{
+"prompt": "pulire, loro →",
+"answer": "puliscono"
+},
+{
+"prompt": "andare, tu →",
+"answer": "vai"
+},
+{
+"prompt": "conoscere, lui/lei →",
+"answer": "conosce"
+},
+{
+"prompt": "aprire, tu →",
+"answer": "apri"
+},
+{
+"prompt": "prendere, noi →",
+"answer": "prendiamo"
+},
+{
+"prompt": "dormire, noi →",
+"answer": "dormiamo"
+},
+{
+"prompt": "aprire, lui/lei →",
+"answer": "apre"
+},
+{
+"prompt": "telefonare, lui/lei →",
+"answer": "telefona"
+},
+{
+"prompt": "costruire, voi →",
+"answer": "costruite"
+},
+{
+"prompt": "dormire, voi →",
+"answer": "dormite"
+},
+{
+"prompt": "andare, voi →",
+"answer": "andate"
+},
+{
+"prompt": "comprare, io →",
+"answer": "compro"
+},
+{
+"prompt": "camminare, tu →",
+"answer": "cammini"
+},
+{
+"prompt": "vedere, io →",
+"answer": "vedo"
+},
+{
+"prompt": "sentire, io →",
+"answer": "sento"
+},
+{
+"prompt": "preferire, lui/lei →",
+"answer": "preferisce"
+},
+{
+"prompt": "spedire, tu →",
+"answer": "spedisci"
+},
+{
+"prompt": "credere, noi →",
+"answer": "crediamo"
+},
+{
+"prompt": "tornare, io →",
+"answer": "torno"
+},
+{
+"prompt": "venire, noi →",
+"answer": "veniamo"
+},
+{
+"prompt": "chiudere, lui/lei →",
+"answer": "chiude"
+},
+{
+"prompt": "essere, loro →",
+"answer": "sono"
+},
+{
+"prompt": "stare, voi →",
+"answer": "state"
+},
+{
+"prompt": "essere, io →",
+"answer": "sono"
+},
+{
+"prompt": "andare, noi →",
+"answer": "andiamo"
+},
+{
+"prompt": "capire, loro →",
+"answer": "capiscono"
+},
+{
+"prompt": "potere, lui/lei →",
+"answer": "può"
+},
+{
+"prompt": "dovere, noi →",
+"answer": "dobbiamo"
+},
+{
+"prompt": "vendere, loro →",
+"answer": "vendono"
+},
+{
+"prompt": "capire, tu →",
+"answer": "capisci"
+},
+{
+"prompt": "ballare, tu →",
+"answer": "balli"
+},
+{
+"prompt": "guardare, io →",
+"answer": "guardo"
+},
+{
+"prompt": "salire, tu →",
+"answer": "sali"
+},
+{
+"prompt": "scrivere, tu →",
+"answer": "scrivi"
+},
+{
+"prompt": "credere, io →",
+"answer": "credo"
+},
+{
+"prompt": "sentire, noi →",
+"answer": "sentiamo"
+},
+{
+"prompt": "offrire, lui/lei →",
+"answer": "offre"
+},
+{
+"prompt": "decidere, voi →",
+"answer": "decidete"
+},
+{
+"prompt": "andare, loro →",
+"answer": "vanno"
+},
+{
+"prompt": "spedire, loro →",
+"answer": "spediscono"
+},
+{
+"prompt": "lavorare, loro →",
+"answer": "lavorano"
+},
+{
+"prompt": "rompere, voi →",
+"answer": "rompete"
+},
+{
+"prompt": "scrivere, voi →",
+"answer": "scrivete"
+},
+{
+"prompt": "conoscere, tu →",
+"answer": "conosci"
+},
+{
+"prompt": "amare, noi →",
+"answer": "amiamo"
+},
+{
+"prompt": "amare, lui/lei →",
+"answer": "ama"
+},
+{
+"prompt": "rispondere, tu →",
+"answer": "rispondi"
+},
+{
+"prompt": "sentire, loro →",
+"answer": "sentono"
+},
+{
+"prompt": "tenere, loro →",
+"answer": "tengono"
+},
+{
+"prompt": "lavorare, lui/lei →",
+"answer": "lavora"
+},
+{
+"prompt": "abitare, tu →",
+"answer": "abiti"
+},
+{
+"prompt": "uscire, lui/lei →",
+"answer": "esce"
+},
+{
+"prompt": "rompere, lui/lei →",
+"answer": "rompe"
+},
+{
+"prompt": "scendere, lui/lei →",
+"answer": "scende"
+},
+{
+"prompt": "bere, lui/lei →",
+"answer": "beve"
+},
+{
+"prompt": "giocare, lui/lei →",
+"answer": "gioca"
+},
+{
+"prompt": "volere, noi →",
+"answer": "vogliamo"
+},
+{
+"prompt": "spedire, io →",
+"answer": "spedisco"
+},
+{
+"prompt": "parlare, voi →",
+"answer": "parlate"
+},
+{
+"prompt": "ubbidire, lui/lei →",
+"answer": "ubbidisce"
+},
+{
+"prompt": "aspettare, voi →",
+"answer": "aspettate"
+},
+{
+"prompt": "vendere, noi →",
+"answer": "vendiamo"
+},
+{
+"prompt": "parlare, io →",
+"answer": "parlo"
+},
+{
+"prompt": "stare, io →",
+"answer": "sto"
+},
+{
+"prompt": "servire, noi →",
+"answer": "serviamo"
+},
+{
+"prompt": "ubbidire, io →",
+"answer": "ubbidisco"
+},
+{
+"prompt": "mettere, tu →",
+"answer": "metti"
+},
+{
+"prompt": "finire, voi →",
+"answer": "finite"
+},
+{
+"prompt": "rimanere, tu →",
+"answer": "rimani"
+},
+{
+"prompt": "ascoltare, loro →",
+"answer": "ascoltano"
+},
+{
+"prompt": "offrire, io →",
+"answer": "offro"
+},
+{
+"prompt": "giocare, loro →",
+"answer": "giocano"
+},
+{
+"prompt": "offrire, loro →",
+"answer": "offrono"
+},
+{
+"prompt": "venire, voi →",
+"answer": "venite"
+},
+{
+"prompt": "vendere, lui/lei →",
+"answer": "vende"
+},
+{
+"prompt": "viaggiare, io →",
+"answer": "viaggio"
+},
+{
+"prompt": "pulire, tu →",
+"answer": "pulisci"
+},
+{
+"prompt": "giocare, tu →",
+"answer": "giochi"
+},
+{
+"prompt": "preferire, voi →",
+"answer": "preferite"
+},
+{
+"prompt": "sentire, voi →",
+"answer": "sentite"
+},
+{
+"prompt": "parlare, tu →",
+"answer": "parli"
+},
+{
+"prompt": "venire, lui/lei →",
+"answer": "viene"
+},
+{
+"prompt": "aspettare, lui/lei →",
+"answer": "aspetta"
+},
+{
+"prompt": "bere, io →",
+"answer": "bevo"
+},
+{
+"prompt": "andare, io →",
+"answer": "vado"
+},
+{
+"prompt": "salire, voi →",
+"answer": "salite"
+},
+{
+"prompt": "dire, lui/lei →",
+"answer": "dice"
+},
+{
+"prompt": "essere, tu →",
+"answer": "sei"
+},
+{
+"prompt": "viaggiare, voi →",
+"answer": "viaggiate"
+},
+{
+"prompt": "parlare, loro →",
+"answer": "parlano"
+},
+{
+"prompt": "leggere, lui/lei →",
+"answer": "legge"
+},
+{
+"prompt": "aprire, io →",
+"answer": "apro"
+},
+{
+"prompt": "volere, loro →",
+"answer": "vogliono"
+},
+{
+"prompt": "decidere, noi →",
+"answer": "decidiamo"
+},
+{
+"prompt": "decidere, loro →",
+"answer": "decidono"
+},
+{
+"prompt": "comprare, lui/lei →",
+"answer": "compra"
+},
+{
+"prompt": "dire, noi →",
+"answer": "diciamo"
+},
+{
+"prompt": "dire, loro →",
+"answer": "dicono"
+},
+{
+"prompt": "aspettare, io →",
+"answer": "aspetto"
+},
+{
+"prompt": "viaggiare, lui/lei →",
+"answer": "viaggia"
+},
+{
+"prompt": "cantare, io →",
+"answer": "canto"
+},
+{
+"prompt": "guardare, voi →",
+"answer": "guardate"
+},
+{
+"prompt": "preferire, io →",
+"answer": "preferisco"
+},
+{
+"prompt": "pulire, lui/lei →",
+"answer": "pulisce"
+},
+{
+"prompt": "ballare, voi →",
+"answer": "ballate"
+},
+{
+"prompt": "spedire, lui/lei →",
+"answer": "spedisce"
+},
+{
+"prompt": "fare, noi →",
+"answer": "facciamo"
+},
+{
+"prompt": "rompere, io →",
+"answer": "rompo"
+},
+{
+"prompt": "sapere, noi →",
+"answer": "sappiamo"
+},
+{
+"prompt": "vedere, lui/lei →",
+"answer": "vede"
+},
+{
+"prompt": "aprire, loro →",
+"answer": "aprono"
+},
+{
+"prompt": "venire, loro →",
+"answer": "vengono"
+},
+{
+"prompt": "leggere, io →",
+"answer": "leggo"
+},
+{
+"prompt": "rimanere, voi →",
+"answer": "rimanete"
+},
+{
+"prompt": "stare, lui/lei →",
+"answer": "sta"
+},
+{
+"prompt": "cucinare, tu →",
+"answer": "cucini"
+},
+{
+"prompt": "volere, io →",
+"answer": "voglio"
+},
+{
+"prompt": "mettere, voi →",
+"answer": "mettete"
+},
+{
+"prompt": "preferire, noi →",
+"answer": "preferiamo"
+},
+{
+"prompt": "vestire, loro →",
+"answer": "vestono"
+},
+{
+"prompt": "dire, voi →",
+"answer": "dite"
+},
+{
+"prompt": "sentire, lui/lei →",
+"answer": "sente"
+},
+{
+"prompt": "entrare, io →",
+"answer": "entro"
+},
+{
+"prompt": "comprare, noi →",
+"answer": "compriamo"
+},
+{
+"prompt": "vedere, loro →",
+"answer": "vedono"
+},
+{
+"prompt": "rompere, tu →",
+"answer": "rompi"
+},
+{
+"prompt": "perdere, loro →",
+"answer": "perdono"
+},
+{
+"prompt": "dovere, tu →",
+"answer": "devi"
+},
+{
+"prompt": "camminare, noi →",
+"answer": "camminiamo"
+},
+{
+"prompt": "cantare, voi →",
+"answer": "cantate"
+},
+{
+"prompt": "correre, voi →",
+"answer": "correte"
+},
+{
+"prompt": "uscire, voi →",
+"answer": "uscite"
+},
+{
+"prompt": "partire, noi →",
+"answer": "partiamo"
+},
+{
+"prompt": "prendere, io →",
+"answer": "prendo"
+},
+{
+"prompt": "essere, voi →",
+"answer": "siete"
+},
+{
+"prompt": "volere, lui/lei →",
+"answer": "vuole"
+},
+{
+"prompt": "colpire, loro →",
+"answer": "colpiscono"
+},
+{
+"prompt": "salire, io →",
+"answer": "salgo"
+},
+{
+"prompt": "aprire, noi →",
+"answer": "apriamo"
+},
+{
+"prompt": "telefonare, noi →",
+"answer": "telefoniamo"
+},
+{
+"prompt": "costruire, loro →",
+"answer": "costruiscono"
+},
+{
+"prompt": "ascoltare, io →",
+"answer": "ascolto"
+},
+{
+"prompt": "vedere, voi →",
+"answer": "vedete"
+},
+{
+"prompt": "tornare, loro →",
+"answer": "tornano"
+},
+{
+"prompt": "chiudere, tu →",
+"answer": "chiudi"
+},
+{
+"prompt": "conoscere, noi →",
+"answer": "conosciamo"
+},
+{
+"prompt": "aspettare, loro →",
+"answer": "aspettano"
+},
+{
+"prompt": "conoscere, io →",
+"answer": "conosco"
+},
+{
+"prompt": "colpire, tu →",
+"answer": "colpisci"
+},
+{
+"prompt": "tenere, voi →",
+"answer": "tenete"
+},
+{
+"prompt": "dire, tu →",
+"answer": "dici"
+},
+{
+"prompt": "dare, tu →",
+"answer": "dai"
+},
+{
+"prompt": "studiare, noi →",
+"answer": "studiamo"
+},
+{
+"prompt": "potere, noi →",
+"answer": "possiamo"
+},
+{
+"prompt": "andare, lui/lei →",
+"answer": "va"
+},
+{
+"prompt": "rispondere, voi →",
+"answer": "rispondete"
+},
+{
+"prompt": "camminare, lui/lei →",
+"answer": "cammina"
+},
+{
+"prompt": "avere, lui/lei →",
+"answer": "ha"
+},
+{
+"prompt": "amare, loro →",
+"answer": "amano"
+},
+{
+"prompt": "comprare, loro →",
+"answer": "comprano"
+},
+{
+"prompt": "pensare, lui/lei →",
+"answer": "pensa"
+},
+{
+"prompt": "servire, tu →",
+"answer": "servi"
+},
+{
+"prompt": "chiudere, loro →",
+"answer": "chiudono"
+},
+{
+"prompt": "spedire, voi →",
+"answer": "spedite"
+},
+{
+"prompt": "ubbidire, noi →",
+"answer": "ubbidiamo"
+},
+{
+"prompt": "vendere, io →",
+"answer": "vendo"
+},
+{
+"prompt": "partire, io →",
+"answer": "parto"
+},
+{
+"prompt": "ascoltare, voi →",
+"answer": "ascoltate"
+},
+{
+"prompt": "decidere, tu →",
+"answer": "decidi"
+},
+{
+"prompt": "abitare, noi →",
+"answer": "abitiamo"
+},
+{
+"prompt": "aprire, voi →",
+"answer": "aprite"
+},
+{
+"prompt": "volere, tu →",
+"answer": "vuoi"
+},
+{
+"prompt": "amare, voi →",
+"answer": "amate"
+},
+{
+"prompt": "vedere, noi →",
+"answer": "vediamo"
+},
+{
+"prompt": "costruire, noi →",
+"answer": "costruiamo"
+},
+{
+"prompt": "chiedere, lui/lei →",
+"answer": "chiede"
+},
+{
+"prompt": "chiudere, noi →",
+"answer": "chiudiamo"
+},
+{
+"prompt": "studiare, tu →",
+"answer": "studi"
+},
+{
+"prompt": "decidere, lui/lei →",
+"answer": "decide"
+},
+{
+"prompt": "potere, loro →",
+"answer": "possono"
+},
+{
+"prompt": "rimanere, lui/lei →",
+"answer": "rimane"
+},
+{
+"prompt": "credere, voi →",
+"answer": "credete"
+},
+{
+"prompt": "entrare, lui/lei →",
+"answer": "entra"
+},
+{
+"prompt": "aspettare, tu →",
+"answer": "aspetti"
+},
+{
+"prompt": "uscire, tu →",
+"answer": "esci"
+},
+{
+"prompt": "chiedere, io →",
+"answer": "chiedo"
+},
+{
+"prompt": "dovere, lui/lei →",
+"answer": "deve"
+},
+{
+"prompt": "stare, noi →",
+"answer": "stiamo"
+},
+{
+"prompt": "aspettare, noi →",
+"answer": "aspettiamo"
+},
+{
+"prompt": "parlare, noi →",
+"answer": "parliamo"
+},
+{
+"prompt": "prendere, voi →",
+"answer": "prendete"
+},
+{
+"prompt": "vestire, tu →",
+"answer": "vesti"
+},
+{
+"prompt": "tenere, tu →",
+"answer": "tieni"
+},
+{
+"prompt": "entrare, voi →",
+"answer": "entrate"
+},
+{
+"prompt": "scendere, voi →",
+"answer": "scendete"
+},
+{
+"prompt": "dovere, loro →",
+"answer": "devono"
+},
+{
+"prompt": "stare, loro →",
+"answer": "stanno"
+},
+{
+"prompt": "essere, lui/lei →",
+"answer": "è"
+},
+{
+"prompt": "dire, io →",
+"answer": "dico"
+},
+{
+"prompt": "pensare, loro →",
+"answer": "pensano"
+},
+{
+"prompt": "partire, loro →",
+"answer": "partono"
+},
+{
+"prompt": "lavorare, tu →",
+"answer": "lavori"
+},
+{
+"prompt": "costruire, lui/lei →",
+"answer": "costruisce"
+},
+{
+"prompt": "pulire, io →",
+"answer": "pulisco"
+},
+{
+"prompt": "camminare, loro →",
+"answer": "camminano"
+},
+{
+"prompt": "entrare, noi →",
+"answer": "entriamo"
+},
+{
+"prompt": "guardare, loro →",
+"answer": "guardano"
+},
+{
+"prompt": "lavorare, noi →",
+"answer": "lavoriamo"
+},
+{
+"prompt": "lavorare, voi →",
+"answer": "lavorate"
+},
+{
+"prompt": "sapere, io →",
+"answer": "so"
+},
+{
+"prompt": "vestire, lui/lei →",
+"answer": "veste"
+},
+{
+"prompt": "guardare, lui/lei →",
+"answer": "guarda"
+},
+{
+"prompt": "offrire, noi →",
+"answer": "offriamo"
+},
+{
+"prompt": "salire, lui/lei →",
+"answer": "sale"
+},
+{
+"prompt": "fare, voi →",
+"answer": "fate"
+},
+{
+"prompt": "studiare, voi →",
+"answer": "studiate"
+},
+{
+"prompt": "uscire, loro →",
+"answer": "escono"
+},
+{
+"prompt": "ballare, loro →",
+"answer": "ballano"
+},
+{
+"prompt": "camminare, io →",
+"answer": "cammino"
+},
+{
+"prompt": "scrivere, loro →",
+"answer": "scrivono"
+},
+{
+"prompt": "prendere, lui/lei →",
+"answer": "prende"
+},
+{
+"prompt": "venire, tu →",
+"answer": "vieni"
+},
+{
+"prompt": "lavorare, io →",
+"answer": "lavoro"
+},
+{
+"prompt": "viaggiare, noi →",
+"answer": "viaggiamo"
+},
+{
+"prompt": "colpire, noi →",
+"answer": "colpiamo"
+}
+]
