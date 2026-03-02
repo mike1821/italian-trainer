@@ -1,299 +1,432 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <title>Italian Trainer</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
     <style>
         :root {
-            --bg: #f5f2ed; --bg-accent: #e8e2d9; --card: #ffffff; --text: #1c1917;
-            --text-muted: #57534e; --primary: #b45309; --primary-hover: #92400e;
-            --success: #15803d; --success-bg: #dcfce7; --error: #b91c1c; --error-bg: #fee2e2;
-            --border: rgba(0,0,0,0.08); --shadow: 0 1px 3px rgba(0,0,0,0.06);
-            --shadow-lg: 0 10px 40px -10px rgba(0,0,0,0.12); --radius: 14px; --radius-sm: 10px;
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --text: #111827;
+            --muted: #6B7280;
+            --border: #E5E7EB;
+            --primary: #16A34A;
+            --primary-hover: #15803D;
+            --primary-ring: rgba(22,163,74,0.15);
+            --error: #DC2626;
+            --error-bg: #FEF2F2;
+            --success-bg: #F0FDF4;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+            --shadow: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.05);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xs: 8px;
         }
-        body.dark-mode {
-            --bg: #1c1917; --bg-accent: #292524; --card: #292524; --text: #fafaf9;
-            --text-muted: #a8a29e; --primary: #f59e0b; --primary-hover: #fbbf24;
-            --success: #4ade80; --success-bg: rgba(74,222,128,0.15); --error: #f87171;
-            --error-bg: rgba(248,113,113,0.15); --border: rgba(255,255,255,0.08);
-            --shadow: 0 1px 3px rgba(0,0,0,0.3); --shadow-lg: 0 10px 40px -10px rgba(0,0,0,0.4);
+        body.dark {
+            --bg: #0F172A;
+            --card: #1E293B;
+            --text: #F1F5F9;
+            --muted: #94A3B8;
+            --border: #334155;
+            --primary: #22C55E;
+            --primary-hover: #16A34A;
+            --primary-ring: rgba(34,197,94,0.2);
+            --error: #F87171;
+            --error-bg: rgba(248,113,113,0.1);
+            --success-bg: rgba(34,197,94,0.1);
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+            --shadow: 0 4px 12px rgba(0,0,0,0.2);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.3);
         }
-        * { box-sizing: border-box; }
-        body { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; max-width: 640px; margin: 0 auto; padding: 24px 20px 48px; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; }
-        h1 { font-size: 1.75rem; font-weight: 700; text-align: center; margin: 0 0 6px; }
-        .subtitle { text-align: center; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; margin-bottom: 32px; }
-        .dark-mode-toggle { position: fixed; top: 16px; right: 16px; width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; font-size: 1.25rem; box-shadow: var(--shadow); z-index: 1000; }
-        .menu { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 24px; }
-        .menu button { font-family: inherit; font-size: 0.9rem; font-weight: 600; padding: 12px 20px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; box-shadow: var(--shadow); }
-        .menu button:hover { background: var(--primary); color: #fff; border-color: var(--primary); transform: translateY(-1px); }
-        .menu button.stats-btn { background: var(--text-muted); color: var(--card); border-color: transparent; }
-        #quiz { background: var(--card); padding: 28px 24px; border-radius: var(--radius); box-shadow: var(--shadow-lg); min-height: 360px; border: 1px solid var(--border); }
-        .progress-container { height: 6px; background: var(--bg-accent); border-radius: 999px; margin: 0 0 12px; overflow: hidden; }
-        .progress-bar { height: 100%; background: var(--primary); border-radius: 999px; transition: width 0.4s; }
-        .progress-text { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 16px; }
-        .card { padding: 32px 24px; text-align: center; font-size: 1.75rem; font-weight: 600; margin: 16px 0; background: var(--bg-accent); border-radius: var(--radius); border: 1px solid var(--border); }
-        .answer { margin: 24px 0; text-align: center; }
-        input { font-family: inherit; font-size: 1.1rem; padding: 14px 18px; width: 100%; max-width: 360px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--card); color: var(--text); outline: none; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(180,83,9,0.15); }
-        button { font-family: inherit; font-size: 0.9rem; font-weight: 600; padding: 12px 24px; margin: 6px; border-radius: var(--radius-sm); border: none; cursor: pointer; }
-        .submit-btn { background: var(--success); color: #fff; }
-        .correct { color: var(--success); font-weight: 700; font-size: 1.15rem; }
-        .wrong { color: var(--error); font-weight: 700; font-size: 1.1rem; }
-        .options { display: flex; flex-direction: column; gap: 10px; max-width: 480px; margin: 20px auto; }
-        .option-btn { font-family: inherit; padding: 16px 20px; font-size: 1rem; font-weight: 500; text-align: left; background: var(--bg-accent); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); cursor: pointer; }
-        .option-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
-        .speaker { cursor: pointer; font-size: 1.4rem; margin-left: 10px; opacity: 0.85; display: inline-block; }
-        .stat-card { background: var(--card); padding: 20px; border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); text-align: center; }
-        .stat-number { font-size: 1.75rem; font-weight: 700; color: var(--primary); }
-        .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; margin-top: 4px; }
-        .panel { background: var(--card); padding: 24px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 20px; }
-        .home-logo { display: block; max-width: 200px; height: auto; margin: 0 auto 20px; border-radius: var(--radius); box-shadow: var(--shadow-lg); }
-        .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
-        .panel table { width: 100%; border-collapse: collapse; }
-        .panel th, .panel td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-        footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 32px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+
+        /* Header */
+        .header { height: 72px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 100; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; }
+        .header-title { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+        .header-right { display: flex; align-items: center; gap: 8px; }
+        .pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; background: var(--bg); border: 1px solid var(--border); color: var(--muted); white-space: nowrap; }
+        .dark-toggle { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--muted); cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .dark-toggle:hover { background: var(--border); }
+
+        /* Container */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* Back link */
+        .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); cursor: pointer; margin: 16px 0 0; padding: 6px 0; background: none; border: none; font-family: inherit; font-weight: 500; transition: color 0.2s; }
+        .back-link:hover { color: var(--text); }
+
+        /* Home screen */
+        .home-section { display: flex; flex-direction: column; align-items: center; padding-top: 48px; }
+        .home-subtitle { font-size: 15px; color: var(--muted); margin-bottom: 32px; font-weight: 500; }
+        .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; max-width: 520px; }
+        .home-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 24px; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm); }
+        .home-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); border-color: var(--primary); }
+        .home-card:active { transform: scale(0.98); }
+        .home-card-icon { font-size: 32px; margin-bottom: 12px; }
+        .home-card-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .home-card-desc { font-size: 13px; color: var(--muted); }
+        .home-stats-link { margin-top: 24px; }
+        .home-stats-link button { background: none; border: 1px solid var(--border); border-radius: var(--radius-xs); padding: 10px 24px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; font-family: inherit; transition: all 0.2s; }
+        .home-stats-link button:hover { color: var(--text); border-color: var(--text); }
+
+        /* Segmented control (mode selector) */
+        .seg-wrap { margin-top: 24px; display: flex; justify-content: center; }
+        .seg { display: inline-flex; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px; gap: 4px; }
+        .seg button { padding: 10px 20px; border: none; border-radius: var(--radius-xs); background: transparent; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .seg button:hover { color: var(--text); }
+        .seg button.active { background: var(--card); color: var(--text); box-shadow: var(--shadow-sm); font-weight: 600; }
+
+        /* Grammar category cards */
+        .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 600px; margin: 24px auto 0; }
+        .cat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm); }
+        .cat-card:hover { border-color: var(--primary); box-shadow: var(--shadow); transform: translateY(-1px); }
+        .cat-card:active { transform: scale(0.98); }
+        .cat-card-icon { font-size: 24px; margin-bottom: 8px; }
+        .cat-card-title { font-size: 14px; font-weight: 600; line-height: 1.4; }
+
+        /* Exercise card */
+        .exercise-card { width: 100%; max-width: 600px; margin: 48px auto 0; background: var(--card); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow-lg); border: 1px solid var(--border); animation: fadeSlideIn 0.25s ease-out; }
+        .exercise-label { font-size: 14px; color: var(--muted); font-weight: 500; margin-bottom: 4px; }
+        .exercise-word { font-size: 40px; font-weight: 700; margin: 12px 0 24px; letter-spacing: -0.02em; line-height: 1.1; word-break: break-word; }
+        .exercise-word .speaker { font-size: 24px; vertical-align: middle; margin-left: 12px; cursor: pointer; opacity: 0.6; transition: opacity 0.2s; }
+        .exercise-word .speaker:hover { opacity: 1; }
+        .exercise-input { width: 100%; height: 48px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 16px; font-size: 16px; font-family: inherit; color: var(--text); background: var(--card); outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+        .exercise-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-ring); }
+        .exercise-input.wrong-shake { animation: shake 0.4s ease-in-out; border-color: var(--error); }
+        .exercise-input.correct-flash { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-ring); }
+        .exercise-btns { display: flex; gap: 12px; margin-top: 24px; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 28px; border-radius: var(--radius-sm); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.15s; border: none; }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: var(--primary); color: #fff; flex: 1; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+        .btn-ghost:hover { border-color: var(--text); color: var(--text); }
+        .exercise-feedback { margin-top: 20px; padding: 14px 16px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; animation: fadeSlideIn 0.2s ease-out; }
+        .exercise-feedback.correct { background: var(--success-bg); color: var(--primary); }
+        .exercise-feedback.wrong { background: var(--error-bg); color: var(--error); }
+
+        /* MC options */
+        .mc-options { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+        .mc-btn { width: 100%; text-align: left; padding: 16px 20px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--card); font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text); cursor: pointer; transition: all 0.2s; }
+        .mc-btn:hover { border-color: var(--primary); background: var(--success-bg); }
+        .mc-btn:active { transform: scale(0.98); }
+
+        /* Progress */
+        .progress-wrap { margin-bottom: 20px; }
+        .progress-bar-track { height: 6px; background: var(--bg); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+        .progress-bar-fill { height: 100%; background: var(--primary); border-radius: 999px; transition: width 0.4s; }
+        .progress-info { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 13px; color: var(--muted); font-weight: 500; }
+
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 24px; }
+        .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; text-align: center; box-shadow: var(--shadow-sm); }
+        .stat-number { font-size: 28px; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
+
+        /* Completion */
+        .completion { text-align: center; padding: 48px 24px; }
+        .completion-score { font-size: 56px; font-weight: 700; color: var(--primary); margin: 16px 0; }
+        .completion-pct { font-size: 18px; color: var(--muted); margin-bottom: 32px; }
+        .completion h2 { font-size: 22px; font-weight: 700; }
+
+        /* Footer */
+        .footer { text-align: center; color: #9CA3AF; font-size: 13px; margin-top: 32px; padding-bottom: 24px; }
+
+        /* Animations */
+        @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-6px); } 40%,80% { transform: translateX(6px); } }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .home-grid { grid-template-columns: 1fr; max-width: 360px; }
+            .cat-grid { grid-template-columns: 1fr; }
+            .exercise-card { margin-top: 24px; padding: 24px 20px; }
+            .exercise-word { font-size: 28px; }
+            .header { padding: 0 16px; }
+            .pill { display: none; }
+            .seg button { padding: 8px 14px; font-size: 13px; }
+        }
     </style>
 </head>
 <body>
-    <button class="dark-mode-toggle" onclick="document.body.classList.toggle('dark-mode')">&#x1F319;</button>
-    <img src="/italian.webp" alt="Italian" class="home-logo" onerror="this.style.display='none'" />
-    <h1>Italian Trainer</h1>
-    <p class="subtitle">Scegli il tipo di pratica</p>
 
-    <div class="menu" id="homeMenu">
-        <button type="button" onclick="showVocabMenu()">Vocabolario</button>
-        <button type="button" onclick="showGrammarMenu()">Grammatica</button>
-        <button type="button" class="stats-btn" onclick="showStats()">Statistiche</button>
+<div class="header">
+    <div class="header-left">
+        <img src="/italian.webp" alt="" class="header-logo" onerror="this.style.display='none'">
+        <span class="header-title">Italian Trainer</span>
     </div>
-    <div class="menu" id="vocabSubMenu" style="display:none;">
-        <button onclick="startMode('it-gr')">Italiano &#x2192; Greco</button>
-        <button onclick="startMode('gr-it')">Greco &#x2192; Italiano</button>
-        <button onclick="startMode('mc')">Scelta multipla (IT&#x2192;GR)</button>
-        <button onclick="startMode('mc-gr-it')">Scelta multipla (GR&#x2192;IT)</button>
-        <button onclick="backToHome()" style="background:var(--text-muted);color:var(--card);">&#x2190; Indietro</button>
+    <div class="header-right">
+        <span class="pill" id="streakPill" style="display:none"></span>
+        <span class="pill" id="accPill" style="display:none"></span>
+        <button class="dark-toggle" onclick="document.body.classList.toggle('dark');localStorage.setItem('dk',document.body.classList.contains('dark'))">&#x1F319;</button>
     </div>
-    <div class="menu" id="grammarSubMenu" style="display:none;">
-        <button onclick="startGrammarCategory('verbs_present')">Verbi al presente indicativo</button>
-        <button onclick="startGrammarCategory('articles')">Articoli determinativi e indeterminativi</button>
-        <button onclick="startGrammarCategory('avercela_avere_essere_esserci')">Avercela, avere, essere, esserci</button>
-        <button onclick="startGrammarCategory('irregular_nouns')">Sostantivi irregolari</button>
-        <button onclick="backToHome()" style="background:var(--text-muted);color:var(--card);">&#x2190; Indietro</button>
+</div>
+
+<div class="container">
+    <!-- Home -->
+    <div id="homeView" class="home-section">
+        <p class="home-subtitle">Scegli il tipo di pratica</p>
+        <div class="home-grid">
+            <div class="home-card" onclick="showVocabMenu()">
+                <div class="home-card-icon">&#x1F4DA;</div>
+                <div class="home-card-title">Vocabolario</div>
+                <div class="home-card-desc">Italiano &harr; Greco</div>
+            </div>
+            <div class="home-card" onclick="showGrammarMenu()">
+                <div class="home-card-icon">&#x270D;&#xFE0F;</div>
+                <div class="home-card-title">Grammatica</div>
+                <div class="home-card-desc">Verbi, articoli, sostantivi</div>
+            </div>
+        </div>
+        <div class="home-stats-link">
+            <button onclick="showStats()">&#x1F4CA; Statistiche</button>
+        </div>
     </div>
-    <div id="quiz"></div>
-    <footer>Esercitati un po' ogni giorno.</footer>
+
+    <!-- Vocab mode selector -->
+    <div id="vocabView" style="display:none;">
+        <button class="back-link" onclick="backToHome()">&#x2190; Indietro</button>
+        <div class="seg-wrap">
+            <div class="seg" id="vocabSeg">
+                <button onclick="startMode('it-gr')" class="active">IT &#x2192; GR</button>
+                <button onclick="startMode('gr-it')">GR &#x2192; IT</button>
+                <button onclick="startMode('mc')">Scelta multipla (IT)</button>
+                <button onclick="startMode('mc-gr-it')">Scelta multipla (GR)</button>
+            </div>
+        </div>
+        <div id="quiz"></div>
+    </div>
+
+    <!-- Grammar category selector -->
+    <div id="grammarView" style="display:none;">
+        <button class="back-link" onclick="backToHome()">&#x2190; Indietro</button>
+        <div class="cat-grid" id="grammarCats">
+            <div class="cat-card" onclick="startGrammarCategory('verbs_present')">
+                <div class="cat-card-icon">&#x1F4AC;</div>
+                <div class="cat-card-title">Verbi al presente indicativo</div>
+            </div>
+            <div class="cat-card" onclick="startGrammarCategory('articles')">
+                <div class="cat-card-icon">&#x1F4D6;</div>
+                <div class="cat-card-title">Articoli determinativi e indeterminativi</div>
+            </div>
+            <div class="cat-card" onclick="startGrammarCategory('avercela_avere_essere_esserci')">
+                <div class="cat-card-icon">&#x1F9E9;</div>
+                <div class="cat-card-title">Avercela, avere, essere, esserci</div>
+            </div>
+            <div class="cat-card" onclick="startGrammarCategory('irregular_nouns')">
+                <div class="cat-card-icon">&#x1F4DD;</div>
+                <div class="cat-card-title">Sostantivi irregolari</div>
+            </div>
+        </div>
+        <div id="grammarQuiz"></div>
+    </div>
+
+    <!-- Stats -->
+    <div id="statsView" style="display:none;">
+        <button class="back-link" onclick="backToHome()">&#x2190; Indietro</button>
+        <div id="statsContent"></div>
+    </div>
+</div>
+
+<div class="footer">Esercitati un po' ogni giorno.</div>
 
 <script>
 "use strict";
 var words = [], current = 0, score = 0, mode = "", totalAnswered = 0;
 var grammarExercises = [], grammarIndex = 0, grammarScore = 0, grammarCategory = "";
 
+if (localStorage.getItem("dk") === "true") document.body.classList.add("dark");
+
 function escapeHtml(t) { var d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
 
-function showVocabMenu() {
-    document.getElementById("homeMenu").style.display = "none";
-    document.getElementById("grammarSubMenu").style.display = "none";
-    document.getElementById("vocabSubMenu").style.display = "flex";
-    document.getElementById("quiz").innerHTML = "";
+function hideAll() {
+    ["homeView","vocabView","grammarView","statsView"].forEach(function(id) { document.getElementById(id).style.display = "none"; });
 }
-function showGrammarMenu() {
-    document.getElementById("homeMenu").style.display = "none";
-    document.getElementById("vocabSubMenu").style.display = "none";
-    document.getElementById("grammarSubMenu").style.display = "flex";
-    document.getElementById("quiz").innerHTML = "";
-}
-function backToHome() {
-    document.getElementById("homeMenu").style.display = "flex";
-    document.getElementById("vocabSubMenu").style.display = "none";
-    document.getElementById("grammarSubMenu").style.display = "none";
-    document.getElementById("quiz").innerHTML = "";
-}
+function backToHome() { hideAll(); document.getElementById("homeView").style.display = "flex"; document.getElementById("quiz").innerHTML = ""; document.getElementById("grammarQuiz").innerHTML = ""; }
+function showVocabMenu() { hideAll(); document.getElementById("vocabView").style.display = "block"; }
+function showGrammarMenu() { hideAll(); document.getElementById("grammarView").style.display = "block"; }
 
 function showStats() {
-    document.getElementById("homeMenu").style.display = "none";
-    document.getElementById("vocabSubMenu").style.display = "none";
-    document.getElementById("grammarSubMenu").style.display = "none";
-    document.getElementById("quiz").innerHTML = "<div style='text-align:center;padding:40px;'>Caricamento statistiche...</div>";
-    fetch("/api/stats").then(function(r) { return r.json(); }).then(function(stats) {
-        var acc = stats.accuracy != null ? (Number(stats.accuracy) * 100).toFixed(1) : "0.0";
-        var html = "<button onclick='backToHome()' class='submit-btn' style='margin-bottom:20px;background:var(--text);color:var(--card);'>Torna alla Home</button>";
-        html += "<div style='display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px;'>";
-        html += "<div class='stat-card'><div class='stat-number'>" + (stats.total_words || 0) + "</div><div class='stat-label'>Parole praticate</div></div>";
-        html += "<div class='stat-card'><div class='stat-number'>" + (stats.total_attempts || 0) + "</div><div class='stat-label'>Tentativi totali</div></div>";
-        html += "<div class='stat-card'><div class='stat-number'>" + acc + "%</div><div class='stat-label'>Precisione</div></div></div>";
-        document.getElementById("quiz").innerHTML = html;
+    hideAll(); document.getElementById("statsView").style.display = "block";
+    document.getElementById("statsContent").innerHTML = "<div style='text-align:center;padding:40px;color:var(--muted);'>Caricamento statistiche...</div>";
+    fetch("/api/stats").then(function(r) { return r.json(); }).then(function(s) {
+        var acc = s.accuracy != null ? Number(s.accuracy).toFixed(1) : "0.0";
+        var html = "<div class='stats-grid'>";
+        html += "<div class='stat-card'><div class='stat-number'>" + (s.total_words || 0) + "</div><div class='stat-label'>Parole praticate</div></div>";
+        html += "<div class='stat-card'><div class='stat-number'>" + (s.total_attempts || 0) + "</div><div class='stat-label'>Tentativi totali</div></div>";
+        html += "<div class='stat-card'><div class='stat-number'>" + acc + "%</div><div class='stat-label'>Precisione</div></div>";
+        if (s.best_streak) html += "<div class='stat-card'><div class='stat-number'>" + s.best_streak + "</div><div class='stat-label'>Miglior serie</div></div>";
+        html += "</div>";
+        document.getElementById("statsContent").innerHTML = html;
+        var ap = document.getElementById("accPill"); if (ap) { ap.textContent = "\u2705 " + acc + "%"; ap.style.display = "inline-flex"; }
     }).catch(function() {
-        document.getElementById("quiz").innerHTML = "<p style='color:red;'>Errore nel caricamento.</p><button onclick='backToHome()' class='submit-btn'>Indietro</button>";
+        document.getElementById("statsContent").innerHTML = "<p style='color:var(--error);padding:24px;'>Errore nel caricamento.</p>";
     });
 }
 
 function playAudio(word) {
-    fetch("/api/speak?word=" + encodeURIComponent(word)).then(function(r) { return r.json(); }).then(function(data) {
-        if (data.audio && data.audio.length > 0) {
-            var a = new Audio("data:audio/mp3;base64," + data.audio);
-            a.play().catch(function() {});
-        }
-    }).catch(function() {});
+    fetch("/api/speak?word=" + encodeURIComponent(word)).then(function(r) { return r.json(); }).then(function(d) {
+        if (d.audio && d.audio.length > 0) { var a = new Audio("data:audio/mp3;base64," + d.audio); a.play().catch(function(){}); }
+    }).catch(function(){});
+}
+function recordResult(word, correct, qt) {
+    fetch("/api/record", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ word: word, correct: correct, quiz_type: qt || "web" }) }).catch(function(){});
 }
 
-function recordResult(word, correct, quizType) {
-    fetch("/api/record", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ word: word, correct: correct, quiz_type: quizType || "web" }) }).catch(function() {});
+function setActiveTab(m) {
+    var btns = document.querySelectorAll("#vocabSeg button");
+    var map = {"it-gr":0,"gr-it":1,"mc":2,"mc-gr-it":3};
+    btns.forEach(function(b,i) { b.className = i === map[m] ? "active" : ""; });
 }
 
 function startMode(m) {
     mode = m; current = 0; score = 0; totalAnswered = 0;
-    document.getElementById("vocabSubMenu").style.display = "none";
+    setActiveTab(m);
+    document.getElementById("quiz").innerHTML = "<div style='text-align:center;padding:40px;color:var(--muted);'>Caricamento...</div>";
     var n = (mode === "mc" || mode === "mc-gr-it") ? 300 : 10;
-    fetch("/api/words?n=" + n).then(function(r) { return r.json(); }).then(function(w) {
-        words = w; showQuestion();
-    }).catch(function() {
-        document.getElementById("quiz").innerHTML = "<p style='color:red;'>Errore nel caricamento del vocabolario.</p>";
+    fetch("/api/words?n=" + n).then(function(r) { return r.json(); }).then(function(w) { words = w; showQuestion(); }).catch(function() {
+        document.getElementById("quiz").innerHTML = "<p style='color:var(--error);padding:24px;'>Errore nel caricamento.</p>";
     });
 }
 
 function showQuestion() {
+    var Q = document.getElementById("quiz");
     var isMC = mode === "mc" || mode === "mc-gr-it";
     if (current >= words.length) {
-        var pct = words.length ? Math.round(score * 100 / (isMC ? totalAnswered : words.length)) : 0;
-        var h = "<div style='text-align:center;padding:32px 24px;'><h2>Quiz completato</h2>";
-        h += "<div style='font-size:3rem;font-weight:700;color:var(--primary);margin:20px 0;'>" + score + "/" + (isMC ? totalAnswered : words.length) + "</div>";
-        h += "<p>" + pct + "% corretto</p>";
-        h += "<button onclick='location.reload()' class='submit-btn'>Menu</button></div>";
-        document.getElementById("quiz").innerHTML = h;
-        if (pct >= 80 && typeof confetti === "function") { confetti({ particleCount: 100, spread: 70 }); }
+        var total = isMC ? totalAnswered : words.length;
+        var pct = total ? Math.round(score * 100 / total) : 0;
+        Q.innerHTML = "<div class='completion'><h2>Quiz completato</h2><div class='completion-score'>" + score + "/" + total + "</div><div class='completion-pct'>" + pct + "% corretto</div><div class='exercise-btns' style='justify-content:center;'><button class='btn btn-primary' onclick='startMode(mode)'>Riprova</button><button class='btn btn-ghost' onclick='backToHome()'>Home</button></div></div>";
+        if (pct >= 80 && typeof confetti === "function") confetti({ particleCount: 100, spread: 70 });
         return;
     }
-    var w = words[current];
-    var isReverse = mode === "gr-it" || mode === "mc-gr-it";
-    var question = isReverse ? w.greek : w.italian;
-    var answer = isReverse ? w.italian : w.greek;
+    var w = words[current], isRev = mode === "gr-it" || mode === "mc-gr-it";
+    var question = isRev ? w.greek : w.italian, answer = isRev ? w.italian : w.greek;
     var pp = words.length ? (current / words.length) * 100 : 0;
-    var html = "<div class='progress-container'><div class='progress-bar' style='width:" + pp + "%'></div></div>";
-    html += "<div class='progress-text'>Domanda " + (current + 1) + " di " + words.length + " &bull; Punteggio: " + score + " <button onclick='backToHome()' style='padding:6px 14px;background:var(--bg-accent);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:0.85rem;'>Ferma</button></div>";
+    var label = isRev ? "Traduci in italiano" : "Traduci in greco";
+
+    var html = "<div class='exercise-card'><div class='progress-wrap'><div class='progress-bar-track'><div class='progress-bar-fill' style='width:" + pp + "%'></div></div><div class='progress-info'><span>Domanda " + (current+1) + " di " + words.length + "</span><span>Punteggio: " + score + "</span></div></div>";
+    html += "<div class='exercise-label'>" + label + "</div>";
+    html += "<div class='exercise-word'>" + escapeHtml(question) + " <span class='speaker' onclick='playAudio(\"" + w.italian.replace(/"/g,"") + "\")'>&#x1F50A;</span></div>";
 
     if (isMC) {
-        var lang = isReverse ? "italian" : "greek";
-        var cat = (w.category || "").trim();
-        var options = [answer];
+        var lang = isRev ? "italian" : "greek", cat = (w.category || "").trim(), options = [answer];
         var url = "/api/mc-options?correct=" + encodeURIComponent(answer) + "&lang=" + lang + "&count=3";
         if (cat) url += "&category=" + encodeURIComponent(cat);
-        fetch(url).then(function(r) { return r.json(); }).then(function(wrongs) {
-            if (Array.isArray(wrongs)) wrongs.forEach(function(x) { if (x && options.indexOf(x) === -1) options.push(x); });
-        }).catch(function() {}).finally(function() {
-            if (options.length < 4) {
-                words.filter(function(x, i) { return i !== current; }).forEach(function(x) {
-                    if (options.length < 4) { var a = isReverse ? x.italian : x.greek; if (a && options.indexOf(a) === -1) options.push(a); }
-                });
-            }
-            options.sort(function() { return Math.random() - 0.5; });
-            html += "<div class='card'>" + escapeHtml(question) + " <span class='speaker' onclick='playAudio(\"" + w.italian.replace(/"/g, "") + "\")'>&#x1F50A;</span></div>";
-            html += "<div class='options'>";
-            options.forEach(function(opt) {
-                html += "<button class='option-btn' onclick='checkMC(this)' data-opt='" + escapeHtml(opt) + "' data-correct='" + escapeHtml(answer) + "' data-italian='" + escapeHtml(w.italian) + "'>" + escapeHtml(opt) + "</button>";
-            });
-            html += "</div>";
-            document.getElementById("quiz").innerHTML = html;
+        fetch(url).then(function(r){return r.json();}).then(function(wr){if(Array.isArray(wr))wr.forEach(function(x){if(x&&options.indexOf(x)===-1)options.push(x);});}).catch(function(){}).finally(function(){
+            if (options.length < 4) words.filter(function(x,i){return i!==current;}).forEach(function(x){ if(options.length<4){var a=isRev?x.italian:x.greek;if(a&&options.indexOf(a)===-1)options.push(a);}});
+            options.sort(function(){return Math.random()-0.5;});
+            html += "<div class='mc-options'>";
+            options.forEach(function(o){ html += "<button class='mc-btn' onclick='checkMC(this)' data-opt='" + escapeHtml(o) + "' data-correct='" + escapeHtml(answer) + "' data-italian='" + escapeHtml(w.italian) + "'>" + escapeHtml(o) + "</button>"; });
+            html += "</div><div id='feedback'></div></div>";
+            Q.innerHTML = html;
         });
     } else {
-        html += "<div class='card'>" + escapeHtml(question) + " <span class='speaker' onclick='playAudio(\"" + w.italian.replace(/"/g, "") + "\")'>&#x1F50A;</span></div>";
-        html += "<div class='answer'><input type='text' id='answer' placeholder='La tua risposta' /><button onclick='checkAnswerBtn()' class='submit-btn'>Invia</button></div><div id='result'></div>";
-        document.getElementById("quiz").innerHTML = html;
+        html += "<input type='text' class='exercise-input' id='answer' placeholder='La tua risposta'>";
+        html += "<div class='exercise-btns'><button class='btn btn-ghost' onclick='skipQuestion()'>Salta</button><button class='btn btn-primary' onclick='checkAnswerBtn()'>Verifica</button></div>";
+        html += "<div id='feedback'></div></div>";
+        Q.innerHTML = html;
         var inp = document.getElementById("answer");
         if (inp) { inp.focus(); inp.onkeypress = function(e) { if (e.key === "Enter") checkAnswerBtn(); }; }
     }
 }
 
+function skipQuestion() { current++; showQuestion(); }
+
 function checkAnswerBtn() {
-    var inp = document.getElementById("answer");
-    if (!inp) return;
+    var inp = document.getElementById("answer"); if (!inp) return;
     var userAnswer = inp.value.trim();
-    var correct = inp.getAttribute("data-correct") || words[current][mode === "gr-it" ? "italian" : "greek"];
+    var correct = words[current][mode === "gr-it" ? "italian" : "greek"];
     var isCorrect = userAnswer.toLowerCase() === correct.toLowerCase();
     recordResult(words[current].italian, isCorrect, mode);
-    if (isCorrect) { score++; document.getElementById("result").innerHTML = "<p class='correct'>&#x2713; Corretto!</p>"; }
-    else { document.getElementById("result").innerHTML = "<p class='wrong'>&#x2717; Sbagliato. Risposta: " + escapeHtml(correct) + "</p>"; }
+    var fb = document.getElementById("feedback");
+    if (isCorrect) {
+        score++; inp.className = "exercise-input correct-flash";
+        fb.innerHTML = "<div class='exercise-feedback correct'>&#x2713; Corretto!</div>";
+    } else {
+        inp.className = "exercise-input wrong-shake";
+        fb.innerHTML = "<div class='exercise-feedback wrong'>&#x2717; Sbagliato. Risposta: " + escapeHtml(correct) + "</div>";
+    }
     playAudio(words[current].italian);
-    current++;
-    setTimeout(showQuestion, 2000);
+    current++; setTimeout(showQuestion, 2000);
 }
 
 function checkMC(btn) {
-    var selected = btn.getAttribute("data-opt");
-    var correct = btn.getAttribute("data-correct");
-    var italian = btn.getAttribute("data-italian");
-    var isCorrect = selected === correct;
-    totalAnswered++;
-    recordResult(italian, isCorrect, "mc");
-    if (isCorrect) score++;
-    var res = isCorrect ? "<p class='correct'>&#x2713; Corretto!</p>" : "<p class='wrong'>&#x2717; Sbagliato. Risposta: " + escapeHtml(correct) + "</p>";
-    document.getElementById("quiz").innerHTML += "<div>" + res + "</div>";
-    playAudio(italian);
-    current++;
-    setTimeout(showQuestion, 2000);
+    var sel = btn.getAttribute("data-opt"), correct = btn.getAttribute("data-correct"), ital = btn.getAttribute("data-italian");
+    var isCorrect = sel === correct; totalAnswered++;
+    recordResult(ital, isCorrect, "mc"); if (isCorrect) score++;
+    var fb = document.getElementById("feedback");
+    if (isCorrect) { btn.style.background = "var(--success-bg)"; btn.style.borderColor = "var(--primary)"; fb.innerHTML = "<div class='exercise-feedback correct'>&#x2713; Corretto!</div>"; }
+    else { btn.style.background = "var(--error-bg)"; btn.style.borderColor = "var(--error)"; fb.innerHTML = "<div class='exercise-feedback wrong'>&#x2717; Sbagliato. Risposta: " + escapeHtml(correct) + "</div>"; }
+    document.querySelectorAll(".mc-btn").forEach(function(b){b.disabled=true;});
+    playAudio(ital); current++; setTimeout(showQuestion, 2000);
 }
 
 function startGrammarCategory(cat) {
     grammarCategory = cat; grammarIndex = 0; grammarScore = 0;
-    document.getElementById("grammarSubMenu").style.display = "none";
-    document.getElementById("quiz").innerHTML = "<div style='text-align:center;padding:24px;'>Caricamento esercizi...</div>";
-    fetch("/api/grammar/exercises?category=" + encodeURIComponent(cat) + "&n=20").then(function(r) { return r.json(); }).then(function(data) {
-        grammarExercises = data;
-        if (!grammarExercises.length) {
-            document.getElementById("quiz").innerHTML = "<p style='color:var(--error);'>Nessun esercizio disponibile.</p><button onclick='backToHome()' class='submit-btn'>Indietro</button>";
-            return;
-        }
+    document.getElementById("grammarCats").style.display = "none";
+    var GQ = document.getElementById("grammarQuiz");
+    GQ.innerHTML = "<div style='text-align:center;padding:40px;color:var(--muted);'>Caricamento esercizi...</div>";
+    fetch("/api/grammar/exercises?category=" + encodeURIComponent(cat) + "&n=20").then(function(r){return r.json();}).then(function(d){
+        grammarExercises = d;
+        if (!grammarExercises.length) { GQ.innerHTML = "<p style='color:var(--error);padding:24px;'>Nessun esercizio disponibile.</p>"; return; }
         showGrammarQuestion();
-    }).catch(function() {
-        document.getElementById("quiz").innerHTML = "<p style='color:var(--error);'>Errore nel caricamento degli esercizi.</p><button onclick='backToHome()' class='submit-btn'>Indietro</button>";
-    });
+    }).catch(function(){ GQ.innerHTML = "<p style='color:var(--error);padding:24px;'>Errore nel caricamento.</p>"; });
 }
 
 function showGrammarQuestion() {
+    var GQ = document.getElementById("grammarQuiz");
     if (grammarIndex >= grammarExercises.length) {
-        var pct = grammarExercises.length ? Math.round(grammarScore * 100 / grammarExercises.length) : 0;
-        var h = "<div style='text-align:center;padding:32px 24px;'><h2>Sessione completata</h2>";
-        h += "<div style='font-size:3rem;font-weight:700;color:var(--primary);margin:20px 0;'>" + grammarScore + "/" + grammarExercises.length + "</div>";
-        h += "<p>" + pct + "% corretto</p>";
-        h += "<button onclick='showGrammarMenu()' class='submit-btn' style='margin:8px;'>Torna alle categorie</button>";
-        h += "<button onclick='backToHome()' class='submit-btn' style='margin:8px;background:var(--text);color:var(--card);'>Home</button></div>";
-        document.getElementById("quiz").innerHTML = h;
+        var pct = grammarExercises.length ? Math.round(grammarScore*100/grammarExercises.length) : 0;
+        GQ.innerHTML = "<div class='completion'><h2>Sessione completata</h2><div class='completion-score'>" + grammarScore + "/" + grammarExercises.length + "</div><div class='completion-pct'>" + pct + "% corretto</div><div class='exercise-btns' style='justify-content:center;'><button class='btn btn-primary' onclick='showGrammarCatsAgain()'>Torna alle categorie</button><button class='btn btn-ghost' onclick='backToHome()'>Home</button></div></div>";
         if (pct >= 80 && typeof confetti === "function") confetti({ particleCount: 100, spread: 70 });
         return;
     }
     var ex = grammarExercises[grammarIndex];
-    var pp = grammarExercises.length ? (grammarIndex / grammarExercises.length) * 100 : 0;
-    var html = "<div class='progress-container'><div class='progress-bar' style='width:" + pp + "%'></div></div>";
-    html += "<div class='progress-text'>Domanda " + (grammarIndex + 1) + " di " + grammarExercises.length + " &bull; Punteggio: " + grammarScore + " <button onclick='backToHome()' style='padding:6px 14px;background:var(--bg-accent);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-weight:600;font-size:0.85rem;'>Ferma</button></div>";
-    html += "<div class='card'>" + escapeHtml(ex.prompt) + "</div>";
-    html += "<div class='answer'><input type='text' id='grammarAnswer' placeholder='La tua risposta' />";
-    html += "<button onclick='checkGrammarAnswer()' class='submit-btn'>Invia</button></div><div id='grammarResult'></div>";
-    document.getElementById("quiz").innerHTML = html;
+    var pp = grammarExercises.length ? (grammarIndex/grammarExercises.length)*100 : 0;
+    var html = "<div class='exercise-card'><div class='progress-wrap'><div class='progress-bar-track'><div class='progress-bar-fill' style='width:"+pp+"%'></div></div><div class='progress-info'><span>Domanda "+(grammarIndex+1)+" di "+grammarExercises.length+"</span><span>Punteggio: "+grammarScore+"</span></div></div>";
+    html += "<div class='exercise-label'>Completa la risposta</div>";
+    html += "<div class='exercise-word'>" + escapeHtml(ex.prompt) + "</div>";
+    html += "<input type='text' class='exercise-input' id='grammarAnswer' placeholder='La tua risposta'>";
+    html += "<div class='exercise-btns'><button class='btn btn-ghost' onclick='grammarIndex++;showGrammarQuestion();'>Salta</button><button class='btn btn-primary' onclick='checkGrammarAnswer()'>Verifica</button></div>";
+    html += "<div id='grammarFeedback'></div></div>";
+    GQ.innerHTML = html;
     var inp = document.getElementById("grammarAnswer");
     if (inp) { inp.focus(); inp.onkeypress = function(e) { if (e.key === "Enter") checkGrammarAnswer(); }; }
 }
 
-function checkGrammarAnswer() {
-    var inp = document.getElementById("grammarAnswer");
-    if (!inp) return;
-    var userAnswer = inp.value.trim();
-    var ex = grammarExercises[grammarIndex];
-    if (!ex) return;
-    fetch("/api/grammar/check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ category: grammarCategory, prompt: ex.prompt, user_answer: userAnswer }) })
-    .then(function(r) { return r.json(); }).then(function(data) {
-        var el = document.getElementById("grammarResult");
-        if (data.correct) { grammarScore++; el.innerHTML = "<p class='correct'>&#x2713; Corretto!</p>"; }
-        else { el.innerHTML = "<p class='wrong'>&#x2717; Sbagliato. Risposta corretta: " + escapeHtml(data.correct_answer || "") + "</p>"; }
-        grammarIndex++;
-        setTimeout(showGrammarQuestion, 2000);
-    }).catch(function() {
-        document.getElementById("grammarResult").innerHTML = "<p class='wrong'>Errore nella verifica della risposta.</p>";
-    });
+function showGrammarCatsAgain() {
+    document.getElementById("grammarCats").style.display = "grid";
+    document.getElementById("grammarQuiz").innerHTML = "";
 }
+
+function checkGrammarAnswer() {
+    var inp = document.getElementById("grammarAnswer"); if (!inp) return;
+    var userAnswer = inp.value.trim();
+    var ex = grammarExercises[grammarIndex]; if (!ex) return;
+    fetch("/api/grammar/check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ category: grammarCategory, prompt: ex.prompt, user_answer: userAnswer }) })
+    .then(function(r){return r.json();}).then(function(d){
+        var fb = document.getElementById("grammarFeedback");
+        if (d.correct) { grammarScore++; inp.className = "exercise-input correct-flash"; fb.innerHTML = "<div class='exercise-feedback correct'>&#x2713; Corretto!</div>"; }
+        else { inp.className = "exercise-input wrong-shake"; fb.innerHTML = "<div class='exercise-feedback wrong'>&#x2717; Sbagliato. Risposta corretta: " + escapeHtml(d.correct_answer || "") + "</div>"; }
+        grammarIndex++; setTimeout(showGrammarQuestion, 2000);
+    }).catch(function(){ document.getElementById("grammarFeedback").innerHTML = "<div class='exercise-feedback wrong'>Errore nella verifica.</div>"; });
+}
+
+fetch("/api/stats").then(function(r){return r.json();}).then(function(s){
+    if (s.total_attempts > 0) {
+        var acc = s.accuracy != null ? Number(s.accuracy).toFixed(0) : "0";
+        var ap = document.getElementById("accPill"); if (ap) { ap.textContent = "\u2705 " + acc + "%"; ap.style.display = "inline-flex"; }
+    }
+}).catch(function(){});
 </script>
 </body>
 </html>
