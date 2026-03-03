@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.italiantrainer.app-debug-35:/layout_activity_main.xml.flat",
+        "source": "com.italiantrainer.app-main-37:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.italiantrainer.app-debug-35:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.italiantrainer.app-main-37:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.italiantrainer.app-debug-35:/layout_activity_settings.xml.flat",
+        "source": "com.italiantrainer.app-main-37:/layout/activity_settings.xml"
+    }
+]

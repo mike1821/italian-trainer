@@ -1,0 +1,34 @@
+R_DEF: Internal format may change without notice
+local
+color error
+color primary
+color primary_dark
+color surface
+drawable ic_launcher_foreground
+id buttonSave
+id buttonTestConnection
+id editBaseUrl
+id loadingLayout
+id progressBar
+id retryButton
+id spinnerTheme
+id toolbar
+id webView
+layout activity_main
+layout activity_settings
+string app_name
+string base_url_hint
+string base_url_label
+string connection_error
+string connection_ok
+string load_error
+string menu_settings
+string retry
+string save
+string settings_title
+string test_connection
+string theme_dark
+string theme_label
+string theme_light
+string theme_system
+style Theme.ItalianTrainer
