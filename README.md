@@ -1,16 +1,16 @@
 # Italian Vocabulary Practice Tool
 
-An enhanced vocabulary learning tool for practicing Italian-Greek translations with multiple study modes.
+An enhanced vocabulary learning tool for practicing Italian–Greek translations and Italian grammar, with a web interface and an Android app.
 
 ## Features
 
-1. **Categories & Difficulty Levels**: Organize words by topics and difficulty (1-3)
-2. **Spaced Repetition**: Automatically tracks weak words and schedules reviews
+1. **Categories & Difficulty Levels**: Organize words by topics and difficulty (1–3)
+2. **Spaced Repetition**: Automatically tracks weak words and schedules reviews; vocabulary quizzes prioritise words due for review and weaker words
 3. **Audio Pronunciation**: Italian text-to-speech using Google TTS
-4. **Flashcard Mode**: Interactive flip cards with self-assessment
-5. **Multiple Choice**: 4-option quiz format
-6. **Sentence Generation**: Practice with auto-generated sentences
-7. **Web Interface**: Modern browser-based practice at localhost:5000
+4. **Multiple Choice**: 4-option quiz (Italian→Greek and Greek→Italian); wrong options are drawn from the same category when possible for harder, more useful practice
+5. **Grammar Exercises**: Fill-in exercises for verbs (present), articles, special verbs (avercela, avere, essere, esserci), and irregular nouns; answers checked on the server
+6. **Web Interface**: Browser-based practice at localhost:5000 – Vocabolario, Grammatica, Statistiche
+7. **Android App**: WebView app that uses the same backend; set your server URL and practice on your phone (see [android/README.md](android/README.md))
 
 ## Installation
 
@@ -39,14 +39,17 @@ italian-trainer/
 ├── vocab.py                    # Main entry point
 ├── app/
 │   ├── vocab_core.py          # Vocabulary loading and management
-│   ├── vocab_quiz.py          # Quiz modes (standard, MC, flashcards)
+│   ├── vocab_quiz.py          # Quiz modes (standard, MC)
 │   ├── vocab_audio.py         # Text-to-speech pronunciation
-│   └── sentence_generator.py  # Intelligent Italian sentence generation
+│   ├── grammar_loader.py      # Grammar exercise loading and answer checking
+│   └── sentence_generator.py  # Italian sentence generation (legacy)
+├── data/grammar/               # Grammar exercise data (JSON)
 ├── database/
 │   └── vocab_db.py            # SQLite database and spaced repetition
 ├── web/
 │   ├── vocab_web.py           # Flask web interface
 │   └── wsgi.py                # WSGI config for PythonAnywhere
+├── android/                    # Android WebView app (see android/README.md)
 ├── docs/
 │   ├── STRUCTURE.md           # Detailed architecture documentation
 │   ├── MIGRATION.md           # Guide for updating existing deployments
@@ -77,19 +80,13 @@ python vocab.py quiz --difficulty 3
 # Multiple choice quiz
 python vocab.py mc 15
 
-# Flashcard mode
-python vocab.py flashcard 20
-
-# Generate practice sentences
-python vocab.py sentences 10
-
 # Pronounce a word
 python vocab.py speak ciao
 
 # View statistics
 python vocab.py stats
 
-# Launch web interface
+# Launch web interface (recommended: Vocabolario, Grammatica, Statistiche)
 python vocab.py web
 ```
 
@@ -97,21 +94,22 @@ python vocab.py web
 
 Launch with `python vocab.py web` and open http://localhost:5000
 
-Modes available:
-- **Italian → Greek**: Direct translation with typed answers
-- **Greek → Italian**: Reverse translation practice
-- **Multiple Choice**: 4-option quiz format
-- **Flashcards**: Click to flip, self-assess
-- **Sentences**: Translate generated Italian sentences
+- **Vocabolario**: Italian→Greek and Greek→Italian (typed answers), plus multiple choice in both directions. Word selection uses spaced repetition; multiple choice uses wrong options from the same category when possible.
+- **Grammatica**: Fill-in exercises – Verbi al presente, Articoli, Verbi speciali, Sostantivi irregolari. Answers are checked on the server.
+- **Statistiche**: Words practiced, total attempts, accuracy, best streak.
 
-All modes include audio pronunciation (🔊 icon) that plays automatically after each answer.
+All modes include audio pronunciation (🔊) after each answer.
 
 ### Sharing & Deployment
 
 Want to share with friends or colleagues?
 
-- **📡 [Windows Network Sharing Guide](docs/WINDOWS_SHARE.md)** - Share on local network or internet using ngrok
-- **☁️ [PythonAnywhere Deployment](docs/PYTHONANYWHERE_DEPLOY.md)** - Deploy to cloud for 24/7 access (free tier available)
+- **📡 [Windows Network Sharing Guide](docs/WINDOWS_SHARE.md)** – Share on local network or internet using ngrok
+- **☁️ [PythonAnywhere Deployment](docs/PYTHONANYWHERE_DEPLOY.md)** – Deploy to cloud for 24/7 access (free tier available)
+
+### Android app
+
+An Android app in the `android/` folder wraps the web interface in a WebView. Set your server URL (e.g. your PythonAnywhere site), and use Vocabolario, Grammatica, and Statistiche on your phone. See **[android/README.md](android/README.md)** for setup and build.
 
 ## Database
 
