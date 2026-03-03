@@ -71,7 +71,11 @@
         .home-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 24px; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm); }
         .home-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); border-color: var(--primary); }
         .home-card:active { transform: scale(0.98); }
-        .home-card-icon { font-size: 32px; margin-bottom: 12px; }
+        .home-card-icon { font-size: 32px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .flag { display: inline-block; width: 42px; height: 28px; border-radius: 4px; background-size: cover; background-position: center; box-shadow: 0 1px 3px rgba(0,0,0,0.15); flex-shrink: 0; }
+        .flag-it { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect fill='%23009246' width='1' height='2'/%3E%3Crect fill='%23fff' x='1' width='1' height='2'/%3E%3Crect fill='%23CE2B37' x='2' width='1' height='2'/%3E%3C/svg%3E"); }
+        .flag-gr { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 27 18'%3E%3Crect fill='%230D5EAF' width='27' height='18'/%3E%3Cpath fill='%23fff' d='M0 2h27v2H0zM0 6h27v2H0zM0 10h27v2H0zM0 14h27v2H0z'/%3E%3Crect fill='%230D5EAF' width='10' height='10'/%3E%3Cpath fill='%23fff' d='M3 0h4v10H3zM0 3h10v4H0z'/%3E%3C/svg%3E"); }
+        .flag-arrow { font-size: 18px; color: var(--muted); }
         .home-card-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
         .home-card-desc { font-size: 13px; color: var(--muted); }
         .home-stats-link { margin-top: 24px; }
@@ -85,13 +89,8 @@
         .seg button:hover { color: var(--text); }
         .seg button.active { background: var(--card); color: var(--text); box-shadow: var(--shadow-sm); font-weight: 600; }
 
-        /* Grammar category cards */
-        .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 600px; margin: 24px auto 0; }
-        .cat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm); }
-        .cat-card:hover { border-color: var(--primary); box-shadow: var(--shadow); transform: translateY(-1px); }
-        .cat-card:active { transform: scale(0.98); }
-        .cat-card-icon { font-size: 24px; margin-bottom: 8px; }
-        .cat-card-title { font-size: 14px; font-weight: 600; line-height: 1.4; }
+        /* Uniform card height in grids */
+        .home-grid .home-card { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
         /* Exercise card */
         .exercise-card { width: 100%; max-width: 600px; margin: 48px auto 0; background: var(--card); border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow-lg); border: 1px solid var(--border); animation: fadeSlideIn 0.25s ease-out; }
@@ -127,10 +126,10 @@
         .progress-info { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 13px; color: var(--muted); font-weight: 500; }
 
         /* Stats */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 24px; }
-        .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; text-align: center; box-shadow: var(--shadow-sm); }
-        .stat-number { font-size: 28px; font-weight: 700; color: var(--primary); }
-        .stat-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
+        .home-card.static { cursor: default; }
+        .home-card.static:hover { box-shadow: var(--shadow-sm); transform: none; border-color: var(--border); }
+        .stat-number { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .stat-label { font-size: 13px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 
         /* Completion */
         .completion { text-align: center; padding: 48px 24px; }
@@ -148,7 +147,6 @@
         /* Responsive */
         @media (max-width: 600px) {
             .home-grid { grid-template-columns: 1fr; max-width: 360px; }
-            .cat-grid { grid-template-columns: 1fr; }
             .exercise-card { margin-top: 24px; padding: 24px 20px; }
             .exercise-word { font-size: 28px; }
             .header { padding: 0 16px; }
@@ -195,12 +193,26 @@
     <!-- Vocab mode selector -->
     <div id="vocabView" style="display:none;">
         <button class="back-link" onclick="backToHome()">&#x2190; Indietro</button>
-        <div class="seg-wrap">
-            <div class="seg" id="vocabSeg">
-                <button onclick="startMode('it-gr')" class="active">IT &#x2192; GR</button>
-                <button onclick="startMode('gr-it')">GR &#x2192; IT</button>
-                <button onclick="startMode('mc')">Scelta multipla (IT)</button>
-                <button onclick="startMode('mc-gr-it')">Scelta multipla (GR)</button>
+        <div class="home-grid" id="vocabCats" style="margin:24px auto 0;">
+            <div class="home-card" onclick="startMode('it-gr')">
+                <div class="home-card-icon"><span class="flag flag-it"></span><span class="flag-arrow">&#x2192;</span><span class="flag flag-gr"></span></div>
+                <div class="home-card-title">Italiano &#x2192; Greco</div>
+                <div class="home-card-desc">Scrivi la traduzione</div>
+            </div>
+            <div class="home-card" onclick="startMode('gr-it')">
+                <div class="home-card-icon"><span class="flag flag-gr"></span><span class="flag-arrow">&#x2192;</span><span class="flag flag-it"></span></div>
+                <div class="home-card-title">Greco &#x2192; Italiano</div>
+                <div class="home-card-desc">Scrivi la traduzione</div>
+            </div>
+            <div class="home-card" onclick="startMode('mc')">
+                <div class="home-card-icon"><span class="flag flag-it"></span><span class="flag-arrow">&#x2192;</span><span class="flag flag-gr"></span></div>
+                <div class="home-card-title">Scelta multipla</div>
+                <div class="home-card-desc">Scegli la traduzione greca</div>
+            </div>
+            <div class="home-card" onclick="startMode('mc-gr-it')">
+                <div class="home-card-icon"><span class="flag flag-gr"></span><span class="flag-arrow">&#x2192;</span><span class="flag flag-it"></span></div>
+                <div class="home-card-title">Scelta multipla</div>
+                <div class="home-card-desc">Scegli la traduzione italiana</div>
             </div>
         </div>
         <div id="quiz"></div>
@@ -209,22 +221,26 @@
     <!-- Grammar category selector -->
     <div id="grammarView" style="display:none;">
         <button class="back-link" onclick="backToHome()">&#x2190; Indietro</button>
-        <div class="cat-grid" id="grammarCats">
-            <div class="cat-card" onclick="startGrammarCategory('verbs_present')">
-                <div class="cat-card-icon">&#x1F4AC;</div>
-                <div class="cat-card-title">Verbi al presente indicativo</div>
+        <div class="home-grid" id="grammarCats" style="margin:24px auto 0;">
+            <div class="home-card" onclick="startGrammarCategory('verbs_present')">
+                <div class="home-card-icon">&#x1F4AC;</div>
+                <div class="home-card-title">Verbi al presente</div>
+                <div class="home-card-desc">Presente indicativo</div>
             </div>
-            <div class="cat-card" onclick="startGrammarCategory('articles')">
-                <div class="cat-card-icon">&#x1F4D6;</div>
-                <div class="cat-card-title">Articoli determinativi e indeterminativi</div>
+            <div class="home-card" onclick="startGrammarCategory('articles')">
+                <div class="home-card-icon">&#x1F4D6;</div>
+                <div class="home-card-title">Articoli</div>
+                <div class="home-card-desc">Determinativi e indeterminativi</div>
             </div>
-            <div class="cat-card" onclick="startGrammarCategory('avercela_avere_essere_esserci')">
-                <div class="cat-card-icon">&#x1F9E9;</div>
-                <div class="cat-card-title">Avercela, avere, essere, esserci</div>
+            <div class="home-card" onclick="startGrammarCategory('avercela_avere_essere_esserci')">
+                <div class="home-card-icon">&#x1F9E9;</div>
+                <div class="home-card-title">Verbi speciali</div>
+                <div class="home-card-desc">Avercela, avere, essere, esserci</div>
             </div>
-            <div class="cat-card" onclick="startGrammarCategory('irregular_nouns')">
-                <div class="cat-card-icon">&#x1F4DD;</div>
-                <div class="cat-card-title">Sostantivi irregolari</div>
+            <div class="home-card" onclick="startGrammarCategory('irregular_nouns')">
+                <div class="home-card-icon">&#x1F4DD;</div>
+                <div class="home-card-title">Sostantivi irregolari</div>
+                <div class="home-card-desc">Plurali e genere</div>
             </div>
         </div>
         <div id="grammarQuiz"></div>
@@ -252,7 +268,7 @@ function hideAll() {
     ["homeView","vocabView","grammarView","statsView"].forEach(function(id) { document.getElementById(id).style.display = "none"; });
 }
 function backToHome() { hideAll(); document.getElementById("homeView").style.display = "flex"; document.getElementById("quiz").innerHTML = ""; document.getElementById("grammarQuiz").innerHTML = ""; }
-function showVocabMenu() { hideAll(); document.getElementById("vocabView").style.display = "block"; }
+function showVocabMenu() { hideAll(); document.getElementById("vocabView").style.display = "block"; document.getElementById("vocabCats").style.display = "grid"; document.getElementById("quiz").innerHTML = ""; }
 function showGrammarMenu() { hideAll(); document.getElementById("grammarView").style.display = "block"; }
 
 function showStats() {
@@ -260,11 +276,11 @@ function showStats() {
     document.getElementById("statsContent").innerHTML = "<div style='text-align:center;padding:40px;color:var(--muted);'>Caricamento statistiche...</div>";
     fetch("/api/stats").then(function(r) { return r.json(); }).then(function(s) {
         var acc = s.accuracy != null ? Number(s.accuracy).toFixed(1) : "0.0";
-        var html = "<div class='stats-grid'>";
-        html += "<div class='stat-card'><div class='stat-number'>" + (s.total_words || 0) + "</div><div class='stat-label'>Parole praticate</div></div>";
-        html += "<div class='stat-card'><div class='stat-number'>" + (s.total_attempts || 0) + "</div><div class='stat-label'>Tentativi totali</div></div>";
-        html += "<div class='stat-card'><div class='stat-number'>" + acc + "%</div><div class='stat-label'>Precisione</div></div>";
-        if (s.best_streak) html += "<div class='stat-card'><div class='stat-number'>" + s.best_streak + "</div><div class='stat-label'>Miglior serie</div></div>";
+        var html = "<div class='home-grid' style='margin:24px auto 0;'>";
+        html += "<div class='home-card static'><div class='stat-number'>" + (s.total_words || 0) + "</div><div class='stat-label'>Parole praticate</div></div>";
+        html += "<div class='home-card static'><div class='stat-number'>" + (s.total_attempts || 0) + "</div><div class='stat-label'>Tentativi totali</div></div>";
+        html += "<div class='home-card static'><div class='stat-number'>" + acc + "%</div><div class='stat-label'>Precisione</div></div>";
+        if (s.best_streak) html += "<div class='home-card static'><div class='stat-number'>" + s.best_streak + "</div><div class='stat-label'>Miglior serie</div></div>";
         html += "</div>";
         document.getElementById("statsContent").innerHTML = html;
         var ap = document.getElementById("accPill"); if (ap) { ap.textContent = "\u2705 " + acc + "%"; ap.style.display = "inline-flex"; }
@@ -282,15 +298,15 @@ function recordResult(word, correct, qt) {
     fetch("/api/record", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ word: word, correct: correct, quiz_type: qt || "web" }) }).catch(function(){});
 }
 
-function setActiveTab(m) {
-    var btns = document.querySelectorAll("#vocabSeg button");
-    var map = {"it-gr":0,"gr-it":1,"mc":2,"mc-gr-it":3};
-    btns.forEach(function(b,i) { b.className = i === map[m] ? "active" : ""; });
+
+function showVocabCatsAgain() {
+    document.getElementById("vocabCats").style.display = "grid";
+    document.getElementById("quiz").innerHTML = "";
 }
 
 function startMode(m) {
     mode = m; current = 0; score = 0; totalAnswered = 0;
-    setActiveTab(m);
+    document.getElementById("vocabCats").style.display = "none";
     document.getElementById("quiz").innerHTML = "<div style='text-align:center;padding:40px;color:var(--muted);'>Caricamento...</div>";
     var n = (mode === "mc" || mode === "mc-gr-it") ? 300 : 10;
     fetch("/api/words?n=" + n).then(function(r) { return r.json(); }).then(function(w) { words = w; showQuestion(); }).catch(function() {
@@ -304,7 +320,7 @@ function showQuestion() {
     if (current >= words.length) {
         var total = isMC ? totalAnswered : words.length;
         var pct = total ? Math.round(score * 100 / total) : 0;
-        Q.innerHTML = "<div class='completion'><h2>Quiz completato</h2><div class='completion-score'>" + score + "/" + total + "</div><div class='completion-pct'>" + pct + "% corretto</div><div class='exercise-btns' style='justify-content:center;'><button class='btn btn-primary' onclick='startMode(mode)'>Riprova</button><button class='btn btn-ghost' onclick='backToHome()'>Home</button></div></div>";
+        Q.innerHTML = "<div class='completion'><h2>Quiz completato</h2><div class='completion-score'>" + score + "/" + total + "</div><div class='completion-pct'>" + pct + "% corretto</div><div class='exercise-btns' style='justify-content:center;'><button class='btn btn-primary' onclick='showVocabCatsAgain()'>Torna alle modalit&#x00E0;</button><button class='btn btn-ghost' onclick='backToHome()'>Home</button></div></div>";
         if (pct >= 80 && typeof confetti === "function") confetti({ particleCount: 100, spread: 70 });
         return;
     }
