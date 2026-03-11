@@ -56,7 +56,7 @@ def get_random_words(words, n=10):
 
 
 def migrate_vocabulary():
-    """Migrate old 2-column format to new 4-column format."""
+    """Migrate old 2-column format to new 4-column format, and fill defaults for any rows missing values."""
     if not VOCAB_FILE.exists():
         print(f"Error: {VOCAB_FILE} not found")
         return False
@@ -64,25 +64,31 @@ def migrate_vocabulary():
     wb = openpyxl.load_workbook(VOCAB_FILE)
     ws = wb.active
     
-    # Check if already migrated
-    if ws.cell(1, 3).value:
-        print("Vocabulary already has Category/Difficulty columns")
+    added_headers = False
+    if not ws.cell(1, 3).value:
+        ws.cell(1, 3, "Category")
+        ws.cell(1, 4, "Difficulty")
+        added_headers = True
+    
+    filled = 0
+    for row in range(2, ws.max_row + 1):
+        if not ws.cell(row, 1).value:
+            continue
+        if not ws.cell(row, 3).value:
+            ws.cell(row, 3, "other")
+            filled += 1
+        if not ws.cell(row, 4).value:
+            ws.cell(row, 4, 2)
+    
+    if not added_headers and filled == 0:
+        print("Nothing to migrate — all rows already have Category and Difficulty.")
         wb.close()
         return False
-    
-    # Add headers
-    ws.cell(1, 3, "Category")
-    ws.cell(1, 4, "Difficulty")
-    
-    # Add default values
-    for row in range(2, ws.max_row + 1):
-        if ws.cell(row, 1).value:  # If Italian word exists
-            ws.cell(row, 3, "other")  # Default category
-            ws.cell(row, 4, 2)        # Default difficulty
     
     wb.save(VOCAB_FILE)
     wb.close()
     
-    print(f"✓ Migration complete! Added Category and Difficulty columns.")
-    print(f"  Default values: Category='other', Difficulty=2")
+    if added_headers:
+        print(f"✓ Migration complete! Added Category and Difficulty columns.")
+    print(f"✓ Filled defaults for {filled} row(s) (Category='other', Difficulty=2).")
     return True

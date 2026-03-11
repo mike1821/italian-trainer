@@ -1031,6 +1031,7 @@ def launch_web():
                 });
                 const data = await res.json();
                 const resultEl = document.getElementById('grammarResult');
+                recordResult(ex.prompt, data.correct, 'grammar');
                 if (data.correct) {
                     grammarScore++;
                     resultEl.innerHTML = '<p class="correct">✓ Correct!</p>';
@@ -1168,6 +1169,21 @@ def launch_web():
         except Exception as e:
             return jsonify({"success": False, "error": str(e)}), 500
     
+    @app.route('/api/reset-stats', methods=['POST'])
+    def reset_stats():
+        """Clear all quiz history and word stats."""
+        try:
+            import sqlite3
+            conn = sqlite3.connect('vocab_progress.db')
+            c = conn.cursor()
+            c.execute("DELETE FROM quiz_history")
+            c.execute("DELETE FROM word_stats")
+            conn.commit()
+            conn.close()
+            return jsonify({"success": True})
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 500
+
     @app.route('/api/grammar/exercises')
     def grammar_exercises():
         """Return list of grammar exercises for a category."""
@@ -1207,7 +1223,6 @@ def create_wsgi_app():
     import os
     
     app = Flask(__name__)
-    vocabulary = load_vocabulary()
     WSGI_WEB_DIR = os.path.dirname(os.path.abspath(__file__))
     WSGI_PROJECT_ROOT = os.path.dirname(WSGI_WEB_DIR)
     
@@ -1721,6 +1736,14 @@ def create_wsgi_app():
             document.getElementById('answer').focus();
         }
 
+        function fallbackSpeak(word) {
+            if (!window.speechSynthesis) return;
+            const u = new SpeechSynthesisUtterance(word);
+            u.lang = 'it-IT';
+            u.rate = 0.9;
+            window.speechSynthesis.speak(u);
+        }
+
         async function playAudio() {
             if (currentWord) {
                 try {
@@ -1728,10 +1751,12 @@ def create_wsgi_app():
                     const data = await response.json();
                     if (data.audio && data.audio.length > 0) {
                         const audio = new Audio('data:audio/mp3;base64,' + data.audio);
-                        audio.play().catch(e => console.log('Audio play error:', e));
+                        audio.play().catch(() => fallbackSpeak(currentWord.italian));
+                    } else {
+                        fallbackSpeak(currentWord.italian);
                     }
                 } catch (e) {
-                    console.log('Audio fetch failed:', e);
+                    fallbackSpeak(currentWord.italian);
                 }
             }
         }
@@ -1824,10 +1849,16 @@ def create_wsgi_app():
                     }
                 });
                 
-                const response = await fetch(`/api/speak?word=${encodeURIComponent(italian)}`);
-                const data = await response.json();
-                const audio = new Audio('data:audio/mp3;base64,' + data.audio);
-                audio.play();
+                try {
+                    const response = await fetch(`/api/speak?word=${encodeURIComponent(italian)}`);
+                    const data = await response.json();
+                    if (data.audio && data.audio.length > 0) {
+                        const audio = new Audio('data:audio/mp3;base64,' + data.audio);
+                        audio.play().catch(() => fallbackSpeak(italian));
+                    } else {
+                        fallbackSpeak(italian);
+                    }
+                } catch(e) { fallbackSpeak(italian); }
             } else {
                 feedback.innerHTML = `✗ Wrong! Correct answer: ${correct}`;
                 feedback.className = 'feedback wrong';
@@ -1953,10 +1984,92 @@ def create_wsgi_app():
     
     @app.route('/api/words')
     def get_words():
+        from database.vocab_db import get_weak_words
+        from datetime import datetime
+        import sqlite3
+
         n = int(request.args.get('n', 10))
-        selected = random.sample(vocabulary, min(n, len(vocabulary)))
-        return jsonify(selected)
-    
+        words = load_vocabulary()
+
+        try:
+            conn = sqlite3.connect('vocab_progress.db')
+            c = conn.cursor()
+
+            due_count = n // 2
+            now = datetime.now()
+            c.execute("""SELECT word_italian
+                         FROM word_stats
+                         WHERE next_review <= ?
+                         ORDER BY next_review ASC
+                         LIMIT ?""", (now, due_count))
+            due_words = [row[0] for row in c.fetchall()]
+
+            weak_count = int(n * 0.3)
+            c.execute("""SELECT word_italian
+                         FROM word_stats
+                         WHERE (CAST(times_correct AS FLOAT) / times_seen) < 0.7
+                         AND times_seen >= 2
+                         ORDER BY (CAST(times_correct AS FLOAT) / times_seen) ASC
+                         LIMIT ?""", (weak_count,))
+            weak_words = [row[0] for row in c.fetchall()]
+
+            conn.close()
+
+            selected_italian = set(due_words + weak_words)
+            selected = [w for w in words if w['italian'] in selected_italian]
+
+            remaining = n - len(selected)
+            if remaining > 0:
+                available = [w for w in words if w['italian'] not in selected_italian]
+                if available:
+                    selected.extend(random.sample(available, min(remaining, len(available))))
+
+            if len(selected) < n:
+                selected = random.sample(words, min(n, len(words)))
+
+        except Exception:
+            selected = random.sample(words, min(n, len(words)))
+
+        return jsonify([{"italian": w["italian"], "greek": w["greek"], "category": w.get("category", "other")} for w in selected])
+
+    @app.route('/api/mc-options')
+    def mc_options_wsgi():
+        """Return wrong options for multiple choice. If category is given, only same-category words (harder)."""
+        correct = request.args.get('correct', '')
+        lang = request.args.get('lang', 'greek')
+        count = int(request.args.get('count', 3))
+        category = request.args.get('category', '').strip() or None
+        words = load_vocabulary()
+        key = 'greek' if lang == 'greek' else 'italian'
+        pool = words
+        if category:
+            pool = [w for w in words if w.get('category') == category]
+        if len(pool) < 4:
+            pool = words
+        candidates = list(dict.fromkeys([w[key] for w in pool if w[key] != correct]))
+        random.shuffle(candidates)
+        return jsonify(candidates[:min(count, len(candidates))])
+
+    @app.route('/api/record', methods=['POST'])
+    def record_result_wsgi():
+        """Record quiz result for spaced repetition."""
+        from database.vocab_db import record_quiz_result, init_db
+
+        try:
+            init_db()
+            data = request.get_json()
+            word = data.get('word')
+            correct = data.get('correct', False)
+            quiz_type = data.get('quiz_type', 'web')
+
+            if word:
+                record_quiz_result(word, correct, quiz_type)
+                return jsonify({"success": True})
+            else:
+                return jsonify({"success": False, "error": "No word provided"}), 400
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 500
+
     @app.route('/api/speak')
     def speak():
         word = request.args.get('word', '')
@@ -1971,6 +2084,21 @@ def create_wsgi_app():
         except Exception:
             return jsonify({"total_words": 0, "total_attempts": 0, "accuracy": 0})
     
+    @app.route('/api/reset-stats', methods=['POST'])
+    def reset_stats_wsgi():
+        """Clear all quiz history and word stats."""
+        try:
+            import sqlite3
+            conn = sqlite3.connect('vocab_progress.db')
+            c = conn.cursor()
+            c.execute("DELETE FROM quiz_history")
+            c.execute("DELETE FROM word_stats")
+            conn.commit()
+            conn.close()
+            return jsonify({"success": True})
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)}), 500
+
     @app.route('/api/grammar/exercises')
     def grammar_exercises_wsgi():
         category = request.args.get('category', '')

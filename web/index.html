@@ -131,6 +131,26 @@
         .stat-number { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
         .stat-label { font-size: 13px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 
+        .stats-section { max-width: 600px; margin: 28px auto 0; }
+        .stats-section-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+        .stats-type-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .stats-type-label { min-width: 100px; font-size: 14px; font-weight: 600; text-align: right; }
+        .stats-type-bar-wrap { flex: 1; height: 24px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; position: relative; }
+        .stats-type-bar { height: 100%; border-radius: 999px; transition: width 0.5s ease-out; min-width: 2px; }
+        .stats-type-detail { min-width: 110px; font-size: 13px; color: var(--muted); font-weight: 500; }
+        .stats-word-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .stats-word-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 10px; border-bottom: 2px solid var(--border); }
+        .stats-word-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+        .stats-word-table tr:last-child td { border-bottom: none; }
+        .stats-word-table .rate-good { color: var(--primary); font-weight: 600; }
+        .stats-word-table .rate-bad { color: var(--error); font-weight: 600; }
+        .stats-empty { text-align: center; padding: 20px; color: var(--muted); font-size: 14px; }
+        .stats-activity { display: flex; gap: 4px; align-items: flex-end; height: 80px; margin-top: 8px; }
+        .stats-activity-bar { flex: 1; background: var(--primary); border-radius: 4px 4px 0 0; min-height: 2px; transition: height 0.4s; opacity: 0.8; position: relative; }
+        .stats-activity-bar:hover { opacity: 1; }
+        .stats-activity-labels { display: flex; gap: 4px; margin-top: 4px; }
+        .stats-activity-labels span { flex: 1; text-align: center; font-size: 10px; color: var(--muted); }
+
         /* Completion */
         .completion { text-align: center; padding: 48px 24px; }
         .completion-score { font-size: 56px; font-weight: 700; color: var(--primary); margin: 16px 0; }
@@ -276,12 +296,81 @@ function showStats() {
     document.getElementById("statsContent").innerHTML = "<div style='text-align:center;padding:40px;color:var(--muted);'>Caricamento statistiche...</div>";
     fetch("/api/stats").then(function(r) { return r.json(); }).then(function(s) {
         var acc = s.accuracy != null ? Number(s.accuracy).toFixed(1) : "0.0";
-        var html = "<div class='home-grid' style='margin:24px auto 0;'>";
-        html += "<div class='home-card static'><div class='stat-number'>" + (s.total_words || 0) + "</div><div class='stat-label'>Parole praticate</div></div>";
+        var html = "";
+
+        html += "<div class='home-grid' style='margin:24px auto 0;'>";
         html += "<div class='home-card static'><div class='stat-number'>" + (s.total_attempts || 0) + "</div><div class='stat-label'>Tentativi totali</div></div>";
         html += "<div class='home-card static'><div class='stat-number'>" + acc + "%</div><div class='stat-label'>Precisione</div></div>";
-        if (s.best_streak) html += "<div class='home-card static'><div class='stat-number'>" + s.best_streak + "</div><div class='stat-label'>Miglior serie</div></div>";
+        html += "<div class='home-card static'><div class='stat-number'>" + (s.best_streak || 0) + "</div><div class='stat-label'>Miglior serie</div></div>";
+        html += "<div class='home-card static'><div class='stat-number'>" + (s.due_for_review || 0) + "</div><div class='stat-label'>Da ripassare</div></div>";
         html += "</div>";
+
+        var typeLabels = {"web":"Digitazione","it-gr":"IT \u2192 GR","gr-it":"GR \u2192 IT","mc":"Scelta multipla","grammar":"Grammatica","standard":"Standard","focus":"Focus","flashcard":"Flashcard","retry":"Ripetizione"};
+        if (s.quiz_types && s.quiz_types.length > 0) {
+            html += "<div class='stats-section'><div class='stats-section-title'>Rendimento per tipo</div>";
+            var maxCount = Math.max.apply(null, s.quiz_types.map(function(t){return t.count;}));
+            s.quiz_types.forEach(function(t) {
+                var pct = maxCount > 0 ? (t.count / maxCount * 100) : 0;
+                var tacc = t.accuracy != null ? Number(t.accuracy).toFixed(0) : "0";
+                var color = Number(tacc) >= 70 ? "var(--primary)" : Number(tacc) >= 40 ? "#F59E0B" : "var(--error)";
+                var label = typeLabels[t.type] || t.type;
+                html += "<div class='stats-type-row'>";
+                html += "<div class='stats-type-label'>" + escapeHtml(label) + "</div>";
+                html += "<div class='stats-type-bar-wrap'><div class='stats-type-bar' style='width:" + pct + "%;background:" + color + ";'></div></div>";
+                html += "<div class='stats-type-detail'>" + t.count + " (" + tacc + "%)</div>";
+                html += "</div>";
+            });
+            html += "</div>";
+        }
+
+        if (s.daily_performance && s.daily_performance.length > 0) {
+            var last7 = s.daily_performance.slice(-7);
+            var maxAttempts = Math.max.apply(null, last7.map(function(d){return d.attempts;}));
+            html += "<div class='stats-section'><div class='stats-section-title'>Attivit\u00e0 recente</div>";
+            html += "<div class='stats-activity'>";
+            last7.forEach(function(d) {
+                var h = maxAttempts > 0 ? Math.max(4, (d.attempts / maxAttempts) * 80) : 4;
+                var dacc = d.accuracy != null ? Number(d.accuracy).toFixed(0) : "0";
+                html += "<div class='stats-activity-bar' style='height:" + h + "px;' title='" + d.date + ": " + d.attempts + " tentativi, " + dacc + "% corretto'></div>";
+            });
+            html += "</div><div class='stats-activity-labels'>";
+            last7.forEach(function(d) {
+                var parts = d.date.split("-");
+                html += "<span>" + parts[2] + "/" + parts[1] + "</span>";
+            });
+            html += "</div></div>";
+        }
+
+        if (s.weak_words && s.weak_words.length > 0) {
+            html += "<div class='stats-section'><div class='stats-section-title'>Parole da migliorare</div>";
+            html += "<table class='stats-word-table'><thead><tr><th>Parola</th><th>Viste</th><th>Precisione</th></tr></thead><tbody>";
+            s.weak_words.slice(0, 8).forEach(function(w) {
+                var r = w.rate != null ? Number(w.rate).toFixed(0) : "0";
+                html += "<tr><td>" + escapeHtml(w.word) + "</td><td>" + w.seen + "</td><td class='rate-bad'>" + r + "%</td></tr>";
+            });
+            html += "</tbody></table></div>";
+        }
+
+        if (s.top_words && s.top_words.length > 0) {
+            html += "<div class='stats-section'><div class='stats-section-title'>Parole migliori</div>";
+            html += "<table class='stats-word-table'><thead><tr><th>Parola</th><th>Viste</th><th>Precisione</th></tr></thead><tbody>";
+            s.top_words.slice(0, 8).forEach(function(w) {
+                var r = w.rate != null ? Number(w.rate).toFixed(0) : "0";
+                html += "<tr><td>" + escapeHtml(w.word) + "</td><td>" + w.seen + "</td><td class='rate-good'>" + r + "%</td></tr>";
+            });
+            html += "</tbody></table></div>";
+        }
+
+        if (!s.total_attempts) {
+            html += "<div class='stats-section'><div class='stats-empty'>Nessun dato ancora. Inizia a esercitarti!</div></div>";
+        }
+
+        if (s.total_attempts) {
+            html += "<div class='stats-section' style='text-align:center;padding-top:12px;'>";
+            html += "<button class='btn btn-ghost' style='color:var(--error);border-color:var(--error);font-size:13px;padding:8px 20px;' onclick='resetStats()'>Azzera statistiche</button>";
+            html += "</div>";
+        }
+
         document.getElementById("statsContent").innerHTML = html;
         var ap = document.getElementById("accPill"); if (ap) { ap.textContent = "\u2705 " + acc + "%"; ap.style.display = "inline-flex"; }
     }).catch(function() {
@@ -289,10 +378,35 @@ function showStats() {
     });
 }
 
+function resetStats() {
+    if (!confirm("Sei sicuro di voler azzerare tutte le statistiche? Questa azione non può essere annullata.")) return;
+    fetch("/api/reset-stats", { method: "POST" }).then(function(r) { return r.json(); }).then(function(d) {
+        if (d.success) {
+            showStats();
+            var ap = document.getElementById("accPill"); if (ap) ap.style.display = "none";
+        } else {
+            alert("Errore: " + (d.error || "sconosciuto"));
+        }
+    }).catch(function() { alert("Errore nella connessione."); });
+}
+
+function fallbackSpeak(word) {
+    if (!window.speechSynthesis) return;
+    var u = new SpeechSynthesisUtterance(word);
+    u.lang = "it-IT";
+    u.rate = 0.9;
+    window.speechSynthesis.speak(u);
+}
+
 function playAudio(word) {
     fetch("/api/speak?word=" + encodeURIComponent(word)).then(function(r) { return r.json(); }).then(function(d) {
-        if (d.audio && d.audio.length > 0) { var a = new Audio("data:audio/mp3;base64," + d.audio); a.play().catch(function(){}); }
-    }).catch(function(){});
+        if (d.audio && d.audio.length > 0) {
+            var a = new Audio("data:audio/mp3;base64," + d.audio);
+            a.play().catch(function() { fallbackSpeak(word); });
+        } else {
+            fallbackSpeak(word);
+        }
+    }).catch(function() { fallbackSpeak(word); });
 }
 function recordResult(word, correct, qt) {
     fetch("/api/record", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ word: word, correct: correct, quiz_type: qt || "web" }) }).catch(function(){});
@@ -431,6 +545,7 @@ function checkGrammarAnswer() {
     fetch("/api/grammar/check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ category: grammarCategory, prompt: ex.prompt, user_answer: userAnswer }) })
     .then(function(r){return r.json();}).then(function(d){
         var fb = document.getElementById("grammarFeedback");
+        recordResult(ex.prompt, d.correct, "grammar");
         if (d.correct) { grammarScore++; inp.className = "exercise-input correct-flash"; fb.innerHTML = "<div class='exercise-feedback correct'>&#x2713; Corretto!</div>"; }
         else { inp.className = "exercise-input wrong-shake"; fb.innerHTML = "<div class='exercise-feedback wrong'>&#x2717; Sbagliato. Risposta corretta: " + escapeHtml(d.correct_answer || "") + "</div>"; }
         grammarIndex++; setTimeout(showGrammarQuestion, 2000);
